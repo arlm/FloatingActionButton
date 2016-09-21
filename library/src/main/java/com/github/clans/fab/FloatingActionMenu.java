@@ -28,7 +28,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FloatingActionMenu extends ViewGroup {
 
     private static final int ANIMATION_DURATION = 300;
@@ -1036,11 +1035,11 @@ public class FloatingActionMenu extends ViewGroup {
         mButtonsCount--;
     }
 
-    public void setmMenuText(String menuText) {
+    public void setMenuText(String menuText) {
         mMenuTextString = menuText;
     }
 
-    public void setmMenuTextColor(int menuTextColor) {
+    public void setMenuTextColor(int menuTextColor) {
         mMenuTextColor = menuTextColor;
     }
 
