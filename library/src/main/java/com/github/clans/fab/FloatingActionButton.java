@@ -444,7 +444,7 @@ public class FloatingActionButton extends ImageButton {
                     int extraShadowSpace = 10;
                     @Override
                     public void getOutline(View view, Outline outline) {
-                        outline.setRoundRect(0, 0, Util.getScreenWidth(getContext()) -  (getExtendedButtonPadding() - Util.dpToPx(getContext(),extraShadowSpace)), Util.dpToPx(getContext(),75f), 25f);
+                        outline.setRoundRect(0, 0, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(),extraShadowSpace)), Util.dpToPx(getContext(),75f), 25f);
                     }
                 });
             }
@@ -796,7 +796,7 @@ public class FloatingActionButton extends ImageButton {
         }
 
         private void drawRoundRectangleCanvas(Canvas canvas,Paint paint) {
-            canvas.drawRoundRect(new RectF(0, 0, Util.getScreenWidth(getContext()) -  (getExtendedButtonPadding() + Util.dpToPx(getContext(),calculateShadowWidth())), Util.dpToPx(getContext(), 56f)), 70f, 70f, paint);
+            canvas.drawRoundRect(new RectF(0, 0, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() + Util.dpToPx(getContext(),2f)), Util.dpToPx(getContext(), 56f)), 70f, 70f, paint);
         }
 
         private void drawCircleCanvas(Canvas canvas,Paint paint) {
