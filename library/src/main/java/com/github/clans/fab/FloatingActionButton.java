@@ -468,7 +468,7 @@ public class FloatingActionButton extends ImageButton {
     private Drawable createCircleDrawable(int color) {
         CircleDrawable shapeDrawable;
         if (mIsExtended){
-       shapeDrawable = new CircleDrawable(new CustomShape(getContext()));
+       shapeDrawable = new CircleDrawable(new ExtendedButtonShadowShape(getContext()));
         } else {
             shapeDrawable = new CircleDrawable(new OvalShape());
         }
