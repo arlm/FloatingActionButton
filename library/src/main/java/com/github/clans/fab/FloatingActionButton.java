@@ -209,7 +209,7 @@ public class FloatingActionButton extends ImageButton {
 
     protected int calculateMeasuredWidth() {
         int width;
-        if (mIsExtended){ //TODO fix
+        if (mIsExtended){
             width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
         } else {
          width = getCircleSize() + calculateShadowWidth();
