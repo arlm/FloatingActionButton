@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:src="@drawable/ic_drawing"
+        app:menu_menuText="Add new expense"
         app:menu_isExtended="true">
 
         <com.github.clans.fab.FloatingActionButton

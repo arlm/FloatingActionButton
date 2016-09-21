@@ -30,6 +30,8 @@
 
     <declare-styleable name="FloatingActionMenu">
         <attr name="menu_isExtended" format="boolean" />
+        <attr name="menu_menuText" format="string" />
+        <attr name="menu_menuTextColor" format="integer" />
         <attr name="menu_showShadow" format="boolean" />
         <attr name="menu_buttonSpacing" format="dimension" />
         <attr name="menu_labels_margin" format="dimension" />
