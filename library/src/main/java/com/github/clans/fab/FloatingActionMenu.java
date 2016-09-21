@@ -30,6 +30,7 @@ import java.util.List;
 
 public class FloatingActionMenu extends ViewGroup {
 
+    private static final int EXTENDED_ACTION_MENU = -1;
     private static final int ANIMATION_DURATION = 300;
     private static final float CLOSED_PLUS_ROTATION = 0f;
     private static final float OPENED_PLUS_ROTATION_LEFT = -90f - 45f;
@@ -46,8 +47,8 @@ public class FloatingActionMenu extends ViewGroup {
     private AnimatorSet mIconToggleSet;
 
     private boolean mIsExtended = false;
-    private String mMenuTextString = "Add new expense";
-    private int mMenuTextColor = 0;
+    private String extendedButtonText = "Add new expense";
+    private int extendedButtonTextColor = 0;
     private int mButtonSpacing = Util.dpToPx(getContext(), 0f);
     private int mMaxButtonWidth;
     private int mLabelsMargin = Util.dpToPx(getContext(), 0f);
@@ -131,8 +132,8 @@ public class FloatingActionMenu extends ViewGroup {
     private void init(Context context, AttributeSet attrs) {
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.FloatingActionMenu, 0, 0);
         mIsExtended = attr.getBoolean(R.styleable.FloatingActionMenu_menu_isExtended, false);
-        mMenuTextString = attr.getString(R.styleable.FloatingActionMenu_menu_menuText);
-        mMenuTextColor = attr.getInt(R.styleable.FloatingActionMenu_menu_menuTextColor, Color.WHITE);
+        extendedButtonText = attr.getString(R.styleable.FloatingActionMenu_menu_extendedButtonText);
+        extendedButtonTextColor = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextColor, Color.WHITE);
         mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, mButtonSpacing);
         mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, mLabelsMargin);
         mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, LABELS_POSITION_LEFT);
@@ -294,7 +295,7 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     private void createExtendedMenuButton() { // Create wide (extended) menu button
-        mMenuButton = new FloatingActionButton(getContext(),null, -1); // -1 = extended menu
+        mMenuButton = new FloatingActionButton(getContext(),null, EXTENDED_ACTION_MENU);
         mMenuButton.mShowShadow = mMenuShowShadow;
         if (mMenuShowShadow) {
             mMenuButton.mShadowRadius = Util.dpToPx(getContext(), mMenuShadowRadius);
@@ -307,9 +308,9 @@ public class FloatingActionMenu extends ViewGroup {
         mMenuButton.setLabelText(mMenuLabelText);
 
         mMenuText = new TextView(getContext());
-        mMenuText.setText(mMenuTextString);
+        mMenuText.setText(extendedButtonText);
         mMenuText.setTextSize(16);
-        mMenuText.setTextColor(mMenuTextColor);
+        mMenuText.setTextColor(extendedButtonTextColor);
 
         mImageToggle = new ImageView(getContext());
         mImageToggle.setImageDrawable(mIcon);
@@ -1036,11 +1037,11 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void setMenuText(String menuText) {
-        mMenuTextString = menuText;
+        extendedButtonText = menuText;
     }
 
     public void setMenuTextColor(int menuTextColor) {
-        mMenuTextColor = menuTextColor;
+        extendedButtonTextColor = menuTextColor;
     }
 
     public void addMenuButton(FloatingActionButton fab, int index) {

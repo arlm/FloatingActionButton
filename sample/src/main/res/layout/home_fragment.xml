@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:menu="http://schemas.android.com/tools"
   >
 
     <ListView
@@ -20,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:src="@drawable/ic_drawing"
-        app:menu_menuText="Add new expense"
+        app:menu_extendedButtonText="Add new expense"
         app:menu_isExtended="true">
 
         <com.github.clans.fab.FloatingActionButton
@@ -38,7 +37,5 @@
             app:fab_size="mini"
             app:fab_label="Menu item 1" />
     </com.github.clans.fab.FloatingActionMenu>
-
-    <!--android:layout_marginRight="32dp"-->
 
 </FrameLayout>

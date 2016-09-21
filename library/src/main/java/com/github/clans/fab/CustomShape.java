@@ -17,7 +17,7 @@ public class CustomShape extends RectShape {
     private float mRadius = 75f;
     private float mExtraTopShadow = -7f;
     private float mExtraLeftShadow = -5f;
-    private float mButtonPadding = 64f;
+    private float mButtonPadding = 80f;
 
     CustomShape(Context ctx) {
         super();
