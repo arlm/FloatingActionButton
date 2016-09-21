@@ -13,6 +13,11 @@ final class Util {
         return Math.round(dp * scale);
     }
 
+    static int getScreenWidth(Context context) {
+        final int width =  context.getResources().getDisplayMetrics().widthPixels;
+        return width;
+    }
+
     static boolean hasJellyBean() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }

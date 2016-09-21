@@ -3,6 +3,7 @@ package com.github.clans.fab;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -36,6 +37,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.R.attr.width;
+
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -61,6 +64,8 @@ public class FloatingActionButton extends ImageButton {
     private int mIconSize = Util.dpToPx(getContext(), 24f);
     private Animation mShowAnimation;
     private Animation mHideAnimation;
+    private Animation mReplaceExtendedAnimation;
+    private Animation mHideExtendedAnimation;
     private String mLabelText;
     private OnClickListener mClickListener;
     private Drawable mBackgroundDrawable;
@@ -95,9 +100,14 @@ public class FloatingActionButton extends ImageButton {
     private boolean mShouldSetProgress;
     private int mProgressMax = 100;
     private boolean mShowProgressBackground;
+    private boolean mIsExtended = false;
+    private float mLandscapePadding = 64f;
+    private float mPortraitPadding = 60f;
+    private Context mContext;
 
     public FloatingActionButton(Context context) {
         this(context, null);
+        mIsExtended = false;
     }
 
     public FloatingActionButton(Context context, AttributeSet attrs) {
@@ -106,17 +116,27 @@ public class FloatingActionButton extends ImageButton {
 
     public FloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        if (defStyleAttr == -1){
+            mIsExtended = true;
+        }else {
+            mIsExtended = false;
+        }
+        mContext = context;
         init(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public FloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        mIsExtended = false;
         init(context, attrs, defStyleAttr);
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.FloatingActionButton, defStyleAttr, 0);
+        if (!mIsExtended){
+        mIsExtended = attr.getBoolean(R.styleable.FloatingActionButton_fab_isExtended, false);
+        }
         mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal, 0xFFDA4336);
         mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed, 0xFFE75043);
         mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled, 0xFFAAAAAA);
@@ -150,6 +170,8 @@ public class FloatingActionButton extends ImageButton {
 
         initShowAnimation(attr);
         initHideAnimation(attr);
+        initReplaceExtendedAnimation();
+        initHideExtendedAnimation();
         attr.recycle();
 
         if (isInEditMode()) {
@@ -160,8 +182,6 @@ public class FloatingActionButton extends ImageButton {
                 setProgress(mProgress, false);
             }
         }
-
-//        updateBackground();
         setClickable(true);
     }
 
@@ -175,21 +195,42 @@ public class FloatingActionButton extends ImageButton {
         mHideAnimation = AnimationUtils.loadAnimation(getContext(), resourceId);
     }
 
+    private void initHideExtendedAnimation() {
+        mHideExtendedAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_extended_hide);
+    }
+
+    private void initReplaceExtendedAnimation() {
+        mReplaceExtendedAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_replace_extended);
+    }
+
     private int getCircleSize() {
         return getResources().getDimensionPixelSize(mFabSize == SIZE_NORMAL
                 ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
     }
 
-    private int calculateMeasuredWidth() {
-        int width = getCircleSize() + calculateShadowWidth();
+    protected int calculateMeasuredWidth() {
+        int width;
+        if (mIsExtended){
+            width = Util.getScreenWidth(getContext()) - Util.dpToPx(getContext(), mPortraitPadding) + calculateShadowWidth();
+        } else {
+         width = getCircleSize() + calculateShadowWidth();
+        }
+        //+ calculateShadowWidth();
         if (mProgressBarEnabled) {
             width += mProgressWidth * 2;
         }
         return width;
     }
 
-    private int calculateMeasuredHeight() {
-        int height = getCircleSize() + calculateShadowHeight();
+    protected int calculateMeasuredHeight() {
+        int height;
+        if (mIsExtended) {
+            height =(Util.dpToPx(getContext(),56f)) + calculateShadowHeight();
+
+        }
+        else {
+            height = getCircleSize() + calculateShadowHeight();
+        }
         if (mProgressBarEnabled) {
             height += mProgressWidth * 2;
         }
@@ -222,7 +263,6 @@ public class FloatingActionButton extends ImageButton {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
     }
 
@@ -342,8 +382,9 @@ public class FloatingActionButton extends ImageButton {
     }
 
     void updateBackground() {
+
         LayerDrawable layerDrawable;
-        if (hasShadow()) {
+        if (hasShadow()) { //TODO return
             layerDrawable = new LayerDrawable(new Drawable[]{
                     new Shadow(),
                     createFillDrawable(),
@@ -396,7 +437,7 @@ public class FloatingActionButton extends ImageButton {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private Drawable createFillDrawable() {
+    protected Drawable createFillDrawable() {
         StateListDrawable drawable = new StateListDrawable();
         drawable.addState(new int[]{-android.R.attr.state_enabled}, createCircleDrawable(mColorDisabled));
         drawable.addState(new int[]{android.R.attr.state_pressed}, createCircleDrawable(mColorPressed));
@@ -405,12 +446,27 @@ public class FloatingActionButton extends ImageButton {
         if (Util.hasLollipop()) {
             RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
                     new int[]{mColorRipple}), drawable, null);
-            setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
-                }
-            });
+            if (mIsExtended){
+                setOutlineProvider(new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            outline.setRoundRect(0, 0, Util.getScreenWidth(getContext()) - Util.dpToPx(getContext(), mLandscapePadding - 20), Util.dpToPx(getContext(),62f), 25f);
+                        } else {
+                            outline.setRoundRect(0, 0, Util.getScreenWidth(getContext()) - Util.dpToPx(getContext(), mPortraitPadding - 20), Util.dpToPx(getContext(), 62f), 25f);
+                        }
+                    }
+                });
+            }
+            else {
+                setOutlineProvider(new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                       outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    }
+                });
+            }
+
             setClipToOutline(true);
             mBackgroundDrawable = ripple;
             return ripple;
@@ -420,8 +476,13 @@ public class FloatingActionButton extends ImageButton {
         return drawable;
     }
 
-    private Drawable createCircleDrawable(int color) {
-        CircleDrawable shapeDrawable = new CircleDrawable(new OvalShape());
+    protected Drawable createCircleDrawable(int color) {
+        CircleDrawable shapeDrawable;
+        if (mIsExtended){
+       shapeDrawable = new CircleDrawable(new CustomShape(getContext()));
+        } else {
+            shapeDrawable = new CircleDrawable(new OvalShape());
+        }
         shapeDrawable.getPaint().setColor(color);
         return shapeDrawable;
     }
@@ -462,6 +523,10 @@ public class FloatingActionButton extends ImageButton {
         }
         setX(x);
         setY(y);
+        if (getParent() instanceof  FloatingActionMenu) {
+            ((FloatingActionMenu) getParent()).setX(x);
+            ((FloatingActionMenu) getParent()).setY(y);
+        }
     }
 
     private void setupProgressBarPaints() {
@@ -498,9 +563,46 @@ public class FloatingActionButton extends ImageButton {
         startAnimation(mShowAnimation);
     }
 
+    void playReplaceExtendedAnimation() {
+        startAnimation(mReplaceExtendedAnimation);
+    }
+
+    void playHideExtendedAnimation() {
+        mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //Nothing
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //TODO add condition
+                if (mIsExtended) {
+                    mIsExtended = false;
+                    FloatingActionButton.super.onAnimationEnd();
+                    setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
+                    updateBackground();
+                    ((FloatingActionMenu) getParent()).onExtendedMenuCollapse();
+                    getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((FloatingActionMenu) getParent()).setIconPosition((getY() + (getHeight()/2)),(getX() + (getWidth()/2))); // There must be some delay to calculate position on final x,y.
+                        }
+                    },300);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // Nothing
+            }
+        });
+        startAnimation(mHideExtendedAnimation);
+    }
+
     void playHideAnimation() {
         mShowAnimation.cancel();
-        startAnimation(mHideAnimation);
+        startAnimation(mHideExtendedAnimation);
     }
 
     OnClickListener getOnClickListener() {
@@ -598,7 +700,6 @@ public class FloatingActionButton extends ImageButton {
         Parcelable superState = super.onSaveInstanceState();
 
         ProgressSavedState ss = new ProgressSavedState(superState);
-
         ss.mCurrentProgress = this.mCurrentProgress;
         ss.mTargetProgress = this.mTargetProgress;
         ss.mSpinSpeed = this.mSpinSpeed;
@@ -639,15 +740,15 @@ public class FloatingActionButton extends ImageButton {
         this.mLastTimeAnimated = SystemClock.uptimeMillis();
     }
 
-    private class CircleDrawable extends ShapeDrawable {
+    protected class CircleDrawable extends ShapeDrawable {
 
         private int circleInsetHorizontal;
         private int circleInsetVertical;
 
-        private CircleDrawable() {
+        protected CircleDrawable() {
         }
 
-        private CircleDrawable(Shape s) {
+        protected CircleDrawable(Shape s) {
             super(s);
             circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
             circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
@@ -662,11 +763,12 @@ public class FloatingActionButton extends ImageButton {
         public void draw(Canvas canvas) {
             setBounds(circleInsetHorizontal, circleInsetVertical, calculateMeasuredWidth()
                     - circleInsetHorizontal, calculateMeasuredHeight() - circleInsetVertical);
+
             super.draw(canvas);
         }
     }
 
-    private class Shadow extends Drawable {
+    protected class Shadow extends Drawable {
 
         private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -696,8 +798,19 @@ public class FloatingActionButton extends ImageButton {
 
         @Override
         public void draw(Canvas canvas) {
-            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mPaint);
-            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mErase);
+            if (mIsExtended) {
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                    canvas.drawRoundRect(new RectF(0,0,Util.getScreenWidth(getContext()) -  Util.dpToPx(getContext(),mLandscapePadding),Util.dpToPx(getContext(),56f)),70f,70f, mPaint);
+                    canvas.drawRoundRect(new RectF(0,0,Util.getScreenWidth(getContext()) -  Util.dpToPx(getContext(),mLandscapePadding),Util.dpToPx(getContext(),56f)),70f,70f, mErase);
+                } else {
+                    canvas.drawRoundRect(new RectF(0,0,Util.getScreenWidth(getContext()) -  Util.dpToPx(getContext(),mPortraitPadding),Util.dpToPx(getContext(),56f)),70f,70f, mPaint);
+                    canvas.drawRoundRect(new RectF(0,0,Util.getScreenWidth(getContext()) -  Util.dpToPx(getContext(),mPortraitPadding),Util.dpToPx(getContext(),56f)),70f,70f, mErase);
+                }
+
+            } else {
+                canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mPaint);
+                canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mErase);
+            }
         }
 
         @Override
@@ -725,6 +838,7 @@ public class FloatingActionButton extends ImageButton {
         int mProgressWidth;
         int mProgressColor;
         int mProgressBackgroundColor;
+        boolean mIsExtended;
         boolean mProgressBarEnabled;
         boolean mProgressBarVisibilityChanged;
         boolean mProgressIndeterminate;
