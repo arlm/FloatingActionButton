@@ -92,7 +92,6 @@ public class FloatingActionMenu extends ViewGroup {
     private boolean mIconAnimated = true;
     private ImageView mImageToggle;
     private TextView mMenuText;
-    private TextView mExtendedMenuText;
     private Animation mMenuButtonShowAnimation;
     private Animation mMenuButtonHideAnimation;
     private Animation mImageToggleShowAnimation;
