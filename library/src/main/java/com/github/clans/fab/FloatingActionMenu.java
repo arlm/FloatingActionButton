@@ -421,23 +421,26 @@ public class FloatingActionMenu extends ViewGroup {
                 : mMaxButtonWidth / 2 + getPaddingLeft();
         boolean openUp = mOpenDirection == OPEN_UP;
 
+        int leftTranslation = 0;
         int menuButtonTop = openUp
                 ? b - t - mMenuButton.getMeasuredHeight() - getPaddingBottom()
                 : getPaddingTop();
         int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
-
-        mMenuButton.layout(menuButtonLeft, menuButtonTop, menuButtonLeft + mMenuButton.getMeasuredWidth(),
+        if (mIsExtended) {
+            leftTranslation = Util.dpToPx(getContext(), 8);
+        }
+        mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.getMeasuredWidth(),
                 menuButtonTop + mMenuButton.getMeasuredHeight());
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
 
         if (mIsExtended) { // Sets position for text ("add new expense") and icon - in this case icon must be more left
-            mImageToggle.layout(imageLeft - Util.dpToPx(getContext(), 80f), imageTop - Util.dpToPx(getContext(), 7.5f),
-                    imageLeft + mImageToggle.getMeasuredWidth() - Util.dpToPx(getContext(), 80f), imageTop + mImageToggle.getMeasuredHeight() - Util.dpToPx(getContext(), 7.5f));
+            mImageToggle.layout(imageLeft - Util.dpToPx(getContext(), 70f), imageTop - Util.dpToPx(getContext(), 0f),
+                    imageLeft + mImageToggle.getMeasuredWidth() - Util.dpToPx(getContext(), 70), imageTop + mImageToggle.getMeasuredHeight() - Util.dpToPx(getContext(), 0f));
             int textLeft = buttonsHorizontalCenter - mMenuText.getMeasuredWidth() / 2;
             int textTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mMenuText.getMeasuredHeight() / 2;
-            mMenuText.layout(textLeft, textTop - Util.dpToPx(getContext(), 7.5f), textLeft + mMenuText.getMeasuredWidth(),
-                    textTop + mMenuText.getMeasuredHeight() - Util.dpToPx(getContext(), 7.5f));
+            mMenuText.layout(textLeft + Util.dpToPx(getContext(), 10f), textTop - Util.dpToPx(getContext(), 0f), textLeft + Util.dpToPx(getContext(), 10f) + mMenuText.getMeasuredWidth(),
+                    textTop + mMenuText.getMeasuredHeight() - Util.dpToPx(getContext(), 0f));
         } else {
             mImageToggle.layout(imageLeft, imageTop, imageLeft + mImageToggle.getMeasuredWidth(),
                     imageTop + mImageToggle.getMeasuredHeight());

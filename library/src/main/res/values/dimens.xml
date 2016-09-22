@@ -4,7 +4,9 @@
     <dimen name="fab_size_normal">56dp</dimen>
     <dimen name="fab_size_mini">40dp</dimen>
     <dimen name="labels_text_size">14sp</dimen>
-    <dimen name="extended_button_padding">64dp</dimen>
-    <dimen name="extended_button_shadow_padding">70dp</dimen>
+    <dimen name="extended_button_padding_portrait">64dp</dimen>
+    <dimen name="extended_button_padding_landscape">420dp</dimen>
+    <dimen name="extended_button_shadow_padding_portrait">70dp</dimen>
+    <dimen name="extended_button_shadow_padding_landscape">426dp</dimen>
 
 </resources>

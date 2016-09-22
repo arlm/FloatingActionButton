@@ -3,6 +3,7 @@ package com.github.clans.fab;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -221,14 +222,22 @@ public class FloatingActionButton extends ImageButton {
                 ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
     }
 
-    private int getExtendedButtonPadding() {
-        return getResources().getDimensionPixelSize(R.dimen.extended_button_padding);
+    private int getExtendedButtonPaddingPortrait() {
+        return getResources().getDimensionPixelSize(R.dimen.extended_button_padding_portrait);
+    }
+
+    private int getExtendedButtonPaddingLandscape() {
+        return getResources().getDimensionPixelSize(R.dimen.extended_button_padding_landscape);
     }
 
     protected int calculateMeasuredWidth() {
         int width;
         if (mIsExtended) {
-            width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            width = Util.getScreenWidth(getContext()) - getExtendedButtonPaddingPortrait() + calculateShadowWidth();
+            } else {
+                width = Util.getScreenWidth(getContext()) - getExtendedButtonPaddingLandscape() + calculateShadowWidth();
+            }
         } else {
             width = getCircleSize() + calculateShadowWidth();
         }
@@ -463,7 +472,11 @@ public class FloatingActionButton extends ImageButton {
 
                     @Override
                     public void getOutline(View view, Outline outline) {
-                        outline.setRoundRect(0, 0, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 75f), 25f);
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPaddingPortrait() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 76f), 25f);
+                        } else {
+                            outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPaddingLandscape() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 76f), 25f);
+                        }
                     }
                 });
             } else {
@@ -1392,7 +1405,11 @@ public class FloatingActionButton extends ImageButton {
         }
 
         private void drawRoundRectangleCanvas(Canvas canvas, Paint paint) {
-            canvas.drawRoundRect(new RectF(0, 0, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() + Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 56f)), 70f, 70f, paint);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                canvas.drawRoundRect(new RectF(0, 17, Util.getScreenWidth(getContext()) - (getExtendedButtonPaddingPortrait() + Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
+            } else {
+                canvas.drawRoundRect(new RectF(0,17, Util.getScreenWidth(getContext()) - (getExtendedButtonPaddingLandscape() + Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
+            }
         }
 
         private void drawCircleCanvas(Canvas canvas, Paint paint) {
