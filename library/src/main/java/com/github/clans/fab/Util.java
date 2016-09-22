@@ -14,7 +14,7 @@ final class Util {
     }
 
     static int getScreenWidth(Context context) {
-        final int width =  context.getResources().getDisplayMetrics().widthPixels;
+        final int width = context.getResources().getDisplayMetrics().widthPixels;
         return width;
     }
 

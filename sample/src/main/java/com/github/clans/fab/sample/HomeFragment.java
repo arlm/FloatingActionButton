@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.fab.sample.R;
@@ -21,8 +20,6 @@ public class HomeFragment extends Fragment {
 
     private ListView mListView;
     private FloatingActionMenu mFab;
-    private int mPreviousVisibleItem;
-    RelativeLayout fab;
 
     @Nullable
     @Override

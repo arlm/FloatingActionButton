@@ -27,6 +27,6 @@ public class ExtendedButtonShadowShape extends RectShape {
 
     @Override
     public void draw(Canvas canvas, Paint paint) { //
-            canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getScreenWidth(mContext) - mButtonPadding, Util.dpToPx(mContext, 50f)),mRadius,mRadius, paint);
+        canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getScreenWidth(mContext) - mButtonPadding, Util.dpToPx(mContext, 50f)), mRadius, mRadius, paint);
     }
 }
