@@ -111,7 +111,7 @@ public class FloatingActionButton extends ImageButton {
 
     public FloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (defStyleAttr == -1){
+        if (defStyleAttr == FloatingActionMenu.EXTENDED_ACTION_MENU){
             mIsExtended = true;
         }else {
             mIsExtended = false;
@@ -195,7 +195,7 @@ public class FloatingActionButton extends ImageButton {
     }
 
     private void initReplaceExtendedAnimation() {
-        mReplaceExtendedAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_replace_extended);
+        mReplaceExtendedAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_extended_replace);
     }
 
     private int getCircleSize() {

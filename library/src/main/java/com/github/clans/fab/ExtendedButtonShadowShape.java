@@ -22,7 +22,7 @@ public class ExtendedButtonShadowShape extends RectShape {
     ExtendedButtonShadowShape(Context ctx) {
         super();
         mContext = ctx;
-        mButtonPadding = ctx.getResources().getDimensionPixelSize(R.dimen.extend_button_shadow_padding);
+        mButtonPadding = ctx.getResources().getDimensionPixelSize(R.dimen.extended_button_shadow_padding);
     }
 
     @Override

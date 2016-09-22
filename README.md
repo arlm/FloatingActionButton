@@ -112,7 +112,7 @@ Here are all the **FloatingActionMenu**'s xml attributes with their **default va
         android:layout_marginLeft="10dp"
         fab:menu_isExtended="false"
         fab:menu_extendedButtonText="Add new expense"
-        fab:menu_extendedButtonTextColor="Color.WHITE"
+        fab:menu_extendedButtonTextColor="@color/white"
         fab:menu_fab_size="normal"
         fab:menu_showShadow="true"
         fab:menu_shadowColor="#66000000"

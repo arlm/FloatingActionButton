@@ -30,7 +30,7 @@ import java.util.List;
 
 public class FloatingActionMenu extends ViewGroup {
 
-    private static final int EXTENDED_ACTION_MENU = -1;
+    protected static final int EXTENDED_ACTION_MENU = -1;
     private static final int ANIMATION_DURATION = 300;
     private static final float CLOSED_PLUS_ROTATION = 0f;
     private static final float OPENED_PLUS_ROTATION_LEFT = -90f - 45f;
@@ -47,8 +47,9 @@ public class FloatingActionMenu extends ViewGroup {
     private AnimatorSet mIconToggleSet;
 
     private boolean mIsExtended = false;
-    private String extendedButtonText = "Add new expense";
+    private String extendedButtonText = null;
     private int extendedButtonTextColor = 0;
+    private int extendedButtonTextSize = 0;
     private int mButtonSpacing = Util.dpToPx(getContext(), 0f);
     private int mMaxButtonWidth;
     private int mLabelsMargin = Util.dpToPx(getContext(), 0f);
@@ -133,6 +134,7 @@ public class FloatingActionMenu extends ViewGroup {
         mIsExtended = attr.getBoolean(R.styleable.FloatingActionMenu_menu_isExtended, false);
         extendedButtonText = attr.getString(R.styleable.FloatingActionMenu_menu_extendedButtonText);
         extendedButtonTextColor = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextColor, Color.WHITE);
+        extendedButtonTextSize = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextSize, 16);
         mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, mButtonSpacing);
         mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, mLabelsMargin);
         mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, LABELS_POSITION_LEFT);
@@ -253,7 +255,7 @@ public class FloatingActionMenu extends ViewGroup {
         params.height = LayoutParams.WRAP_CONTENT;
         params.width = LayoutParams.WRAP_CONTENT;
         setLayoutParams(params);
-        this.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fab_replace_extended));
+        this.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fab_extended_replace));
     }
     public void setIconPosition(float yPos,float xPos) {
         mImageToggle.setX(xPos - mImageToggle.getWidth() / 2 );
@@ -308,7 +310,7 @@ public class FloatingActionMenu extends ViewGroup {
 
         mMenuText = new TextView(getContext());
         mMenuText.setText(extendedButtonText);
-        mMenuText.setTextSize(16);
+        mMenuText.setTextSize(extendedButtonTextSize);
         mMenuText.setTextColor(extendedButtonTextColor);
 
         mImageToggle = new ImageView(getContext());
@@ -429,7 +431,7 @@ public class FloatingActionMenu extends ViewGroup {
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
 
-        if (mIsExtended) { // Sets position for text ("add new Expense") and icon - in this case icon must be more left
+        if (mIsExtended) { // Sets position for text ("add new expense") and icon - in this case icon must be more left
             mImageToggle.layout(imageLeft - Util.dpToPx(getContext(),80f), imageTop - Util.dpToPx(getContext(),7.5f),
                     imageLeft + mImageToggle.getMeasuredWidth() - Util.dpToPx(getContext(),80f), imageTop + mImageToggle.getMeasuredHeight() - Util.dpToPx(getContext(),7.5f));
             int textLeft = buttonsHorizontalCenter - mMenuText.getMeasuredWidth() / 2;
@@ -1035,12 +1037,16 @@ public class FloatingActionMenu extends ViewGroup {
         mButtonsCount--;
     }
 
-    public void setMenuText(String menuText) {
+    public void setExtendedButtonText(String menuText) {
         extendedButtonText = menuText;
     }
 
-    public void setMenuTextColor(int menuTextColor) {
+    public void setExtendedButtonTextColor(int menuTextColor) {
         extendedButtonTextColor = menuTextColor;
+    }
+
+    public void setExtendedButtonTextSize(int menuTextSize) {
+        extendedButtonTextSize = menuTextSize;
     }
 
     public void addMenuButton(FloatingActionButton fab, int index) {
