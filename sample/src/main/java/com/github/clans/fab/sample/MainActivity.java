@@ -16,6 +16,29 @@ import com.github.fab.sample.R;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
+    NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+
+            Fragment fragment = null;
+            final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            switch (item.getItemId()) {
+                case R.id.home:
+                    fragment = new HomeFragment();
+                    break;
+                case R.id.menus:
+                    fragment = new MenusFragment();
+                    break;
+                case R.id.progress:
+                    fragment = new ProgressFragment();
+                    break;
+            }
+
+            ft.replace(R.id.fragment, fragment).commit();
+            return true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,30 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView.setCheckedItem(R.id.home);
     }
-
-    NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-
-            Fragment fragment = null;
-            final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            switch (item.getItemId()) {
-                case R.id.home:
-                    fragment = new HomeFragment();
-                    break;
-                case R.id.menus:
-                    fragment = new MenusFragment();
-                    break;
-                case R.id.progress:
-                    fragment = new ProgressFragment();
-                    break;
-            }
-
-            ft.replace(R.id.fragment, fragment).commit();
-            return true;
-        }
-    };
 
     @Override
     public void onBackPressed() {

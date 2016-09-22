@@ -41,6 +41,21 @@ public class MenusFragment extends Fragment {
 
     private List<FloatingActionMenu> menus = new ArrayList<>();
     private Handler mUiHandler = new Handler();
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    break;
+                case R.id.fab2:
+                    fab2.setVisibility(View.GONE);
+                    break;
+                case R.id.fab3:
+                    fab2.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -189,20 +204,4 @@ public class MenusFragment extends Fragment {
 
         menuGreen.setIconToggleAnimatorSet(set);
     }
-
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.fab1:
-                    break;
-                case R.id.fab2:
-                    fab2.setVisibility(View.GONE);
-                    break;
-                case R.id.fab3:
-                    fab2.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
-    };
 }
