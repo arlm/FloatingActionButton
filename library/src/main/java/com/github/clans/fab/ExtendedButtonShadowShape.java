@@ -25,15 +25,14 @@ public class ExtendedButtonShadowShape extends RectShape {
         super();
         mContext = ctx;
         mButtonPaddingPortrait = ctx.getResources().getDimensionPixelSize(R.dimen.extended_button_shadow_padding);
-        mButtonPaddingLandscape = ctx.getResources().getDimensionPixelSize(R.dimen.extended_button_shadow_padding);
     }
 
     @Override
-    public void draw(Canvas canvas, Paint paint) { //TODO(pepa): need to change
+    public void draw(Canvas canvas, Paint paint) {
         if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getScreenWidth(mContext) - mButtonPaddingPortrait, Util.dpToPx(mContext, 56f)), mRadius, mRadius, paint);
         } else {
-            canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getScreenWidth(mContext) - mButtonPaddingLandscape, Util.dpToPx(mContext, 56f)), mRadius, mRadius, paint);
+            canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getExtendedButtonLandscapeWidth(mContext), Util.dpToPx(mContext, 56f)), mRadius, mRadius, paint);
         }
     }
 }

@@ -410,7 +410,6 @@ public class FloatingActionMenu extends ViewGroup {
         if (getLayoutParams().height == LayoutParams.MATCH_PARENT) {
             height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         }
-
         setMeasuredDimension(width, height);
     }
 

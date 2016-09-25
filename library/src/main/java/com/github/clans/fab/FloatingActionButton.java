@@ -27,6 +27,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -226,14 +227,17 @@ public class FloatingActionButton extends ImageButton {
         return getResources().getDimensionPixelSize(R.dimen.extended_button_padding);
     }
 
+    private int getExtendedButtonLandscapeWidth() {
+        return getResources().getDimensionPixelSize(R.dimen.extended_button_width);
+    }
 
     protected int calculateMeasuredWidth() {
         int width;
         if (mIsExtended) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
-            } else {
                 width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
+            } else {
+                width = getExtendedButtonLandscapeWidth() + calculateShadowWidth();
             }
         } else {
             width = getCircleSize() + calculateShadowWidth();
@@ -471,8 +475,10 @@ public class FloatingActionButton extends ImageButton {
                     public void getOutline(View view, Outline outline) {
                         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                             outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 76f), 25f);
+
                         } else {
-                            outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 76f), 25f);
+                            outline.setRoundRect(0, -8, getExtendedButtonLandscapeWidth() + Util.dpToPx(getContext(), extraShadowSpace), Util.dpToPx(getContext(), 76f), 25f);
+
                         }
                     }
                 });
@@ -1405,7 +1411,7 @@ public class FloatingActionButton extends ImageButton {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 canvas.drawRoundRect(new RectF(0, 17, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() + Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
             } else {
-                canvas.drawRoundRect(new RectF(0,17, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() + Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
+                canvas.drawRoundRect(new RectF(0, 17, getExtendedButtonLandscapeWidth() - (Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
             }
         }
 

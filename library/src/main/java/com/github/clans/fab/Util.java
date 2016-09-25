@@ -18,6 +18,10 @@ final class Util {
         return width;
     }
 
+    static int getExtendedButtonLandscapeWidth(Context context) {
+        return context.getResources().getDimensionPixelSize(R.dimen.extended_button_width) - dpToPx(context,5f);
+    }
+
     static boolean hasJellyBean() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
