@@ -27,7 +27,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -469,16 +468,15 @@ public class FloatingActionButton extends ImageButton {
                     new int[]{mColorRipple}), drawable, null);
             if (mIsExtended) {
                 setOutlineProvider(new ViewOutlineProvider() {
-                    int extraShadowSpace = 10;
+                    int extraShadowSpace = 5;
 
                     @Override
                     public void getOutline(View view, Outline outline) {
                         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 76f), 25f);
+                            outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 70f), 25f);
 
                         } else {
-                            outline.setRoundRect(0, -8, getExtendedButtonLandscapeWidth() + Util.dpToPx(getContext(), extraShadowSpace), Util.dpToPx(getContext(), 76f), 25f);
-
+                            outline.setRoundRect(0, -8, getExtendedButtonLandscapeWidth() + Util.dpToPx(getContext(), extraShadowSpace), Util.dpToPx(getContext(), 70f), 25f);
                         }
                     }
                 });
@@ -1400,7 +1398,6 @@ public class FloatingActionButton extends ImageButton {
         public void draw(Canvas canvas) {
             if (mIsExtended) {
                 drawRoundRectangleCanvas(canvas, mPaint);
-                drawRoundRectangleCanvas(canvas, mErase);
             } else {
                 drawCircleCanvas(canvas, mPaint);
                 drawCircleCanvas(canvas, mErase);
@@ -1409,9 +1406,9 @@ public class FloatingActionButton extends ImageButton {
 
         private void drawRoundRectangleCanvas(Canvas canvas, Paint paint) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                canvas.drawRoundRect(new RectF(0, 17, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() + Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
+                canvas.drawRoundRect(new RectF(0, Util.dpToPx(getContext(), 8), Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() + Util.dpToPx(getContext(), 3f)), Util.dpToPx(getContext(), 63f)), 70f, 70f, paint);
             } else {
-                canvas.drawRoundRect(new RectF(0, 17, getExtendedButtonLandscapeWidth() - (Util.dpToPx(getContext(), 2f)), Util.dpToPx(getContext(), 62f)), 70f, 70f, paint);
+                canvas.drawRoundRect(new RectF(0, Util.dpToPx(getContext(), 8), getExtendedButtonLandscapeWidth() - Util.dpToPx(getContext(), 2f), Util.dpToPx(getContext(), 63f)), 70f, 70f, paint);
             }
         }
 

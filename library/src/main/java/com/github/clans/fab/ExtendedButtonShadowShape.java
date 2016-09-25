@@ -15,11 +15,10 @@ import android.graphics.drawable.shapes.RectShape;
 
 public class ExtendedButtonShadowShape extends RectShape {
     private Context mContext;
-    private float mRadius = 75f;
+    private float mRadius = 70f;
     private float mExtraTopShadow = -0f;
     private float mExtraLeftShadow = -5f;
     private float mButtonPaddingPortrait;
-    private float mButtonPaddingLandscape;
 
     ExtendedButtonShadowShape(Context ctx) {
         super();
