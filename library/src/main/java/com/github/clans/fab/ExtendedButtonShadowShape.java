@@ -18,19 +18,18 @@ public class ExtendedButtonShadowShape extends RectShape {
     private float mRadius = 75f;
     private float mExtraTopShadow = -0f;
     private float mExtraLeftShadow = -5f;
-    private float mButtonPaddingPortrait;
-    private float mButtonPaddingLandscape;
+    private float mButtonPadding;
 
     ExtendedButtonShadowShape(Context ctx) {
         super();
         mContext = ctx;
-        mButtonPaddingPortrait = ctx.getResources().getDimensionPixelSize(R.dimen.extended_button_shadow_padding);
+        mButtonPadding = ctx.getResources().getDimensionPixelSize(R.dimen.extended_button_shadow_padding);
     }
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
         if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getScreenWidth(mContext) - mButtonPaddingPortrait, Util.dpToPx(mContext, 56f)), mRadius, mRadius, paint);
+            canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getScreenWidth(mContext) - mButtonPadding, Util.dpToPx(mContext, 56f)), mRadius, mRadius, paint);
         } else {
             canvas.drawRoundRect(new RectF(Util.dpToPx(mContext, mExtraLeftShadow), Util.dpToPx(mContext, mExtraTopShadow), Util.getExtendedButtonLandscapeWidth(mContext), Util.dpToPx(mContext, 56f)), mRadius, mRadius, paint);
         }

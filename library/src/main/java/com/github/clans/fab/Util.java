@@ -19,7 +19,7 @@ final class Util {
     }
 
     static int getExtendedButtonLandscapeWidth(Context context) {
-        return context.getResources().getDimensionPixelSize(R.dimen.extended_button_width) - dpToPx(context,5f);
+        return context.getResources().getDimensionPixelSize(R.dimen.extended_button_width_landscape) - dpToPx(context,5f);
     }
 
     static boolean hasJellyBean() {
