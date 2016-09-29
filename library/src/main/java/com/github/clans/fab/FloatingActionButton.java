@@ -229,7 +229,7 @@ public class FloatingActionButton extends ImageButton {
     }
 
     private int getExtendedButtonLandscapeWidth() {
-        return getResources().getDimensionPixelSize(R.dimen.extended_button_width);
+        return getResources().getDimensionPixelSize(R.dimen.extended_button_width_landscape);
     }
 
     protected int calculateMeasuredWidth() {
