@@ -37,6 +37,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.view.View.LAYER_TYPE_SOFTWARE;
+
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -1364,6 +1366,17 @@ public class FloatingActionButton extends ImageButton {
 
             super.draw(canvas);
         }
+    }
+
+    public void setExtended(Boolean isExtended) {
+        mIsExtended = isExtended;
+        if (isExtended){
+            mIcon = new ColorDrawable(Color.TRANSPARENT); // remove icon
+        }
+    }
+
+    public Boolean isExtended() {
+        return mIsExtended;
     }
 
     private class Shadow extends Drawable {

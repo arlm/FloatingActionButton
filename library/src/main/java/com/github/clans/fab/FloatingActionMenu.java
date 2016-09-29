@@ -524,7 +524,12 @@ public class FloatingActionMenu extends ViewGroup {
             if (getChildAt(i) instanceof FloatingActionButton) {
                 final FloatingActionButton fab = (FloatingActionButton) getChildAt(i);
                 if (fab.getTag(R.id.fab_label) != null) continue;
-                addLabel(fab);
+                if (mIsExtended && fab != mMenuButton) {
+                    fab.setExtended(true);
+                }
+                if (!mIsExtended) {
+                    addLabel(fab);
+                }
                 if (fab == mMenuButton) {
                     mMenuButton.setOnClickListener(new OnClickListener() {
                         @Override
@@ -680,11 +685,11 @@ public class FloatingActionMenu extends ViewGroup {
         if (isOpened()) {
             close(animate);
         } else {
-            open(animate);
-            if (mIsExtended) {
-                mIsExtended = false;
-                mMenuButton.playHideExtendedAnimation();
-            }
+            open(animate); //FIXME(pepa)
+//            if (mIsExtended) {
+//                mIsExtended = false;
+//                mMenuButton.playHideExtendedAnimation();
+//            }
         }
     }
 
@@ -707,31 +712,31 @@ public class FloatingActionMenu extends ViewGroup {
             int counter = 0;
             mIsMenuOpening = true;
 
-            if (!mIsExtended) {
-                for (int i = getChildCount() - 1; i >= 0; i--) {
-                    View child = getChildAt(i);
-                    if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
-                        counter++;
+//            if (!mIsExtended) { //FIXME
+            for (int i = getChildCount() - 1; i >= 0; i--) {
+                View child = getChildAt(i);
+                if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
+                    counter++;
 
-                        final FloatingActionButton fab = (FloatingActionButton) child;
-                        mUiHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isOpened()) return;
+                    final FloatingActionButton fab = (FloatingActionButton) child;
+                    mUiHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isOpened()) return;
 
-                                if (fab != mMenuButton) {
-                                    fab.show(animate);
-                                }
-
-                                Label label = (Label) fab.getTag(R.id.fab_label);
-                                if (label != null && label.isHandleVisibilityChanges()) {
-                                    label.show(animate);
-                                }
+                            if (fab != mMenuButton) {
+                                fab.show(animate);
                             }
-                        }, delay);
-                        delay += mAnimationDelayPerItem;
-                    }
+
+                            Label label = (Label) fab.getTag(R.id.fab_label);
+                            if (label != null && label.isHandleVisibilityChanges()) {
+                                label.show(animate);
+                            }
+                        }
+                    }, delay);
+                    delay += mAnimationDelayPerItem;
                 }
+//                }
             }
 
             mUiHandler.postDelayed(new Runnable() {
