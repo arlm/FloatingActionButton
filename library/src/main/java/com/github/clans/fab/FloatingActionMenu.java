@@ -50,7 +50,7 @@ public class FloatingActionMenu extends ViewGroup {
     private String extendedButtonText = null;
     private int extendedButtonTextColor = 0;
     private int extendedButtonTextSize = 0;
-    private int mButtonSpacing = Util.dpToPx(getContext(), 0f);
+    private int mButtonSpacing = Util.dpToPx(getContext(), 20f); // FIXME default size was 0
     private int mMaxButtonWidth;
     private int mLabelsMargin = Util.dpToPx(getContext(), 0f);
     private int mLabelsVerticalOffset = Util.dpToPx(getContext(), 0f);
@@ -410,7 +410,7 @@ public class FloatingActionMenu extends ViewGroup {
         if (getLayoutParams().height == LayoutParams.MATCH_PARENT) {
             height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         }
-        setMeasuredDimension(width, height);
+        setMeasuredDimension(width, height + 40); //FIXME remove extra 40
     }
 
     @Override
@@ -527,9 +527,9 @@ public class FloatingActionMenu extends ViewGroup {
                 if (mIsExtended && fab != mMenuButton) {
                     fab.setExtended(true);
                 }
-                if (!mIsExtended) {
+//                if (mIsExtended) {  // FIXME: 30.9.16
                     addLabel(fab);
-                }
+//                }
                 if (fab == mMenuButton) {
                     mMenuButton.setOnClickListener(new OnClickListener() {
                         @Override
@@ -570,7 +570,7 @@ public class FloatingActionMenu extends ViewGroup {
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
             label.setTextColor(mLabelsTextColor);
 
-            int left = mLabelsPaddingLeft;
+            int left = mLabelsPaddingLeft;  //FIXME remove 80
             int top = mLabelsPaddingTop;
             if (mLabelsShowShadow) {
                 left += fab.getShadowRadius() + Math.abs(fab.getShadowXOffset());

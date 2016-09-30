@@ -257,7 +257,7 @@ public class FloatingActionButton extends ImageButton {
         if (mProgressBarEnabled) {
             height += mProgressWidth * 2;
         }
-        return height;
+        return Util.dpToPx(mContext,63f) + Util.dpToPx(mContext, 10); // FIXME button heigt + random
     }
 
     int calculateShadowWidth() {
