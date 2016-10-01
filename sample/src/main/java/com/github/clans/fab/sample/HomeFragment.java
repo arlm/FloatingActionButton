@@ -47,5 +47,6 @@ public class HomeFragment extends Fragment {
                 android.R.id.text1, locales));
         mFab = (FloatingActionMenu) getActivity().findViewById(R.id.fab);
         mFab.setIconAnimated(false);
+        mFab.setClosedOnTouchOutside(true);
     }
 }

@@ -30,14 +30,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_star"
-            app:fab_size="mini"
-            app:fab_label="Menu item 1" />
+            android:clickable="true"
+            app:fab_size="normal"
+            app:fab_label="Hodor! Hodor hodor, hodor " />
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item2"
+            android:clickable="true"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_star"
-            app:fab_size="mini"
+            app:fab_size="normal"
             app:fab_label="Menu item 1" />
     </com.github.clans.fab.FloatingActionMenu>
 

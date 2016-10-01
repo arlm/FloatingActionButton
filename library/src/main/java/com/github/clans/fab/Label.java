@@ -303,6 +303,11 @@ public class Label extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        if (mFab != null && mFab.isExtended()) {  // Ripple was not handled.
+            return false;
+        }
+
         if (mFab == null || mFab.getOnClickListener() == null || !mFab.isEnabled()) {
             return super.onTouchEvent(event);
         }
