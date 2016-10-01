@@ -61,7 +61,7 @@ public class FloatingActionMenu extends ViewGroup {
     private int mLabelsShowAnimation;
     private int mLabelsHideAnimation;
     private int mLabelsPaddingTop = Util.dpToPx(getContext(), 4f);
-    private int mLabelsPaddingRight = Util.dpToPx(getContext(), 8f);
+    private int mLabelsPaddingRight = Util.dpToPx(getContext(), 0f); // FIXME
     private int mLabelsPaddingBottom = Util.dpToPx(getContext(), 4f);
     private int mLabelsPaddingLeft = Util.dpToPx(getContext(), 8f);
     private ColorStateList mLabelsTextColor;
@@ -410,7 +410,7 @@ public class FloatingActionMenu extends ViewGroup {
         if (getLayoutParams().height == LayoutParams.MATCH_PARENT) {
             height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         }
-        setMeasuredDimension(width, height + 40); //FIXME remove extra 40
+        setMeasuredDimension(width, height); //FIXME remove extra 40
     }
 
     @Override
@@ -491,8 +491,15 @@ public class FloatingActionMenu extends ViewGroup {
                 int labelTop = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
                         - label.getMeasuredHeight()) / 2;
 
-                label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight());
+                int labelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
+                        + label.getMeasuredHeight()) / 2;
 
+                int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
+                if (mIsExtended) {
+                    label.layout(labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2, labelTop, labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2, labelBottom);
+                } else {
+                    label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // TODO: Here we set label position
+                }
                 if (!mIsMenuOpening) {
                     label.setVisibility(INVISIBLE);
                 }
@@ -526,9 +533,11 @@ public class FloatingActionMenu extends ViewGroup {
                 if (fab.getTag(R.id.fab_label) != null) continue;
                 if (mIsExtended && fab != mMenuButton) {
                     fab.setExtended(true);
+                    fab.setBackgroundColor(getResources().getColor(R.color.white));
+                    mLabelsTextColor = getButtonLabelColors();
                 }
 //                if (mIsExtended) {  // FIXME: 30.9.16
-                    addLabel(fab);
+                addLabel(fab);
 //                }
                 if (fab == mMenuButton) {
                     mMenuButton.setOnClickListener(new OnClickListener() {
@@ -565,7 +574,9 @@ public class FloatingActionMenu extends ViewGroup {
                 setLabelEllipsize(label);
             }
             label.setMaxLines(mLabelsMaxLines);
-            label.updateBackground();
+            if (!mIsExtended) { // It adds shadow and fill drawable  - we dont use it for extended button
+                label.updateBackground();
+            }
 
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
             label.setTextColor(mLabelsTextColor);
@@ -614,6 +625,26 @@ public class FloatingActionMenu extends ViewGroup {
                 break;
         }
     }
+
+    public ColorStateList getButtonLabelColors() {
+        int[][] labelTextStates = new int[][]{
+                new int[]{android.R.attr.state_enabled}, // enabled
+                new int[]{-android.R.attr.state_enabled}, // disabled
+                new int[]{-android.R.attr.state_checked}, // unchecked
+                new int[]{android.R.attr.state_pressed}  // pressed
+        };
+
+        int[] labelTextColors = new int[]{
+                mMenuButton.getColorNormal(),
+                mMenuButton.getColorNormal(),
+                mMenuButton.getColorRipple(),
+                mMenuButton.getColorPressed()
+        };
+
+        ColorStateList extendedLabelColorStateList = new ColorStateList(labelTextStates, labelTextColors);
+        return extendedLabelColorStateList;
+    }
+
 
     @Override
     public MarginLayoutParams generateLayoutParams(AttributeSet attrs) {
@@ -770,7 +801,7 @@ public class FloatingActionMenu extends ViewGroup {
             int delay = 0;
             int counter = 0;
             mIsMenuOpening = false;
-            if (!mIsExtended) {
+           // if (!mIsExtended) { // FIXME: 30.09.2016
                 for (int i = 0; i < getChildCount(); i++) {
                     View child = getChildAt(i);
                     if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
@@ -793,7 +824,7 @@ public class FloatingActionMenu extends ViewGroup {
                         delay += mAnimationDelayPerItem;
                     }
                 }
-            }
+          //  }
 
             mUiHandler.postDelayed(new Runnable() {
                 @Override

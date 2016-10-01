@@ -37,8 +37,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import static android.view.View.LAYER_TYPE_SOFTWARE;
-
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -257,7 +255,7 @@ public class FloatingActionButton extends ImageButton {
         if (mProgressBarEnabled) {
             height += mProgressWidth * 2;
         }
-        return Util.dpToPx(mContext,63f) + Util.dpToPx(mContext, 10); // FIXME button heigt + random
+        return Util.dpToPx(mContext, 56f) + calculateShadowHeight(); // FIXME button heigt + random
     }
 
     int calculateShadowWidth() {
@@ -406,6 +404,10 @@ public class FloatingActionButton extends ImageButton {
 
     void updateBackground() {
         LayerDrawable layerDrawable;
+        int iconOffsetVertical = 0;
+        int iconOffsetLeft = 0;
+        int iconOffsetRight = 0;
+
         if (hasShadow()) {
             layerDrawable = new LayerDrawable(new Drawable[]{
                     new Shadow(),
@@ -423,7 +425,19 @@ public class FloatingActionButton extends ImageButton {
         if (getIconDrawable() != null) {
             iconSize = Math.max(getIconDrawable().getIntrinsicWidth(), getIconDrawable().getIntrinsicHeight());
         }
-        int iconOffset = (getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
+        if (!mIsExtended) {
+            iconOffsetVertical = (getCircleSize() - (iconSize > 0 ? iconSize : mIconSize) / 2);
+        } else {
+            int extraLeftOffset = Util.dpToPx(mContext, 70);
+
+            if (getLabelView() != null) {
+                //          extraLeftOffset = getLabelView().getWidth() / 2; // Align icon on the left side of label text
+            }
+            iconOffsetVertical = (calculateMeasuredHeight() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
+            iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;
+            iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset;
+        }
+
         int circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
         int circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
 
@@ -439,14 +453,25 @@ public class FloatingActionButton extends ImageButton {
                 circleInsetHorizontal,
                 circleInsetVertical
         );*/
-        layerDrawable.setLayerInset(
-                hasShadow() ? 2 : 1,
-                circleInsetHorizontal + iconOffset,
-                circleInsetVertical + iconOffset,
-                circleInsetHorizontal + iconOffset,
-                circleInsetVertical + iconOffset
-        );
+        if (mIsExtended) {
+            layerDrawable.setLayerInset( //TODO calculate the correct align
+                    hasShadow() ? 2 : 1,
+                    iconOffsetLeft,
+                    iconOffsetVertical + (circleInsetVertical / 4),
+                    iconOffsetRight,
+                    iconOffsetVertical +
+                            (circleInsetVertical / 4)
+            );
 
+        } else {
+            layerDrawable.setLayerInset(
+                    hasShadow() ? 2 : 1,
+                    circleInsetHorizontal + iconOffsetVertical,
+                    circleInsetVertical + iconOffsetVertical,
+                    circleInsetHorizontal + iconOffsetVertical,
+                    circleInsetVertical + iconOffsetVertical
+            );
+        }
         setBackgroundCompat(layerDrawable);
     }
 
@@ -1259,7 +1284,9 @@ public class FloatingActionButton extends ImageButton {
         int bottom = label.getPaddingBottom();
 
         label.setColors(colorNormal, colorPressed, colorRipple);
-        label.updateBackground();
+        if (!mIsExtended) { // It adds shadow and fill drawable  - we dont use it for extended button
+            label.updateBackground();
+        }
         label.setPadding(left, top, right, bottom);
     }
 
@@ -1269,6 +1296,25 @@ public class FloatingActionButton extends ImageButton {
 
     public void setLabelTextColor(ColorStateList colors) {
         getLabelView().setTextColor(colors);
+    }
+
+    public void setExtended(Boolean isExtended) {
+        mIsExtended = isExtended;
+        if (isExtended) {
+            mColorNormal = mContext.getResources().getColor(R.color.white); //FIXME add other colors
+            mColorPressed = mContext.getResources().getColor(R.color.extended_child_background_pressed);
+            setIconColor(((FloatingActionMenu) getParent()).getMenuButtonColorNormal());
+            //mIcon = new ColorDrawable(Color.TRANSPARENT); // remove icon
+        }
+    }
+
+    public void setIconColor(int color) {
+        PorterDuff.Mode filterMode = PorterDuff.Mode.SRC_ATOP;
+        mIcon.setColorFilter(color, filterMode);
+    }
+
+    public Boolean isExtended() {
+        return mIsExtended;
     }
 
     static class ProgressSavedState extends BaseSavedState {
@@ -1366,17 +1412,6 @@ public class FloatingActionButton extends ImageButton {
 
             super.draw(canvas);
         }
-    }
-
-    public void setExtended(Boolean isExtended) {
-        mIsExtended = isExtended;
-        if (isExtended){
-            mIcon = new ColorDrawable(Color.TRANSPARENT); // remove icon
-        }
-    }
-
-    public Boolean isExtended() {
-        return mIsExtended;
     }
 
     private class Shadow extends Drawable {

@@ -100,11 +100,11 @@ public class Label extends TextView {
         return getMeasuredHeight() + calculateShadowHeight();
     }
 
-    int calculateShadowWidth() {
+    protected int calculateShadowWidth() {
         return mShowShadow ? (mShadowRadius + Math.abs(mShadowXOffset)) : 0;
     }
 
-    int calculateShadowHeight() {
+    protected int calculateShadowHeight() {
         return mShowShadow ? (mShadowRadius + Math.abs(mShadowYOffset)) : 0;
     }
 
