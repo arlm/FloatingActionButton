@@ -387,7 +387,7 @@ public class FloatingActionButton extends ImageButton {
 
         setupProgressBounds();
         setupProgressBarPaints();
-        updateBackground(null);
+        updateBackground();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -402,7 +402,7 @@ public class FloatingActionButton extends ImageButton {
         super.setLayoutParams(params);
     }
 
-    void updateBackground(Label label) {
+    void updateBackground() {
         LayerDrawable layerDrawable;
         int iconOffsetVertical = 0;
         int iconOffsetLeft = 0;
@@ -629,7 +629,7 @@ public class FloatingActionButton extends ImageButton {
                     mIsExtended = false;
                     FloatingActionButton.super.onAnimationEnd();
                     setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-                    updateBackground(null);
+                    updateBackground();
                     ((FloatingActionMenu) getParent()).onExtendedMenuCollapse();
                     getHandler().postDelayed(new Runnable() {
                         @Override
@@ -788,7 +788,7 @@ public class FloatingActionButton extends ImageButton {
     public void setImageDrawable(Drawable drawable) {
         if (mIcon != drawable) {
             mIcon = drawable;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -797,7 +797,7 @@ public class FloatingActionButton extends ImageButton {
         Drawable drawable = getResources().getDrawable(resId);
         if (mIcon != drawable) {
             mIcon = drawable;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -817,7 +817,7 @@ public class FloatingActionButton extends ImageButton {
 
         if (mFabSize != size) {
             mFabSize = size;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -832,7 +832,7 @@ public class FloatingActionButton extends ImageButton {
     public void setColorNormal(int color) {
         if (mColorNormal != color) {
             mColorNormal = color;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -847,7 +847,7 @@ public class FloatingActionButton extends ImageButton {
     public void setColorPressed(int color) {
         if (color != mColorPressed) {
             mColorPressed = color;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -862,7 +862,7 @@ public class FloatingActionButton extends ImageButton {
     public void setColorRipple(int color) {
         if (color != mColorRipple) {
             mColorRipple = color;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -877,14 +877,14 @@ public class FloatingActionButton extends ImageButton {
     public void setColorDisabled(int color) {
         if (color != mColorDisabled) {
             mColorDisabled = color;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
     public void setShowShadow(boolean show) {
         if (mShowShadow != show) {
             mShowShadow = show;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -902,7 +902,7 @@ public class FloatingActionButton extends ImageButton {
         if (mShadowRadius != shadowRadius) {
             mShadowRadius = shadowRadius;
             requestLayout();
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -921,7 +921,7 @@ public class FloatingActionButton extends ImageButton {
     public void setShadowRadius(float shadowRadiusDp) {
         mShadowRadius = Util.dpToPx(getContext(), shadowRadiusDp);
         requestLayout();
-        updateBackground(null);
+        updateBackground();
     }
 
     /**
@@ -934,7 +934,7 @@ public class FloatingActionButton extends ImageButton {
         if (mShadowXOffset != shadowXOffset) {
             mShadowXOffset = shadowXOffset;
             requestLayout();
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -953,7 +953,7 @@ public class FloatingActionButton extends ImageButton {
     public void setShadowXOffset(float shadowXOffsetDp) {
         mShadowXOffset = Util.dpToPx(getContext(), shadowXOffsetDp);
         requestLayout();
-        updateBackground(null);
+        updateBackground();
     }
 
     /**
@@ -966,7 +966,7 @@ public class FloatingActionButton extends ImageButton {
         if (mShadowYOffset != shadowYOffset) {
             mShadowYOffset = shadowYOffset;
             requestLayout();
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -985,14 +985,14 @@ public class FloatingActionButton extends ImageButton {
     public void setShadowYOffset(float shadowYOffsetDp) {
         mShadowYOffset = Util.dpToPx(getContext(), shadowYOffsetDp);
         requestLayout();
-        updateBackground(null);
+        updateBackground();
     }
 
     public void setShadowColorResource(int colorResId) {
         int shadowColor = getResources().getColor(colorResId);
         if (mShadowColor != shadowColor) {
             mShadowColor = shadowColor;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -1003,7 +1003,7 @@ public class FloatingActionButton extends ImageButton {
     public void setShadowColor(int color) {
         if (mShadowColor != color) {
             mShadowColor = color;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -1089,7 +1089,7 @@ public class FloatingActionButton extends ImageButton {
                 mUsingElevation = true;
                 mShowShadow = false;
             }
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -1110,7 +1110,7 @@ public class FloatingActionButton extends ImageButton {
             super.setElevation(elevation);
             mUsingElevationCompat = true;
             mShowShadow = false;
-            updateBackground(null);
+            updateBackground();
 
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
             if (layoutParams != null) {
@@ -1118,7 +1118,7 @@ public class FloatingActionButton extends ImageButton {
             }
         } else {
             mShowShadow = true;
-            updateBackground(null);
+            updateBackground();
         }
     }
 
@@ -1140,7 +1140,7 @@ public class FloatingActionButton extends ImageButton {
         mLastTimeAnimated = SystemClock.uptimeMillis();
         setupProgressBounds();
 //        saveButtonOriginalPosition();
-        updateBackground(null);
+        updateBackground();
     }
 
     public synchronized int getMax() {
@@ -1166,7 +1166,7 @@ public class FloatingActionButton extends ImageButton {
         mShouldUpdateButtonPosition = true;
         setupProgressBounds();
         saveButtonOriginalPosition();
-        updateBackground(null);
+        updateBackground();
 
         if (progress < 0) {
             progress = 0;
@@ -1195,7 +1195,7 @@ public class FloatingActionButton extends ImageButton {
     public synchronized void hideProgress() {
         mProgressBarEnabled = false;
         mShouldUpdateButtonPosition = true;
-        updateBackground(null);
+        updateBackground();
     }
 
     public synchronized void setShowProgressBackground(boolean show) {

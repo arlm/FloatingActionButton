@@ -283,7 +283,7 @@ public class FloatingActionMenu extends ViewGroup {
         mMenuButton.setColors(mMenuColorNormal, mMenuColorPressed, mMenuColorRipple);
         mMenuButton.mShadowColor = mMenuShadowColor;
         mMenuButton.mFabSize = mMenuFabSize;
-        mMenuButton.updateBackground(null);
+        mMenuButton.updateBackground();
         mMenuButton.setLabelText(mMenuLabelText);
         mImageToggle = new ImageView(getContext());
         mImageToggle.setImageDrawable(mIcon);
@@ -303,7 +303,7 @@ public class FloatingActionMenu extends ViewGroup {
         }
         mMenuButton.setColors(mMenuColorNormal, mMenuColorPressed, mMenuColorRipple);
         mMenuButton.mShadowColor = mMenuShadowColor;
-        mMenuButton.updateBackground(null);
+        mMenuButton.updateBackground();
         mMenuButton.setLabelText(mMenuLabelText);
 
         mMenuText = new TextView(getContext());
@@ -511,7 +511,7 @@ public class FloatingActionMenu extends ViewGroup {
             }
             int extendedButtonSpacingExtra = getResources().getDimensionPixelSize(R.dimen.extended_button_spacing_extra);
             int buttonSpacing = mButtonSpacing + (mIsExtended ? extendedButtonSpacingExtra : 0);
-            fab.updateBackground((Label)label);
+            fab.updateBackground();
             nextY = openUp
                     ? childY - buttonSpacing
                     : childY + child.getMeasuredHeight() + buttonSpacing;
@@ -624,7 +624,7 @@ public class FloatingActionMenu extends ViewGroup {
             label.setTypeface(mCustomTypefaceFromFont);
         }
         label.setText(text);
-        fab.updateBackground(label);
+        fab.updateBackground();
         label.setOnClickListener(fab.getOnClickListener());
 
         addView(label);
