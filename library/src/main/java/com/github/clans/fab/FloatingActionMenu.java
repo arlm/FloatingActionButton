@@ -400,12 +400,8 @@ public class FloatingActionMenu extends ViewGroup {
         }
 
         width = Math.max(mMaxButtonWidth, maxLabelWidth + mLabelsMargin) + getPaddingLeft() + getPaddingRight();
-
-
-
         height += mButtonSpacing * (mButtonsCount - 1) + getPaddingTop() + getPaddingBottom();
         height = adjustForOvershoot(height);
-
         if (getLayoutParams().width == LayoutParams.MATCH_PARENT) {
             width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         }
@@ -435,9 +431,7 @@ public class FloatingActionMenu extends ViewGroup {
                 menuButtonTop + mMenuButton.getMeasuredHeight());
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
-
         if (mIsExtended) { // Sets position for text ("add new expense") and icon - in this case icon must be more left
-
             mImageToggle.layout(imageLeft - Util.dpToPx(getContext(), 70f), imageTop - Util.dpToPx(getContext(), 0f),
                     imageLeft + mImageToggle.getMeasuredWidth() - Util.dpToPx(getContext(), 70), imageTop + mImageToggle.getMeasuredHeight() - Util.dpToPx(getContext(), 0f));
             alignMenuText();
@@ -501,7 +495,7 @@ public class FloatingActionMenu extends ViewGroup {
                 if (mIsExtended) {
                     int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
                     int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
-                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight , labelBottom);
+                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
                 } else {
                     label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // Here we set label position
                 }
@@ -556,19 +550,19 @@ public class FloatingActionMenu extends ViewGroup {
         }
     }
 
-    private void alignMenuText(){
+    private void alignMenuText() {
         int textIconGap = Math.round(getResources().getDimension(R.dimen.extended_button_gap_between_icon_text));
         int textLeft = (Math.round(mMenuButton.getX()) + mMenuButton.getMeasuredWidth() / 2 - mMenuText.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 3;
         int textTop = Math.round(mMenuButton.getY()) + mMenuButton.getMeasuredHeight() / 2 - mMenuText.getMeasuredHeight() / 2;
-        mMenuText.layout(textLeft , textTop, textLeft + mMenuText.getMeasuredWidth(),
+        mMenuText.layout(textLeft, textTop, textLeft + mMenuText.getMeasuredWidth(),
                 textTop + mMenuText.getMeasuredHeight());
     }
 
-    private void alignMenuIcon(){
+    private void alignMenuIcon() {
 
         int iconLeft = Math.round(mMenuText.getX()) - (mImageToggle.getMeasuredWidth() / 2 + getResources().getDimensionPixelOffset(R.dimen.extended_button_gap_between_icon_text));
         int iconTop = Math.round(mMenuButton.getY()) + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
-        mImageToggle.layout(iconLeft , iconTop, iconLeft + mImageToggle.getMeasuredWidth(),
+        mImageToggle.layout(iconLeft, iconTop, iconLeft + mImageToggle.getMeasuredWidth(),
                 iconTop + mImageToggle.getMeasuredHeight());
     }
 
@@ -829,7 +823,7 @@ public class FloatingActionMenu extends ViewGroup {
                                 fab.hide(animate);
                             }
                             Label label = (Label) fab.getTag(R.id.fab_label);
-                            if ( label != null && label.isHandleVisibilityChanges()) {
+                            if (label != null && label.isHandleVisibilityChanges()) {
                                 label.hide(!mIsExtended && animate);
                             }
                         }
