@@ -776,8 +776,8 @@ public class FloatingActionMenu extends ViewGroup {
                             }
 
                             Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (mIsExtended && label != null && label.isHandleVisibilityChanges()) {
-                                label.show(animate);
+                            if (label != null && label.isHandleVisibilityChanges()) {
+                                label.show(!mIsExtended && animate);
                             }
                         }
                     }, delay);
@@ -829,8 +829,8 @@ public class FloatingActionMenu extends ViewGroup {
                                 fab.hide(animate);
                             }
                             Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (mIsExtended && label != null && label.isHandleVisibilityChanges()) {
-                                label.hide(animate);
+                            if ( label != null && label.isHandleVisibilityChanges()) {
+                                label.hide(!mIsExtended && animate);
                             }
                         }
                     }, delay);
