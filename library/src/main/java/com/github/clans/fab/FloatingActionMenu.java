@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
@@ -49,8 +48,9 @@ public class FloatingActionMenu extends ViewGroup {
 
     private boolean mIsExtended = false;
     private String extendedButtonText = null;
-    private int extendedButtonTextColor = 0;
-    private int extendedButtonTextSize = 0;
+    private int mExtendedButtonTextColor = 0;
+    private int mExtendedButtonBackgroundColor;
+    private int mExtendedButtonTextSize = 0;
     private int mButtonSpacing = Util.dpToPx(getContext(), 0f);
     private int mMaxButtonWidth;
     private int mLabelsMargin = Util.dpToPx(getContext(), 0f);
@@ -65,13 +65,11 @@ public class FloatingActionMenu extends ViewGroup {
     private int mLabelsPaddingRight = Util.dpToPx(getContext(), 0f);
     private int mLabelsPaddingBottom = Util.dpToPx(getContext(), 4f);
     private int mLabelsPaddingLeft = Util.dpToPx(getContext(), 8f);
-    private ColorStateList mLabelsTextColor;
+    private ColorStateList mLabelsNormalTextColor;
+    private ColorStateList mLabelsExtendedTextColor;
     private float mLabelsTextSize;
     private int mLabelsCornerRadius = Util.dpToPx(getContext(), 3f);
     private boolean mLabelsShowShadow;
-    private int mLabelsColorNormal;
-    private int mLabelsColorPressed;
-    private int mLabelsColorRipple;
     private boolean mMenuShowShadow;
     private int mMenuShadowColor;
     private float mMenuShadowRadius = 4f;
@@ -130,8 +128,9 @@ public class FloatingActionMenu extends ViewGroup {
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.FloatingActionMenu, 0, 0);
         mIsExtended = attr.getBoolean(R.styleable.FloatingActionMenu_menu_isExtended, false);
         extendedButtonText = attr.getString(R.styleable.FloatingActionMenu_menu_extendedButtonText);
-        extendedButtonTextColor = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextColor, Color.WHITE);
-        extendedButtonTextSize = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextSize, 16);
+        mExtendedButtonTextColor = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextColor, Color.WHITE);
+        mExtendedButtonBackgroundColor = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextColor, Color.WHITE);
+        mExtendedButtonTextSize = attr.getInt(R.styleable.FloatingActionMenu_menu_extendedButtonTextSize, 16);
         mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, mButtonSpacing);
         mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, mLabelsMargin);
         mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, LABELS_POSITION_LEFT);
@@ -143,17 +142,17 @@ public class FloatingActionMenu extends ViewGroup {
         mLabelsPaddingRight = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingRight, mLabelsPaddingRight);
         mLabelsPaddingBottom = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingBottom, mLabelsPaddingBottom);
         mLabelsPaddingLeft = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingLeft, mLabelsPaddingLeft);
-        mLabelsTextColor = attr.getColorStateList(R.styleable.FloatingActionMenu_menu_labels_textColor);
-        // set default value if null same as for textview
-        if (mLabelsTextColor == null) {
-            mLabelsTextColor = ColorStateList.valueOf(Color.WHITE);
+        mLabelsNormalTextColor = attr.getColorStateList(R.styleable.FloatingActionMenu_menu_labels_textNormalColorList);
+        if (mLabelsNormalTextColor == null) {
+            mLabelsNormalTextColor = ColorStateList.valueOf(Color.WHITE);
+        }
+        mLabelsExtendedTextColor = attr.getColorStateList(R.styleable.FloatingActionMenu_menu_labels_textExtendedColorList);
+        if (mLabelsExtendedTextColor == null) {
+            mLabelsExtendedTextColor = ColorStateList.valueOf(Color.WHITE);
         }
         mLabelsTextSize = attr.getDimension(R.styleable.FloatingActionMenu_menu_labels_textSize, getResources().getDimension(R.dimen.labels_text_size));
         mLabelsCornerRadius = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_cornerRadius, mLabelsCornerRadius);
         mLabelsShowShadow = attr.getBoolean(R.styleable.FloatingActionMenu_menu_labels_showShadow, true);
-        mLabelsColorNormal = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorNormal, 0xFF333333);
-        mLabelsColorPressed = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorPressed, 0xFF444444);
-        mLabelsColorRipple = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorRipple, 0x66FFFFFF);
         mMenuShowShadow = attr.getBoolean(R.styleable.FloatingActionMenu_menu_showShadow, true);
         mMenuShadowColor = attr.getColor(R.styleable.FloatingActionMenu_menu_shadowColor, 0x66000000);
         mMenuShadowRadius = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowRadius, mMenuShadowRadius);
@@ -244,15 +243,17 @@ public class FloatingActionMenu extends ViewGroup {
         });
     }
 
-    public void onExtendedMenuCollapse() {
-        close(false);
-        mMenuText.setVisibility(View.GONE);
-        //Resize viewgroup
+    public void onMenuSizeChange() {
+        setVisibility(View.INVISIBLE);
         LayoutParams params = getLayoutParams();
-        params.height = LayoutParams.WRAP_CONTENT;
-        params.width = LayoutParams.WRAP_CONTENT;
+        params.height = LayoutParams.MATCH_PARENT;
+        params.width = LayoutParams.MATCH_PARENT;
         setLayoutParams(params);
-        this.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fab_extended_replace));
+        if (mIsExtended) {
+            mMenuText.setVisibility(View.VISIBLE);
+        } else {
+            mMenuText.setVisibility(View.GONE);
+        }
     }
 
     public void setIconPosition(float yPos, float xPos) {
@@ -309,8 +310,8 @@ public class FloatingActionMenu extends ViewGroup {
 
         mMenuText = new TextView(getContext());
         mMenuText.setText(extendedButtonText);
-        mMenuText.setTextSize(extendedButtonTextSize);
-        mMenuText.setTextColor(extendedButtonTextColor);
+        mMenuText.setTextSize(mExtendedButtonTextSize);
+        mMenuText.setTextColor(mExtendedButtonTextColor);
 
         mImageToggle = new ImageView(getContext());
         mImageToggle.setImageDrawable(mIcon);
@@ -320,6 +321,15 @@ public class FloatingActionMenu extends ViewGroup {
         addView(mImageToggle);
 
         createDefaultIconAnimation();
+    }
+
+    private void addExtendedActionMenuText() {
+        mMenuText = new TextView(getContext());
+        mMenuText.setText(extendedButtonText);
+        mMenuText.setTextSize(mExtendedButtonTextSize);
+        mMenuText.setTextColor(mExtendedButtonTextColor);
+        mMenuText.setVisibility(View.GONE);
+        addView(mMenuText);
     }
 
     private void createDefaultIconAnimation() {
@@ -445,7 +455,7 @@ public class FloatingActionMenu extends ViewGroup {
         for (int i = mButtonsCount - 1; i >= 0; i--) {
             View child = getChildAt(i);
 
-            if (child == mMenuText || child == mImageToggle) continue;
+            if (child == mMenuText || child == mImageToggle || child instanceof TextView) continue;
 
             FloatingActionButton fab = (FloatingActionButton) child;
 
@@ -456,6 +466,15 @@ public class FloatingActionMenu extends ViewGroup {
             int childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
 
             if (fab != mMenuButton) {
+                if (mIsExtended) {
+                    fab.setExtended(true);
+                    fab.setLabelTextColor(getMenuButtonColorNormal());
+                    fab.measure(fab.calculateMeasuredWidth(), fab.calculateMeasuredHeight());
+                } else {
+                    fab.setExtended(false);
+                    fab.setLabelTextColor(mLabelsNormalTextColor);
+                    fab.measure(fab.calculateMeasuredWidth(), fab.calculateMeasuredHeight());
+                }
                 fab.layout(childX, childY, childX + fab.getMeasuredWidth(),
                         childY + fab.getMeasuredHeight());
 
@@ -532,8 +551,7 @@ public class FloatingActionMenu extends ViewGroup {
                 if (fab.getTag(R.id.fab_label) != null) continue;
                 if (mIsExtended && fab != mMenuButton) {
                     fab.setExtended(true);
-                    fab.setBackgroundColor(getResources().getColor(R.color.white));
-                    mLabelsTextColor = getButtonLabelColors();
+                    fab.setBackgroundColor(mExtendedButtonBackgroundColor);
                 }
                 addLabel(fab);
                 if (fab == mMenuButton) {
@@ -579,19 +597,15 @@ public class FloatingActionMenu extends ViewGroup {
             label.setShowShadow(false);
             label.setUsingStyle(true);
         } else {
-            label.setColors(mLabelsColorNormal, mLabelsColorPressed, mLabelsColorRipple);
             label.setShowShadow(mLabelsShowShadow);
             label.setCornerRadius(mLabelsCornerRadius);
             if (mLabelsEllipsize > 0) {
                 setLabelEllipsize(label);
             }
             label.setMaxLines(mLabelsMaxLines);
-            if (!mIsExtended) { // It adds shadow and fill drawable  - we dont use it for extended button
-                label.updateBackground();
-            }
-
+            label.updateBackground();
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
-            label.setTextColor(mLabelsTextColor);
+            label.setTextColor(mLabelsNormalTextColor);
 
             int left = mLabelsPaddingLeft;
             int top = mLabelsPaddingTop;
@@ -638,26 +652,6 @@ public class FloatingActionMenu extends ViewGroup {
                 break;
         }
     }
-
-    public ColorStateList getButtonLabelColors() {
-        int[][] labelTextStates = new int[][]{
-                new int[]{android.R.attr.state_enabled}, // enabled
-                new int[]{-android.R.attr.state_enabled}, // disabled
-                new int[]{-android.R.attr.state_checked}, // unchecked
-                new int[]{android.R.attr.state_pressed}  // pressed
-        };
-
-        int[] labelTextColors = new int[]{
-                mMenuButton.getColorNormal(),
-                mMenuButton.getColorNormal(),
-                mMenuButton.getColorRipple(),
-                mMenuButton.getColorPressed()
-        };
-
-        ColorStateList extendedLabelColorStateList = new ColorStateList(labelTextStates, labelTextColors);
-        return extendedLabelColorStateList;
-    }
-
 
     @Override
     public MarginLayoutParams generateLayoutParams(AttributeSet attrs) {
@@ -875,6 +869,10 @@ public class FloatingActionMenu extends ViewGroup {
         mCloseAnimatorSet.setDuration(animated ? ANIMATION_DURATION : 0);
     }
 
+    public Boolean isExtended() {
+        return mIsExtended;
+    }
+
     public int getAnimationDelayPerItem() {
         return mAnimationDelayPerItem;
     }
@@ -1080,22 +1078,25 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setNormalMenuSize() {
         mIsExtended = false;
+        mMenuButton.playHideExtendedAnimation(false);
     }
 
     public void setExtendedMenuSize() {
         mIsExtended = true;
+        addExtendedActionMenuText();
+        mMenuButton.playHideExtendedAnimation(true);
     }
 
     public void setExtendedButtonText(String menuText) {
         extendedButtonText = menuText;
     }
 
-    public void setExtendedButtonTextColor(int menuTextColor) {
-        extendedButtonTextColor = menuTextColor;
+    public void setmExtendedButtonTextColor(int menuTextColor) {
+        mExtendedButtonTextColor = menuTextColor;
     }
 
-    public void setExtendedButtonTextSize(int menuTextSize) {
-        extendedButtonTextSize = menuTextSize;
+    public void setmExtendedButtonTextSize(int menuTextSize) {
+        mExtendedButtonTextSize = menuTextSize;
     }
 
     public void addMenuButton(FloatingActionButton fab, int index) {

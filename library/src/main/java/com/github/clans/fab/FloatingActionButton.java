@@ -55,6 +55,10 @@ public class FloatingActionButton extends ImageButton {
     private int mColorPressed;
     private int mColorDisabled;
     private int mColorRipple;
+    private int mColorExtendedNormal;
+    private int mColorExtendedPressed;
+    private int mColorExtendedDisabled;
+    private int mColorExtendedRipple;
     private Drawable mIcon;
     private int mIconSize = Util.dpToPx(getContext(), 24f);
     private Animation mShowAnimation;
@@ -62,6 +66,9 @@ public class FloatingActionButton extends ImageButton {
     private Animation mReplaceExtendedAnimation;
     private Animation mHideExtendedAnimation;
     private String mLabelText;
+    private int mLabelColorNormal;
+    private int mLabelColorRipple;
+    private int mLabelColorPressed;
     private OnClickListener mClickListener;
     private Drawable mBackgroundDrawable;
     GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -154,6 +161,10 @@ public class FloatingActionButton extends ImageButton {
         mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal, 0xFFDA4336);
         mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed, 0xFFE75043);
         mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled, 0xFFAAAAAA);
+        mColorExtendedDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedRipple, Color.parseColor("#a2000000"));
+        mColorExtendedNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedNormal, Color.parseColor("#ffffff"));
+        mColorExtendedPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedPressed, Color.parseColor("#50e0e0e0"));
+        mColorExtendedRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedDisabled, Color.parseColor("#50eeeeee"));
         mColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorRipple, 0x99FFFFFF);
         mShowShadow = attr.getBoolean(R.styleable.FloatingActionButton_fab_showShadow, true);
         mShadowColor = attr.getColor(R.styleable.FloatingActionButton_fab_shadowColor, 0x66000000);
@@ -162,6 +173,9 @@ public class FloatingActionButton extends ImageButton {
         mShadowYOffset = attr.getDimensionPixelSize(R.styleable.FloatingActionButton_fab_shadowYOffset, mShadowYOffset);
         mFabSize = attr.getInt(R.styleable.FloatingActionButton_fab_size, SIZE_NORMAL);
         mLabelText = attr.getString(R.styleable.FloatingActionButton_fab_label);
+        mLabelColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorNormal, Color.BLACK);
+        mLabelColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorPressed, Color.BLACK);
+        mLabelColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorRipple, Color.BLACK);
         mShouldProgressIndeterminate = attr.getBoolean(R.styleable.FloatingActionButton_fab_progress_indeterminate, false);
         mProgressColor = attr.getColor(R.styleable.FloatingActionButton_fab_progress_color, 0xFF009688);
         mProgressBackgroundColor = attr.getColor(R.styleable.FloatingActionButton_fab_progress_backgroundColor, 0x4D000000);
@@ -616,7 +630,7 @@ public class FloatingActionButton extends ImageButton {
         startAnimation(mReplaceExtendedAnimation);
     }
 
-    void playHideExtendedAnimation() {
+    void playHideExtendedAnimation(final Boolean shouldBeExtended) {
         mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -625,19 +639,18 @@ public class FloatingActionButton extends ImageButton {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (mIsExtended) {
-                    mIsExtended = false;
-                    FloatingActionButton.super.onAnimationEnd();
-                    setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-                    updateBackground();
-                    ((FloatingActionMenu) getParent()).onExtendedMenuCollapse();
-                    getHandler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((FloatingActionMenu) getParent()).setIconPosition((getY() + (getHeight() / 2)), (getX() + (getWidth() / 2))); // There must be some delay to calculate position on final x,y.
-                        }
-                    }, 300);
-                }
+                mIsExtended = shouldBeExtended;
+                FloatingActionButton.super.onAnimationEnd();
+                setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
+                updateBackground();
+                ((FloatingActionMenu) getParent()).onMenuSizeChange();
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE);
+                        ((FloatingActionMenu) getParent()).open(false); // There must be some delay to calculate position on final x,y.
+                    }
+                }, 10);
             }
 
             @Override
@@ -1277,9 +1290,7 @@ public class FloatingActionButton extends ImageButton {
         int bottom = label.getPaddingBottom();
 
         label.setColors(colorNormal, colorPressed, colorRipple);
-        if (!mIsExtended) { // It adds shadow and fill drawable  - we dont use it for extended button
-            label.updateBackground();
-        }
+        label.updateBackground();
         label.setPadding(left, top, right, bottom);
     }
 
@@ -1293,13 +1304,21 @@ public class FloatingActionButton extends ImageButton {
 
     public void setExtended(Boolean isExtended) {
         mIsExtended = isExtended;
+        mColorNormal = mColorExtendedNormal;
+        mColorPressed = mColorExtendedPressed;
+        mColorRipple = mColorExtendedRipple;
+        mColorDisabled = mColorExtendedDisabled;
+        setColorRipple(mColorRipple);
+        setIconColor(((FloatingActionMenu) getParent()).getMenuButtonColorNormal());
         if (isExtended) {
-            mColorNormal = mContext.getResources().getColor(R.color.white);
-            mColorPressed = mContext.getResources().getColor(R.color.white_pressed);
-            mColorRipple = mContext.getResources().getColor(R.color.white_ripple);
-            setColorRipple(mColorRipple);
-            mColorDisabled = mContext.getResources().getColor(R.color.white_disabled);
-            setIconColor(((FloatingActionMenu) getParent()).getMenuButtonColorNormal());
+            if (getLabelView() != null) {
+                getLabelView().removeLabelBackground();
+            }
+
+        } else {
+            if (getLabelView() != null) {
+                setLabelColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
+            }
         }
     }
 
