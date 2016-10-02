@@ -45,7 +45,6 @@ public class FloatingActionMenu extends ViewGroup {
     private AnimatorSet mOpenAnimatorSet = new AnimatorSet();
     private AnimatorSet mCloseAnimatorSet = new AnimatorSet();
     private AnimatorSet mIconToggleSet;
-
     private boolean mIsExtended = false;
     private String extendedButtonText = null;
     private int mExtendedButtonTextColor = 0;
@@ -101,11 +100,9 @@ public class FloatingActionMenu extends ViewGroup {
     private int mOpenDirection;
     private OnMenuToggleListener mToggleListener;
     private FloatingActionButton mMenuButton;
-
     private ValueAnimator mShowBackgroundAnimator;
     private ValueAnimator mHideBackgroundAnimator;
     private int mBackgroundColor;
-
     private int mLabelsPosition;
     private Context mLabelsContext;
     private String mMenuLabelText;
@@ -210,7 +207,6 @@ public class FloatingActionMenu extends ViewGroup {
         int showResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_show_animation, R.anim.fab_scale_up);
         setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), showResId));
         mImageToggleShowAnimation = AnimationUtils.loadAnimation(getContext(), showResId);
-
         int hideResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_hide_animation, R.anim.fab_scale_down);
         setMenuButtonHideAnimation(AnimationUtils.loadAnimation(getContext(), hideResId));
         mImageToggleHideAnimation = AnimationUtils.loadAnimation(getContext(), hideResId);
@@ -244,15 +240,13 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void onMenuSizeChange() {
-        setVisibility(View.INVISIBLE);
-        LayoutParams params = getLayoutParams();
-        params.height = LayoutParams.MATCH_PARENT;
-        params.width = LayoutParams.MATCH_PARENT;
+        close(false);
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         setLayoutParams(params);
-        if (mIsExtended) {
+        if (mMenuText != null) {
             mMenuText.setVisibility(View.VISIBLE);
-        } else {
-            mMenuText.setVisibility(View.GONE);
         }
     }
 
@@ -706,7 +700,6 @@ public class FloatingActionMenu extends ViewGroup {
                     close(mIsAnimated);
                     handled = true;
             }
-
             return handled;
         }
 

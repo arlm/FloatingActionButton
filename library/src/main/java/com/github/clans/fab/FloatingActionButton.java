@@ -634,21 +634,19 @@ public class FloatingActionButton extends ImageButton {
         mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                //Nothing
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 mIsExtended = shouldBeExtended;
                 FloatingActionButton.super.onAnimationEnd();
-                setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-                updateBackground();
                 ((FloatingActionMenu) getParent()).onMenuSizeChange();
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE);
-                        ((FloatingActionMenu) getParent()).open(false); // There must be some delay to calculate position on final x,y.
+                        setMeasuredDimension(calculateMeasuredWidth(),calculateMeasuredHeight());
+                        measure(calculateMeasuredWidth(),calculateMeasuredHeight());
+                        updateBackground();
                     }
                 }, 10);
             }
@@ -1152,7 +1150,6 @@ public class FloatingActionButton extends ImageButton {
         mProgressIndeterminate = indeterminate;
         mLastTimeAnimated = SystemClock.uptimeMillis();
         setupProgressBounds();
-//        saveButtonOriginalPosition();
         updateBackground();
     }
 

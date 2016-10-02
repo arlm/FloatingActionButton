@@ -65,19 +65,5 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        mFab.setOnMenuButtonLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                if (mFab.isExtended()) {
-                    mFab.setNormalMenuSize();
-                } else {
-                    mFab.setExtendedMenuSize();
-
-                }
-                return true;
-            }
-        });
-
     }
 }
