@@ -426,7 +426,7 @@ public class FloatingActionButton extends ImageButton {
             iconSize = Math.max(getIconDrawable().getIntrinsicWidth(), getIconDrawable().getIntrinsicHeight());
         }
         if (!mIsExtended) {
-            iconOffsetVertical = (getCircleSize() - (iconSize > 0 ? iconSize : mIconSize) / 2);
+            iconOffsetVertical = ((getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2);
         } else {
             int extraLeftOffset = 0;
 
@@ -1300,7 +1300,6 @@ public class FloatingActionButton extends ImageButton {
             setColorRipple(mColorRipple);
             mColorDisabled = mContext.getResources().getColor(R.color.white_disabled);
             setIconColor(((FloatingActionMenu) getParent()).getMenuButtonColorNormal());
-            //mIcon = new ColorDrawable(Color.TRANSPARENT); // remove icon
         }
     }
 

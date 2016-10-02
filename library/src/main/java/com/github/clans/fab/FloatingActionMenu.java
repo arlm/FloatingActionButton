@@ -318,7 +318,6 @@ public class FloatingActionMenu extends ViewGroup {
         addView(mMenuButton, super.generateDefaultLayoutParams());
         addView(mImageToggle);
 
-
         createDefaultIconAnimation();
     }
 
@@ -432,8 +431,6 @@ public class FloatingActionMenu extends ViewGroup {
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
         if (mIsExtended) { // Sets position for text ("add new expense") and icon - in this case icon must be more left
-            mImageToggle.layout(imageLeft - Util.dpToPx(getContext(), 70f), imageTop - Util.dpToPx(getContext(), 0f),
-                    imageLeft + mImageToggle.getMeasuredWidth() - Util.dpToPx(getContext(), 70), imageTop + mImageToggle.getMeasuredHeight() - Util.dpToPx(getContext(), 0f));
             alignMenuText();
             alignMenuIcon();
         } else {
@@ -620,7 +617,6 @@ public class FloatingActionMenu extends ViewGroup {
         label.setText(text);
         fab.updateBackground();
         label.setOnClickListener(fab.getOnClickListener());
-
         addView(label);
         fab.setTag(R.id.fab_label, label);
     }
