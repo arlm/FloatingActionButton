@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -245,7 +246,7 @@ public class FloatingActionMenu extends ViewGroup {
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         setLayoutParams(params);
-        if (mMenuText != null) {
+        if (mMenuText != null && !mIsExtended) {
             mMenuText.setVisibility(View.VISIBLE);
         }
     }
@@ -931,6 +932,22 @@ public class FloatingActionMenu extends ViewGroup {
         return mMenuButton.isHidden();
     }
 
+    public void setCorrectPivot() {
+        if (!mIsExtended) {
+            setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
+            setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+            mMenuButton.setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
+            mMenuButton.setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+        } else {
+            int pivotY = Math.round(mMenuButton.getY() + mMenuButton.calculateMeasuredHeight() / 2);
+            int pivotX = Math.round(mMenuButton.getX() + mMenuButton.calculateMeasuredWidth() / 2);
+            setPivotX(pivotX);
+            setPivotY(pivotY);
+            mMenuButton.setPivotX(pivotX);
+            mMenuButton.setPivotY(pivotY);
+        }
+    }
+
     /**
      * Makes the whole {@link #FloatingActionMenu} to appear and sets its visibility to {@link #VISIBLE}
      *
@@ -938,10 +955,7 @@ public class FloatingActionMenu extends ViewGroup {
      */
     public void showMenu(boolean animate) {
         if (isMenuHidden()) {
-            setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
-            setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
-            mMenuButton.setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
-            mMenuButton.setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+            setCorrectPivot();
             if (animate) {
                 startAnimation(mMenuButtonShowAnimation);
             }
@@ -957,10 +971,7 @@ public class FloatingActionMenu extends ViewGroup {
     public void hideMenu(final boolean animate) {
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
-            setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
-            setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
-            mMenuButton.setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
-            mMenuButton.setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+            setCorrectPivot();
             if (isOpened()) {
                 close(animate);
                 mUiHandler.postDelayed(new Runnable() {
@@ -1094,7 +1105,6 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setNormalMenuSize() {
         mIsExtended = false;
-        //removeView(mMenuText);
         mMenuButton.changeMenuSize(false); // animate = false
     }
 
