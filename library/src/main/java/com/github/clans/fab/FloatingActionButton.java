@@ -37,9 +37,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import static android.R.attr.animation;
-import static android.R.attr.label;
-
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -651,7 +648,7 @@ public class FloatingActionButton extends ImageButton {
                         setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
                         measure(calculateMeasuredWidth(), calculateMeasuredHeight());
                         updateBackground();
-                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE);
+                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE); // Menu will be visible when it has correct state
                     }
                 }, 10);
             }
