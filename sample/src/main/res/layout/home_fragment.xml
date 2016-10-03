@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-  >
+    android:layout_height="match_parent">
 
     <ListView
         android:id="@+id/list"
@@ -12,14 +11,13 @@
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:paddingBottom="12dp"
-        android:paddingRight="16dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom|right"
+        android:paddingBottom="20dp"
+        android:paddingRight="24dp"
         android:src="@drawable/ic_drawing"
+        app:menu_backgroundColor="@color/black_a160"
         app:menu_extendedButtonText="Add new expense"
         app:menu_isExtended="true">
 
@@ -27,16 +25,19 @@
             android:id="@+id/menu_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:src="@drawable/ic_star"
-            app:fab_size="mini"
-            app:fab_label="Menu item 1" />
+            app:fab_label="Lorem ipsum dolor sit amet"
+            app:fab_size="normal" />
+
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:src="@drawable/ic_star"
-            app:fab_size="mini"
-            app:fab_label="Menu item 1" />
+            app:fab_label="Menu item 1"
+            app:fab_size="normal" />
     </com.github.clans.fab.FloatingActionMenu>
 
 </FrameLayout>

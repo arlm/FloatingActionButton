@@ -55,6 +55,10 @@ public class FloatingActionButton extends ImageButton {
     private int mColorPressed;
     private int mColorDisabled;
     private int mColorRipple;
+    private int mColorExtendedNormal;
+    private int mColorExtendedPressed;
+    private int mColorExtendedDisabled;
+    private int mColorExtendedRipple;
     private Drawable mIcon;
     private int mIconSize = Util.dpToPx(getContext(), 24f);
     private Animation mShowAnimation;
@@ -62,6 +66,9 @@ public class FloatingActionButton extends ImageButton {
     private Animation mReplaceExtendedAnimation;
     private Animation mHideExtendedAnimation;
     private String mLabelText;
+    private int mLabelColorNormal;
+    private int mLabelColorRipple;
+    private int mLabelColorPressed;
     private OnClickListener mClickListener;
     private Drawable mBackgroundDrawable;
     GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -154,6 +161,10 @@ public class FloatingActionButton extends ImageButton {
         mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal, 0xFFDA4336);
         mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed, 0xFFE75043);
         mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled, 0xFFAAAAAA);
+        mColorExtendedDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedRipple, Color.parseColor("#a2000000"));
+        mColorExtendedNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedNormal, Color.parseColor("#ffffff"));
+        mColorExtendedPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedPressed, Color.parseColor("#50e0e0e0"));
+        mColorExtendedRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorExtendedDisabled, Color.parseColor("#50eeeeee"));
         mColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorRipple, 0x99FFFFFF);
         mShowShadow = attr.getBoolean(R.styleable.FloatingActionButton_fab_showShadow, true);
         mShadowColor = attr.getColor(R.styleable.FloatingActionButton_fab_shadowColor, 0x66000000);
@@ -162,6 +173,9 @@ public class FloatingActionButton extends ImageButton {
         mShadowYOffset = attr.getDimensionPixelSize(R.styleable.FloatingActionButton_fab_shadowYOffset, mShadowYOffset);
         mFabSize = attr.getInt(R.styleable.FloatingActionButton_fab_size, SIZE_NORMAL);
         mLabelText = attr.getString(R.styleable.FloatingActionButton_fab_label);
+        mLabelColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorNormal, Color.BLACK);
+        mLabelColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorPressed, Color.BLACK);
+        mLabelColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorRipple, Color.BLACK);
         mShouldProgressIndeterminate = attr.getBoolean(R.styleable.FloatingActionButton_fab_progress_indeterminate, false);
         mProgressColor = attr.getColor(R.styleable.FloatingActionButton_fab_progress_color, 0xFF009688);
         mProgressBackgroundColor = attr.getColor(R.styleable.FloatingActionButton_fab_progress_backgroundColor, 0x4D000000);
@@ -255,7 +269,7 @@ public class FloatingActionButton extends ImageButton {
         if (mProgressBarEnabled) {
             height += mProgressWidth * 2;
         }
-        return height;
+        return getCircleSize() + calculateShadowHeight();
     }
 
     int calculateShadowWidth() {
@@ -404,6 +418,10 @@ public class FloatingActionButton extends ImageButton {
 
     void updateBackground() {
         LayerDrawable layerDrawable;
+        int iconOffsetVertical = 0;
+        int iconOffsetLeft = 0;
+        int iconOffsetRight = 0;
+
         if (hasShadow()) {
             layerDrawable = new LayerDrawable(new Drawable[]{
                     new Shadow(),
@@ -421,7 +439,19 @@ public class FloatingActionButton extends ImageButton {
         if (getIconDrawable() != null) {
             iconSize = Math.max(getIconDrawable().getIntrinsicWidth(), getIconDrawable().getIntrinsicHeight());
         }
-        int iconOffset = (getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
+        if (!mIsExtended) {
+            iconOffsetVertical = ((getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2);
+        } else {
+            int extraLeftOffset = 0;
+
+            if (getLabelView() != null) {
+                extraLeftOffset = Math.round(((getX() + calculateMeasuredWidth() / 2) - getLabelView().getX()) + getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4); // Align icon on the left side of label text
+            }
+            iconOffsetVertical = (calculateMeasuredHeight() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
+            iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;
+            iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset;
+        }
+
         int circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
         int circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
 
@@ -430,21 +460,25 @@ public class FloatingActionButton extends ImageButton {
             circleInsetVertical += mProgressWidth;
         }
 
-        /*layerDrawable.setLayerInset(
-                mShowShadow ? 1 : 0,
-                circleInsetHorizontal,
-                circleInsetVertical,
-                circleInsetHorizontal,
-                circleInsetVertical
-        );*/
-        layerDrawable.setLayerInset(
-                hasShadow() ? 2 : 1,
-                circleInsetHorizontal + iconOffset,
-                circleInsetVertical + iconOffset,
-                circleInsetHorizontal + iconOffset,
-                circleInsetVertical + iconOffset
-        );
+        if (mIsExtended) {
+            layerDrawable.setLayerInset(
+                    hasShadow() ? 2 : 1,
+                    iconOffsetLeft,
+                    iconOffsetVertical + (circleInsetVertical / 4),
+                    iconOffsetRight,
+                    iconOffsetVertical +
+                            (circleInsetVertical / 4)
+            );
 
+        } else {
+            layerDrawable.setLayerInset(
+                    hasShadow() ? 2 : 1,
+                    circleInsetHorizontal + iconOffsetVertical,
+                    circleInsetVertical + iconOffsetVertical,
+                    circleInsetHorizontal + iconOffsetVertical,
+                    circleInsetVertical + iconOffsetVertical
+            );
+        }
         setBackgroundCompat(layerDrawable);
     }
 
@@ -596,28 +630,25 @@ public class FloatingActionButton extends ImageButton {
         startAnimation(mReplaceExtendedAnimation);
     }
 
-    void playHideExtendedAnimation() {
+    void playHideExtendedAnimation(final Boolean shouldBeExtended) {
         mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                //Nothing
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (mIsExtended) {
-                    mIsExtended = false;
-                    FloatingActionButton.super.onAnimationEnd();
-                    setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-                    updateBackground();
-                    ((FloatingActionMenu) getParent()).onExtendedMenuCollapse();
-                    getHandler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((FloatingActionMenu) getParent()).setIconPosition((getY() + (getHeight() / 2)), (getX() + (getWidth() / 2))); // There must be some delay to calculate position on final x,y.
-                        }
-                    }, 300);
-                }
+                mIsExtended = shouldBeExtended;
+                FloatingActionButton.super.onAnimationEnd();
+                ((FloatingActionMenu) getParent()).onMenuSizeChange();
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setMeasuredDimension(calculateMeasuredWidth(),calculateMeasuredHeight());
+                        measure(calculateMeasuredWidth(),calculateMeasuredHeight());
+                        updateBackground();
+                    }
+                }, 10);
             }
 
             @Override
@@ -1119,7 +1150,6 @@ public class FloatingActionButton extends ImageButton {
         mProgressIndeterminate = indeterminate;
         mLastTimeAnimated = SystemClock.uptimeMillis();
         setupProgressBounds();
-//        saveButtonOriginalPosition();
         updateBackground();
     }
 
@@ -1213,7 +1243,7 @@ public class FloatingActionButton extends ImageButton {
 
             Label label = getLabelView();
             if (label != null) {
-                label.hide(animate);
+                label.hide(!mIsExtended && animate);
             }
 
             getHideAnimation().setAnimationListener(new Animation.AnimationListener() {
@@ -1241,7 +1271,7 @@ public class FloatingActionButton extends ImageButton {
         show(animate);
         Label label = getLabelView();
         if (label != null) {
-            label.show(animate);
+            label.show(!mIsExtended && animate);
         }
     }
 
@@ -1267,6 +1297,35 @@ public class FloatingActionButton extends ImageButton {
 
     public void setLabelTextColor(ColorStateList colors) {
         getLabelView().setTextColor(colors);
+    }
+
+    public void setExtended(Boolean isExtended) {
+        mIsExtended = isExtended;
+        mColorNormal = mColorExtendedNormal;
+        mColorPressed = mColorExtendedPressed;
+        mColorRipple = mColorExtendedRipple;
+        mColorDisabled = mColorExtendedDisabled;
+        setColorRipple(mColorRipple);
+        setIconColor(((FloatingActionMenu) getParent()).getMenuButtonColorNormal());
+        if (isExtended) {
+            if (getLabelView() != null) {
+                getLabelView().removeLabelBackground();
+            }
+
+        } else {
+            if (getLabelView() != null) {
+                setLabelColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
+            }
+        }
+    }
+
+    public void setIconColor(int color) {
+        PorterDuff.Mode filterMode = PorterDuff.Mode.SRC_ATOP;
+        mIcon.setColorFilter(color, filterMode);
+    }
+
+    public Boolean isExtended() {
+        return mIsExtended;
     }
 
     static class ProgressSavedState extends BaseSavedState {
