@@ -37,6 +37,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.R.attr.animation;
 import static android.R.attr.label;
 
 public class FloatingActionButton extends ImageButton {
@@ -642,15 +643,17 @@ public class FloatingActionButton extends ImageButton {
             public void onAnimationEnd(Animation animation) {
                 mIsExtended = shouldBeExtended;
                 FloatingActionButton.super.onAnimationEnd();
+                ((FloatingActionMenu) getParent()).setVisibility(View.INVISIBLE);
                 ((FloatingActionMenu) getParent()).onMenuSizeChange();
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setMeasuredDimension(calculateMeasuredWidth(),calculateMeasuredHeight());
-                        measure(calculateMeasuredWidth(),calculateMeasuredHeight());
+                        setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
+                        measure(calculateMeasuredWidth(), calculateMeasuredHeight());
                         updateBackground();
+                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE);
                     }
-                }, 10);
+                }, 100);
             }
 
             @Override
