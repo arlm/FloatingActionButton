@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -49,18 +50,20 @@ public class HomeFragment extends Fragment {
         mListView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, locales));
         mFab = (FloatingActionMenu) getActivity().findViewById(R.id.fab);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mFab.setNormalMenuSize();
         }
         mFab.setIconAnimated(false);
         mFab.setClosedOnTouchOutside(true);
+        mFab.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_up)));
+        mFab.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_down)));
         mFab.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mFab.isOpened()) {
-                    mFab.close(true);
+                    mFab.close(false);
                 } else {
-                    mFab.open(true);
+                    mFab.open(false);
                 }
             }
         });

@@ -318,12 +318,14 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     private void addExtendedActionMenuText() {
-        mMenuText = new TextView(getContext());
-        mMenuText.setText(extendedButtonText);
-        mMenuText.setTextSize(mExtendedButtonTextSize);
-        mMenuText.setTextColor(mExtendedButtonTextColor);
-        mMenuText.setVisibility(View.GONE);
-        addView(mMenuText);
+        if (mMenuText == null) {
+            mMenuText = new TextView(getContext());
+            mMenuText.setText(extendedButtonText);
+            mMenuText.setTextSize(mExtendedButtonTextSize);
+            mMenuText.setTextColor(mExtendedButtonTextColor);
+            mMenuText.setVisibility(View.GONE);
+            addView(mMenuText);
+        }
     }
 
     private void createDefaultIconAnimation() {
@@ -762,8 +764,12 @@ public class FloatingActionMenu extends ViewGroup {
                             }
 
                             Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges() && fab != mMenuButton) {
-                                label.show(!mIsExtended && animate);
+                            if (label != null && label.isHandleVisibilityChanges()) {
+                                if (fab != mMenuButton) {
+                                    label.show(!mIsExtended && animate);
+                                } else if (!mIsExtended && fab == mMenuButton) {
+                                    label.show(animate);
+                                }
                             }
                         }
                     }, delay);
@@ -931,6 +937,10 @@ public class FloatingActionMenu extends ViewGroup {
      */
     public void showMenu(boolean animate) {
         if (isMenuHidden()) {
+            setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
+            setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+            mMenuButton.setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
+            mMenuButton.setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
             if (animate) {
                 startAnimation(mMenuButtonShowAnimation);
             }
@@ -946,6 +956,10 @@ public class FloatingActionMenu extends ViewGroup {
     public void hideMenu(final boolean animate) {
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
+            setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
+            setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+            mMenuButton.setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
+            mMenuButton.setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
             if (isOpened()) {
                 close(animate);
                 mUiHandler.postDelayed(new Runnable() {
@@ -1079,6 +1093,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setNormalMenuSize() {
         mIsExtended = false;
+        //removeView(mMenuText);
         mMenuButton.changeMenuSize(false); // animate = false
     }
 
