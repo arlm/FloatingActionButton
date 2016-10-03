@@ -767,7 +767,8 @@ public class FloatingActionMenu extends ViewGroup {
                             if (label != null && label.isHandleVisibilityChanges()) {
                                 if (fab != mMenuButton) {
                                     label.show(!mIsExtended && animate);
-                                } else if (!mIsExtended && fab == mMenuButton) {
+                                }
+                                if (!mIsExtended && fab == mMenuButton && mMenuText != null) {
                                     label.show(animate);
                                 }
                             }
