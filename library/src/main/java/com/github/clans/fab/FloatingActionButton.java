@@ -653,7 +653,7 @@ public class FloatingActionButton extends ImageButton {
                         updateBackground();
                         ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE);
                     }
-                }, 100);
+                }, 10);
             }
 
             @Override
