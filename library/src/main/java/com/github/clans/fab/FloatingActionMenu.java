@@ -459,8 +459,13 @@ public class FloatingActionMenu extends ViewGroup {
             int childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
             int childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
 
-            if (fab == mMenuButton && !mIsExtended) {
-                fab.setNormalMenuLabelColors();
+            if (fab == mMenuButton) {
+                if (!mIsExtended) {
+                    fab.getLabelView().setVisibility(View.VISIBLE);
+                    fab.setNormalMenuLabelColors();
+                } else {
+
+                }
             }
             if (fab != mMenuButton) {
                 if (mIsExtended) {
@@ -757,7 +762,7 @@ public class FloatingActionMenu extends ViewGroup {
                             }
 
                             Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges()) {
+                            if (label != null && label.isHandleVisibilityChanges() && fab != mMenuButton) {
                                 label.show(!mIsExtended && animate);
                             }
                         }
