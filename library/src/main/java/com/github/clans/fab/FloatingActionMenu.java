@@ -22,7 +22,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -246,8 +245,12 @@ public class FloatingActionMenu extends ViewGroup {
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         setLayoutParams(params);
-        if (mMenuText != null && !mIsExtended) {
-            mMenuText.setVisibility(View.VISIBLE);
+        if (mMenuText != null) {
+            if (mIsExtended) {
+                mMenuText.setVisibility(View.VISIBLE);
+            } else {
+                mMenuText.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
