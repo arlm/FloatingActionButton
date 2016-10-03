@@ -37,6 +37,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.R.attr.label;
+
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -1316,6 +1318,13 @@ public class FloatingActionButton extends ImageButton {
             if (getLabelView() != null) {
                 setLabelColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
             }
+        }
+    }
+
+    public void setNormalMenuLabelColors() {
+        if (getLabelView() != null) {
+            getLabelView().setColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
+            getLabelView().updateBackground();
         }
     }
 

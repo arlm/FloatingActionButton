@@ -546,6 +546,8 @@ public class FloatingActionMenu extends ViewGroup {
                 if (mIsExtended && fab != mMenuButton) {
                     fab.setExtended(true);
                     fab.setBackgroundColor(mExtendedButtonBackgroundColor);
+                } else if (fab == mMenuButton && !mIsExtended) {
+                    fab.setNormalMenuLabelColors();
                 }
                 addLabel(fab);
                 if (fab == mMenuButton) {
