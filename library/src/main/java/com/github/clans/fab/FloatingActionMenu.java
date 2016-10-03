@@ -459,6 +459,9 @@ public class FloatingActionMenu extends ViewGroup {
             int childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
             int childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
 
+            if (fab == mMenuButton && !mIsExtended) {
+                fab.setNormalMenuLabelColors();
+            }
             if (fab != mMenuButton) {
                 if (mIsExtended) {
                     fab.setExtended(true);
@@ -546,8 +549,6 @@ public class FloatingActionMenu extends ViewGroup {
                 if (mIsExtended && fab != mMenuButton) {
                     fab.setExtended(true);
                     fab.setBackgroundColor(mExtendedButtonBackgroundColor);
-                } else if (fab == mMenuButton && !mIsExtended) {
-                    fab.setNormalMenuLabelColors();
                 }
                 addLabel(fab);
                 if (fab == mMenuButton) {
@@ -1073,13 +1074,13 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setNormalMenuSize() {
         mIsExtended = false;
-        mMenuButton.playHideExtendedAnimation(false);
+        mMenuButton.changeMenuSize(false); // animate = false
     }
 
     public void setExtendedMenuSize() {
         mIsExtended = true;
         addExtendedActionMenuText();
-        mMenuButton.playHideExtendedAnimation(true);
+        mMenuButton.changeMenuSize(true); // animate = true
     }
 
     public void setExtendedButtonText(String menuText) {

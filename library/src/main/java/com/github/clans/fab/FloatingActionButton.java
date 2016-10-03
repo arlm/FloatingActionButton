@@ -632,7 +632,7 @@ public class FloatingActionButton extends ImageButton {
         startAnimation(mReplaceExtendedAnimation);
     }
 
-    void playHideExtendedAnimation(final Boolean shouldBeExtended) {
+    void changeMenuSize(final Boolean shouldBeExtended) {
         mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
