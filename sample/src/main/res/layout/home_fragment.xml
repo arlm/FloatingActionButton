@@ -18,6 +18,7 @@
         android:paddingRight="24dp"
         android:src="@drawable/ic_drawing"
         app:menu_backgroundColor="@color/black_a160"
+        app:menu_fab_label="MENU LABEL"
         app:menu_extendedButtonText="Add new expense"
         app:menu_isExtended="true">
 

@@ -630,7 +630,7 @@ public class FloatingActionButton extends ImageButton {
         startAnimation(mReplaceExtendedAnimation);
     }
 
-    void playHideExtendedAnimation(final Boolean shouldBeExtended) {
+    void changeMenuSize(final Boolean shouldBeExtended) {
         mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -640,13 +640,15 @@ public class FloatingActionButton extends ImageButton {
             public void onAnimationEnd(Animation animation) {
                 mIsExtended = shouldBeExtended;
                 FloatingActionButton.super.onAnimationEnd();
+                ((FloatingActionMenu) getParent()).setVisibility(View.INVISIBLE);
                 ((FloatingActionMenu) getParent()).onMenuSizeChange();
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setMeasuredDimension(calculateMeasuredWidth(),calculateMeasuredHeight());
-                        measure(calculateMeasuredWidth(),calculateMeasuredHeight());
+                        setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
+                        measure(calculateMeasuredWidth(), calculateMeasuredHeight());
                         updateBackground();
+                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE); // Menu will be visible when it has correct state
                     }
                 }, 10);
             }
@@ -1316,6 +1318,13 @@ public class FloatingActionButton extends ImageButton {
             if (getLabelView() != null) {
                 setLabelColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
             }
+        }
+    }
+
+    public void setNormalMenuLabelColors() {
+        if (getLabelView() != null) {
+            getLabelView().setColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
+            getLabelView().updateBackground();
         }
     }
 
