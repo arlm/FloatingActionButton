@@ -631,35 +631,22 @@ public class FloatingActionButton extends ImageButton {
     }
 
     void changeMenuSize(final Boolean shouldBeExtended) {
-        mHideExtendedAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
 
+        mIsExtended = shouldBeExtended;
+        FloatingActionButton.super.onAnimationEnd();
+        ((FloatingActionMenu) getParent()).setVisibility(View.INVISIBLE);
+        ((FloatingActionMenu) getParent()).onMenuSizeChange();
+        getHandler().postDelayed(new Runnable() {
             @Override
-            public void onAnimationEnd(Animation animation) {
-                mIsExtended = shouldBeExtended;
-                FloatingActionButton.super.onAnimationEnd();
-                ((FloatingActionMenu) getParent()).setVisibility(View.INVISIBLE);
-                ((FloatingActionMenu) getParent()).onMenuSizeChange();
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-                        measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-                        updateBackground();
-                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE); // Menu will be visible when it has correct state
-                    }
-                }, 10);
+            public void run() {
+                setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
+                measure(calculateMeasuredWidth(), calculateMeasuredHeight());
+                updateBackground();
+                ((FloatingActionMenu) getParent()).setCorrectPivot(); // It is not set visible here because it may cause problem during animation aplicated on this button.
             }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                // Nothing
-            }
-        });
-        startAnimation(mHideExtendedAnimation);
+        }, 10);
     }
+
 
     void playHideAnimation() {
         mShowAnimation.cancel();
