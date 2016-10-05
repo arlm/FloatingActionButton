@@ -648,7 +648,7 @@ public class FloatingActionButton extends ImageButton {
                         setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
                         measure(calculateMeasuredWidth(), calculateMeasuredHeight());
                         updateBackground();
-                        ((FloatingActionMenu) getParent()).setVisibility(View.VISIBLE); // Menu will be visible when it has correct state
+                        ((FloatingActionMenu) getParent()).setCorrectPivot(); // It is not set visible here because it may cause problem during animation aplicated on this button.
                     }
                 }, 10);
             }
