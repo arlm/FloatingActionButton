@@ -980,7 +980,6 @@ public class FloatingActionMenu extends ViewGroup {
      */
     public void showMenu(boolean animate) {
         if (isMenuHidden()) {
-            setCorrectPivot();
             if (animate) {
                 startAnimation(mMenuButtonShowAnimation);
             }
@@ -996,7 +995,6 @@ public class FloatingActionMenu extends ViewGroup {
     public void hideMenu(final boolean animate) {
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
-            setCorrectPivot();
             if (isOpened()) {
                 close(animate);
                 mUiHandler.postDelayed(new Runnable() {
