@@ -28,6 +28,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.pivotX;
+
 public class FloatingActionMenu extends ViewGroup {
 
     protected static final int EXTENDED_ACTION_MENU = -1;
@@ -951,6 +953,26 @@ public class FloatingActionMenu extends ViewGroup {
         }
     }
 
+    // There are edgecases when we can't use getX()/getY() methods to get correct values.
+    public void setCorrectPivotForNormalSize() {
+        int pivotX = (Util.getScreenWidth(getContext()) - (getPaddingRight() + (mMenuButton.getCircleSize() / 2 - mImageToggle.getWidth() / 2)));
+        float pivotY = (mImageToggle.getY() + mImageToggle.getHeight() / 2);
+        setPivotX(pivotX);
+        setPivotY(pivotY);
+        mMenuButton.setPivotX(pivotX);
+        mMenuButton.setPivotY(pivotY);
+    }
+    // There are edgecases when we can't use getX()/getY() methods to get correct values.
+    public void setCorrectPivotForExtendedSize() {
+        int buttonLeftPadding = ((Util.getScreenWidth(getContext()) - mMenuButton.calculateMeasuredWidth()) - getPaddingRight()); // We suppose that left padding is equal to right padding.
+        int pivotX = Math.round(buttonLeftPadding + mMenuButton.calculateMeasuredWidth() / 2);
+        int pivotY = Math.round(mMenuButton.getY() + mMenuButton.calculateMeasuredHeight() / 2);
+        setPivotX(pivotX);
+        setPivotY(pivotY);
+        mMenuButton.setPivotX(pivotX);
+        mMenuButton.setPivotY(pivotY);
+    }
+
     /**
      * Makes the whole {@link #FloatingActionMenu} to appear and sets its visibility to {@link #VISIBLE}
      *
@@ -958,7 +980,6 @@ public class FloatingActionMenu extends ViewGroup {
      */
     public void showMenu(boolean animate) {
         if (isMenuHidden()) {
-            setCorrectPivot();
             if (animate) {
                 startAnimation(mMenuButtonShowAnimation);
             }
@@ -974,7 +995,6 @@ public class FloatingActionMenu extends ViewGroup {
     public void hideMenu(final boolean animate) {
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
-            setCorrectPivot();
             if (isOpened()) {
                 close(animate);
                 mUiHandler.postDelayed(new Runnable() {

@@ -1,6 +1,5 @@
 package com.github.clans.fab.sample;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,9 +49,7 @@ public class HomeFragment extends Fragment {
         mListView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, locales));
         mFab = (FloatingActionMenu) getActivity().findViewById(R.id.fab);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mFab.setNormalMenuSize();
-        }
+
         mFab.setIconAnimated(false);
         mFab.setClosedOnTouchOutside(true);
         mFab.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_up)));
@@ -67,6 +64,8 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+        mFab.setCorrectPivotForExtendedSize();
+        mFab.setCorrectPivotForNormalSize();
 
     }
 }
