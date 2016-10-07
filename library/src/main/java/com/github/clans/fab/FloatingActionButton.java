@@ -579,8 +579,8 @@ public class FloatingActionButton extends ImageButton {
         setX(x);
         setY(y);
         if (getParent() instanceof FloatingActionMenu) {
-            (getActionMenu().setX(x);
-            (getActionMenu().setY(y);
+            getActionMenu().setX(x);
+            getActionMenu().setY(y);
         }
     }
 
