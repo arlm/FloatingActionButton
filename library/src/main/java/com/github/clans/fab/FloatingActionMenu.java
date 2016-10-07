@@ -938,18 +938,10 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void setCorrectPivot() {
-        if (!mIsExtended) {
-            setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
-            setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
-            mMenuButton.setPivotX(mImageToggle.getX() + mImageToggle.getWidth() / 2);
-            mMenuButton.setPivotY(mImageToggle.getY() + mImageToggle.getHeight() / 2);
+        if (mIsExtended) {
+            setCorrectPivotForExtendedSize();
         } else {
-            int pivotY = Math.round(mMenuButton.getY() + mMenuButton.calculateMeasuredHeight() / 2);
-            int pivotX = Math.round(mMenuButton.getX() + mMenuButton.calculateMeasuredWidth() / 2);
-            setPivotX(pivotX);
-            setPivotY(pivotY);
-            mMenuButton.setPivotX(pivotX);
-            mMenuButton.setPivotY(pivotY);
+            setCorrectPivotForNormalSize();
         }
     }
 
@@ -979,6 +971,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "show animation"
      */
     public void showMenu(boolean animate) {
+        setCorrectPivot();
         if (isMenuHidden()) {
             if (animate) {
                 startAnimation(mMenuButtonShowAnimation);
@@ -993,6 +986,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "hide animation"
      */
     public void hideMenu(final boolean animate) {
+        setCorrectPivot();
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
@@ -1032,6 +1026,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "show animation"
      */
     public void showMenuButton(boolean animate) {
+        setCorrectPivot();
         if (isMenuButtonHidden()) {
             showMenuButtonWithImage(animate);
         }
@@ -1044,6 +1039,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "hide animation"
      */
     public void hideMenuButton(final boolean animate) {
+        setCorrectPivot();
         if (!isMenuButtonHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {

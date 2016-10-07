@@ -648,11 +648,6 @@ public class FloatingActionButton extends ImageButton {
                 setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
                 measure(calculateMeasuredWidth(), calculateMeasuredHeight());
                 updateBackground(); // It is not set visible here because it may cause problem during animation aplicated on this button.
-                if (mIsExtended) {
-                    getActionMenu().setCorrectPivotForExtendedSize();
-                } else {
-                    getActionMenu().setCorrectPivotForNormalSize();
-                }
             }
         }, 10);
     }
