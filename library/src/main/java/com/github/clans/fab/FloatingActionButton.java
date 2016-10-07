@@ -579,8 +579,8 @@ public class FloatingActionButton extends ImageButton {
         setX(x);
         setY(y);
         if (getParent() instanceof FloatingActionMenu) {
-            ((FloatingActionMenu) getParent()).setX(x);
-            ((FloatingActionMenu) getParent()).setY(y);
+            (getActionMenu().setX(x);
+            (getActionMenu().setY(y);
         }
     }
 
@@ -630,23 +630,30 @@ public class FloatingActionButton extends ImageButton {
         startAnimation(mReplaceExtendedAnimation);
     }
 
+    FloatingActionMenu getActionMenu() {
+        return ((FloatingActionMenu) getParent());
+    }
+
     void changeMenuSize(final Boolean shouldBeExtended) {
 
         mIsExtended = shouldBeExtended;
         FloatingActionButton.super.onAnimationEnd();
-        ((FloatingActionMenu) getParent()).setVisibility(View.INVISIBLE);
-        ((FloatingActionMenu) getParent()).onMenuSizeChange();
+        getActionMenu().setVisibility(View.INVISIBLE);
+        getActionMenu().onMenuSizeChange();
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
                 measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-                updateBackground();
-                ((FloatingActionMenu) getParent()).setCorrectPivot(); // It is not set visible here because it may cause problem during animation aplicated on this button.
+                updateBackground(); // It is not set visible here because it may cause problem during animation aplicated on this button.
+                if (mIsExtended) {
+                    getActionMenu().setCorrectPivotForExtendedSize();
+                } else {
+                    getActionMenu().setCorrectPivotForNormalSize();
+                }
             }
         }, 10);
     }
-
 
     void playHideAnimation() {
         mShowAnimation.cancel();
@@ -1295,7 +1302,7 @@ public class FloatingActionButton extends ImageButton {
         mColorRipple = mColorExtendedRipple;
         mColorDisabled = mColorExtendedDisabled;
         setColorRipple(mColorRipple);
-        setIconColor(((FloatingActionMenu) getParent()).getMenuButtonColorNormal());
+        setIconColor(getActionMenu().getMenuButtonColorNormal());
         if (isExtended) {
             if (getLabelView() != null) {
                 getLabelView().removeLabelBackground();
