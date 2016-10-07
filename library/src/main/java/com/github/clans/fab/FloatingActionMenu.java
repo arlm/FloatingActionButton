@@ -955,7 +955,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     // There are edgecases when we can't use getX()/getY() methods to get correct values.
     public void setCorrectPivotForNormalSize() {
-        int pivotX = (Util.getScreenWidth(getContext()) - (getPaddingRight() + (mMenuButton.getCircleSize() / 2 - mImageToggle.getWidth() / 2)));
+        int pivotX = (Util.getScreenWidth(getContext()) - ((getPaddingRight() + mMenuButton.getCircleSize() / 2)));
         float pivotY = (mImageToggle.getY() + mImageToggle.getHeight() / 2);
         setPivotX(pivotX);
         setPivotY(pivotY);
