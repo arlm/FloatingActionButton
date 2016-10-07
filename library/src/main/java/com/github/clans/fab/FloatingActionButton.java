@@ -23,6 +23,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
@@ -125,6 +126,7 @@ public class FloatingActionButton extends ImageButton {
     private boolean mShowProgressBackground;
     private boolean mIsExtended = false;
     private Context mContext;
+    private Handler uiHandler = new Handler();
 
     public FloatingActionButton(Context context) {
         this(context, null);
@@ -640,7 +642,7 @@ public class FloatingActionButton extends ImageButton {
         FloatingActionButton.super.onAnimationEnd();
         getActionMenu().setVisibility(View.INVISIBLE);
         getActionMenu().onMenuSizeChange();
-        getHandler().postDelayed(new Runnable() {
+        uiHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
