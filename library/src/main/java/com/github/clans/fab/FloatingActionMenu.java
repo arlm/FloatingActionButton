@@ -518,7 +518,7 @@ public class FloatingActionMenu extends ViewGroup {
                 int extraShadowOffset = Util.dpToPx(getContext(), 6);
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
                 if (mIsExtended) {
-                    int extendedLabelLeft = Math.round((fab.getX() + relatedButtonWidth) - label.getMeasuredWidth() / 2 - extraShadowOffset + mImageToggle.getWidth() / 2 + getContext().getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4);
+                    int extendedLabelLeft =  Math.round((fab.getX() + relatedButtonWidth) - label.getMeasuredWidth() / 2 - extraShadowOffset + mImageToggle.getWidth() / 2 + getContext().getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4);
                     int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
                     label.layout(extendedLabelLeft, labelTop, extendedLabelLeft + label.getMeasuredWidth(), labelBottom);
                 } else {
@@ -606,9 +606,6 @@ public class FloatingActionMenu extends ViewGroup {
         } else {
             label.setShowShadow(mLabelsShowShadow);
             label.setCornerRadius(mLabelsCornerRadius);
-            if (mIsExtended) {
-                label.setTypeface(null, Typeface.BOLD);
-            }
             if (mLabelsEllipsize > 0) {
                 setLabelEllipsize(label);
             }
@@ -906,8 +903,8 @@ public class FloatingActionMenu extends ViewGroup {
     public void setIconAnimated(boolean animated) {
         mIconAnimated = animated;
     }
-
-    public FloatingActionButton getMenuButton() {
+    
+    public FloatingActionButton getMenuButton(){
         return mMenuButton;
     }
 
