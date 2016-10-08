@@ -106,7 +106,7 @@ public class MenusFragment extends Fragment {
         menuRed.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menuRed.setExtendedMenuSize();
+                menuRed.extendMenu();
             }
         });
 

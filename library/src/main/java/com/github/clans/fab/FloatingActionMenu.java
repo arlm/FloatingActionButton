@@ -580,7 +580,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     private void alignMenuText() {
         int textIconGap = Math.round(getResources().getDimension(R.dimen.extended_button_gap_between_icon_text));
-        int textLeft = (Math.round(mMenuButton.getX()) + mMenuButton.getMeasuredWidth() / 2 - mMenuText.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 3;
+        int textLeft = (Math.round(mMenuButton.getX()) + mMenuButton.getMeasuredWidth() / 2 - mMenuText.getMeasuredWidth() / 2) + mImageToggle.getMeasuredWidth() / 2 + textIconGap / 2;
         int textTop = Math.round(mMenuButton.getY()) + mMenuButton.getMeasuredHeight() / 2 - mMenuText.getMeasuredHeight() / 2;
         mMenuText.layout(textLeft, textTop, textLeft + mMenuText.getMeasuredWidth(),
                 textTop + mMenuText.getMeasuredHeight());
@@ -1147,12 +1147,12 @@ public class FloatingActionMenu extends ViewGroup {
         mButtonsCount--;
     }
 
-    public void setNormalMenuSize() {
+    public void shrinkMenu() {
         mIsExtended = false;
         mMenuButton.changeMenuSize(false); // animate = false
     }
 
-    public void setExtendedMenuSize() {
+    public void extendMenu() {
         mIsExtended = true;
         addExtendedActionMenuText();
         mMenuButton.changeMenuSize(true); // animate = true
