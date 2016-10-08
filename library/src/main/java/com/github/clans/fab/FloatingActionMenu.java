@@ -28,8 +28,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.pivotX;
-
 public class FloatingActionMenu extends ViewGroup {
 
     protected static final int EXTENDED_ACTION_MENU = -1;
@@ -517,12 +515,12 @@ public class FloatingActionMenu extends ViewGroup {
 
                 int labelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
                         + label.getMeasuredHeight()) / 2;
-
+                int extraShadowOffset = Util.dpToPx(getContext(), 6);
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
                 if (mIsExtended) {
-                    int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
+                    int extendedLabelLeft =  Math.round((fab.getX() + relatedButtonWidth) - label.getMeasuredWidth() / 2 - extraShadowOffset + mImageToggle.getWidth() / 2 + getContext().getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4);
                     int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
-                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                    label.layout(extendedLabelLeft, labelTop, extendedLabelLeft + label.getMeasuredWidth(), labelBottom);
                 } else {
                     label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // Here we set label position
                 }
@@ -577,7 +575,6 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     private void alignMenuText() {
-        int textIconGap = Math.round(getResources().getDimension(R.dimen.extended_button_gap_between_icon_text));
         int textLeft = (Math.round(mMenuButton.getX()) + mMenuButton.getMeasuredWidth() / 2 - mMenuText.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 3;
         int textTop = Math.round(mMenuButton.getY()) + mMenuButton.getMeasuredHeight() / 2 - mMenuText.getMeasuredHeight() / 2;
         mMenuText.layout(textLeft, textTop, textLeft + mMenuText.getMeasuredWidth(),

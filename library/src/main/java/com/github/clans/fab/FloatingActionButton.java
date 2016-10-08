@@ -445,13 +445,15 @@ public class FloatingActionButton extends ImageButton {
             iconOffsetVertical = ((getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2);
         } else {
             int extraLeftOffset = 0;
+            int labelShadowOffset = 0;
 
             if (getLabelView() != null) {
-                extraLeftOffset = Math.round(((getX() + calculateMeasuredWidth() / 2) - getLabelView().getX()) + getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4); // Align icon on the left side of label text
+                labelShadowOffset = Util.dpToPx(getContext(), 2);
+                extraLeftOffset = getLabelView().getMeasuredWidth() / 2 - mIconSize / 4; // Align icon on the left side of label text
             }
             iconOffsetVertical = (calculateMeasuredHeight() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
-            iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;
-            iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset;
+            iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset + labelShadowOffset;
+            iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset + labelShadowOffset;
         }
 
         int circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
