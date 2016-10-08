@@ -4,7 +4,7 @@
     <dimen name="fab_size_mini">40dp</dimen>
     <dimen name="labels_text_size">16sp</dimen>
     <dimen name="extended_button_padding">56dp</dimen>
-    <dimen name="extended_button_gap_between_icon_text">16dp</dimen>
+    <dimen name="extended_button_gap_between_icon_text">20dp</dimen>
     <dimen name="extended_button_shadow_padding">63dp</dimen>
     <dimen name="extended_button_spacing_extra">2dp</dimen>
     <dimen name="extended_button_child_left_offset">8dp</dimen>

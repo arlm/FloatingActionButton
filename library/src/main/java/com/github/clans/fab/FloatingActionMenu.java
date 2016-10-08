@@ -583,7 +583,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     private void alignMenuIcon() {
 
-        int iconLeft = Math.round(mMenuText.getX()) - (mImageToggle.getMeasuredWidth() / 2 + getResources().getDimensionPixelOffset(R.dimen.extended_button_gap_between_icon_text));
+        int iconLeft = Math.round(mMenuText.getX()) - (mImageToggle.getMeasuredWidth() + getResources().getDimensionPixelOffset(R.dimen.extended_button_gap_between_icon_text));
         int iconTop = Math.round(mMenuButton.getY()) + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
         mImageToggle.layout(iconLeft, iconTop, iconLeft + mImageToggle.getMeasuredWidth(),
                 iconTop + mImageToggle.getMeasuredHeight());
