@@ -903,6 +903,10 @@ public class FloatingActionMenu extends ViewGroup {
     public void setIconAnimated(boolean animated) {
         mIconAnimated = animated;
     }
+    
+    public FloatingActionButton getMenuButton(){
+        return mMenuButton;
+    }
 
     public ImageView getMenuIconView() {
         return mImageToggle;
