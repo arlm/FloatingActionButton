@@ -307,6 +307,7 @@ public class FloatingActionMenu extends ViewGroup {
         mMenuButton.setLabelText(mMenuLabelText);
 
         mMenuText = new TextView(getContext());
+        mMenuText.setTypeface(null,Typeface.BOLD);
         mMenuText.setText(extendedButtonText);
         mMenuText.setTextSize(mExtendedButtonTextSize);
         mMenuText.setTextColor(mExtendedButtonTextColor);
@@ -325,6 +326,7 @@ public class FloatingActionMenu extends ViewGroup {
         if (mMenuText == null) {
             mMenuText = new TextView(getContext());
             mMenuText.setText(extendedButtonText);
+            mMenuText.setTypeface(null,Typeface.BOLD);
             mMenuText.setTextSize(mExtendedButtonTextSize);
             mMenuText.setTextColor(mExtendedButtonTextColor);
             mMenuText.setVisibility(View.GONE);
@@ -610,6 +612,7 @@ public class FloatingActionMenu extends ViewGroup {
                 setLabelEllipsize(label);
             }
             label.setMaxLines(mLabelsMaxLines);
+            label.setTypeface(null,Typeface.BOLD);
             label.updateBackground();
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
             label.setTextColor(mLabelsNormalTextColor);
