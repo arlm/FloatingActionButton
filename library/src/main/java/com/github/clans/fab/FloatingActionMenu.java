@@ -307,7 +307,7 @@ public class FloatingActionMenu extends ViewGroup {
         mMenuButton.setLabelText(mMenuLabelText);
 
         mMenuText = new TextView(getContext());
-        mMenuText.setTypeface(null,Typeface.BOLD);
+        mMenuText.setTypeface(null, Typeface.BOLD);
         mMenuText.setText(extendedButtonText);
         mMenuText.setTextSize(mExtendedButtonTextSize);
         mMenuText.setTextColor(mExtendedButtonTextColor);
@@ -326,7 +326,7 @@ public class FloatingActionMenu extends ViewGroup {
         if (mMenuText == null) {
             mMenuText = new TextView(getContext());
             mMenuText.setText(extendedButtonText);
-            mMenuText.setTypeface(null,Typeface.BOLD);
+            mMenuText.setTypeface(null, Typeface.BOLD);
             mMenuText.setTextSize(mExtendedButtonTextSize);
             mMenuText.setTextColor(mExtendedButtonTextColor);
             mMenuText.setVisibility(View.GONE);
@@ -520,7 +520,7 @@ public class FloatingActionMenu extends ViewGroup {
                 int extraShadowOffset = Util.dpToPx(getContext(), 6);
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
                 if (mIsExtended) {
-                    int extendedLabelLeft =  Math.round((fab.getX() + relatedButtonWidth) - label.getMeasuredWidth() / 2 - extraShadowOffset + mImageToggle.getWidth() / 2 + getContext().getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4);
+                    int extendedLabelLeft = Math.round((fab.getX() + relatedButtonWidth) - label.getMeasuredWidth() / 2 - extraShadowOffset + mImageToggle.getWidth() / 2 + getContext().getResources().getDimension(R.dimen.extended_button_gap_between_icon_text) / 4);
                     int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
                     label.layout(extendedLabelLeft, labelTop, extendedLabelLeft + label.getMeasuredWidth(), labelBottom);
                 } else {
@@ -612,7 +612,7 @@ public class FloatingActionMenu extends ViewGroup {
                 setLabelEllipsize(label);
             }
             label.setMaxLines(mLabelsMaxLines);
-            label.setTypeface(null,Typeface.BOLD);
+            label.setTypeface(null, Typeface.BOLD);
             label.updateBackground();
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
             label.setTextColor(mLabelsNormalTextColor);
@@ -644,6 +644,23 @@ public class FloatingActionMenu extends ViewGroup {
         label.setOnClickListener(fab.getOnClickListener());
         addView(label);
         fab.setTag(R.id.fab_label, label);
+    }
+
+    public void setFloatingActionMenuTypeface(int typefaceStyle) {
+        if (mMenuText != null) {
+            mMenuText.setTypeface(null, typefaceStyle);
+        }
+
+        for (int i = getChildCount() - 1; i >= 0; i--) {
+            View child = getChildAt(i);
+            if (child instanceof FloatingActionButton) {
+                final FloatingActionButton fab = (FloatingActionButton) child;
+                Label label = (Label) fab.getTag(R.id.fab_label);
+                if (label != null && label.isHandleVisibilityChanges()) {
+                    label.setTypeface(null, typefaceStyle);
+                }
+            }
+        }
     }
 
     private void setLabelEllipsize(Label label) {
@@ -906,8 +923,8 @@ public class FloatingActionMenu extends ViewGroup {
     public void setIconAnimated(boolean animated) {
         mIconAnimated = animated;
     }
-    
-    public FloatingActionButton getMenuButton(){
+
+    public FloatingActionButton getMenuButton() {
         return mMenuButton;
     }
 
@@ -958,6 +975,7 @@ public class FloatingActionMenu extends ViewGroup {
         mMenuButton.setPivotX(pivotX);
         mMenuButton.setPivotY(pivotY);
     }
+
     // There are edgecases when we can't use getX()/getY() methods to get correct values.
     public void setCorrectPivotForExtendedSize() {
         int buttonLeftPadding = ((Util.getScreenWidth(getContext()) - mMenuButton.calculateMeasuredWidth()) - getPaddingRight()); // We suppose that left padding is equal to right padding.

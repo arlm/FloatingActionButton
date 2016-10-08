@@ -1,5 +1,6 @@
 package com.github.clans.fab.sample;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -65,6 +66,7 @@ public class HomeFragment extends Fragment {
         });
         mFab.setCorrectPivotForExtendedSize();
         mFab.setCorrectPivotForNormalSize();
+        mFab.setFloatingActionMenuTypeface(Typeface.BOLD);
 
     }
 }
