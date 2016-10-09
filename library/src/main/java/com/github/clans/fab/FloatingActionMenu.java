@@ -243,17 +243,19 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void onMenuSizeChange() {
         close(false);
-        ViewGroup.LayoutParams params = getLayoutParams();
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        setLayoutParams(params);
+
+
         if (mMenuText != null) {
             if (mIsExtended) {
-                mMenuText.setVisibility(View.VISIBLE);
+                mMenuText.setVisibility(View.GONE);
             } else {
-                mMenuText.setVisibility(View.INVISIBLE);
+                mMenuText.setVisibility(View.GONE);
             }
         }
+       // mMenuButton.setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
+//        mMenuButton.measure(mMenuButton.calculateMeasuredWidth(), mMenuButton.calculateMeasuredHeight());
+//        mMenuButton.updateBackground(); // It is not set visible here because it may cause problem during animation aplicated on this button.
+
     }
 
     public void setIconPosition(float yPos, float xPos) {
@@ -780,41 +782,41 @@ public class FloatingActionMenu extends ViewGroup {
                     counter++;
 
                     final FloatingActionButton fab = (FloatingActionButton) child;
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isOpened()) return;
+                    // mUiHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+                    if (isOpened()) return;
 
-                            if (fab != mMenuButton) {
-                                fab.show(animate);
-                            }
+                    if (fab != mMenuButton) {
+                        fab.show(animate);
+                    }
 
-                            Label label = (Label) fab.getTag(R.id.fab_label);
-                            if (label != null && label.isHandleVisibilityChanges()) {
-                                if (fab != mMenuButton) {
-                                    label.show(!mIsExtended && animate);
-                                }
-                                if (!mIsExtended && fab == mMenuButton && mMenuText != null) {
-                                    label.show(animate);
-                                }
-                            }
+                    Label label = (Label) fab.getTag(R.id.fab_label);
+                    if (label != null && label.isHandleVisibilityChanges()) {
+                        if (fab != mMenuButton) {
+                            label.show(!mIsExtended && animate);
                         }
-                    }, delay);
-                    delay += mAnimationDelayPerItem;
+                        if (!mIsExtended && fab == mMenuButton && mMenuText != null) {
+                            label.show(animate);
+                        }
+                    }
                 }
+                //}, delay);
+                //delay += mAnimationDelayPerItem;
             }
 
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+
+//            mUiHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
                     mMenuOpened = true;
 
                     if (mToggleListener != null) {
                         mToggleListener.onMenuToggle(true);
                     }
                 }
-            }, ++counter * mAnimationDelayPerItem);
-        }
+//            }, ++counter * mAnimationDelayPerItem);
+//        }
     }
 
     public void close(final boolean animate) {
@@ -840,9 +842,9 @@ public class FloatingActionMenu extends ViewGroup {
                 if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
                     counter++;
                     final FloatingActionButton fab = (FloatingActionButton) child;
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+//                    mUiHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
                             if (!isOpened()) return;
                             if (fab != mMenuButton) {
                                 fab.hide(animate);
@@ -852,21 +854,21 @@ public class FloatingActionMenu extends ViewGroup {
                                 label.hide(!mIsExtended && animate);
                             }
                         }
-                    }, delay);
-                    delay += mAnimationDelayPerItem;
-                }
+//                    }, delay);
+//                    delay += mAnimationDelayPerItem;
+//                }
             }
 
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+//            mUiHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
                     mMenuOpened = false;
 
                     if (mToggleListener != null) {
                         mToggleListener.onMenuToggle(false);
                     }
-                }
-            }, ++counter * mAnimationDelayPerItem);
+//                }
+//            }, ++counter * mAnimationDelayPerItem);
         }
     }
 
@@ -962,11 +964,11 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void setCorrectPivot() {
-        if (mIsExtended) {
-            setCorrectPivotForExtendedSize();
-        } else {
-            setCorrectPivotForNormalSize();
-        }
+//        if (mIsExtended) {
+//            setCorrectPivotForExtendedSize();
+//        } else {
+//            setCorrectPivotForNormalSize();
+//        }
     }
 
     // There are edgecases when we can't use getX()/getY() methods to get correct values.
@@ -1016,25 +1018,25 @@ public class FloatingActionMenu extends ViewGroup {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
                 close(animate);
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+//                mUiHandler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
                         if (animate) {
                             startAnimation(mMenuButtonHideAnimation);
                         }
                         setVisibility(INVISIBLE);
                         mIsMenuButtonAnimationRunning = false;
                     }
-                }, mAnimationDelayPerItem * mButtonsCount);
-            } else {
-                if (animate) {
+//                }, mAnimationDelayPerItem * mButtonsCount);
+//            } else {
+//                if (animate) {
                     startAnimation(mMenuButtonHideAnimation);
                 }
                 setVisibility(INVISIBLE);
                 mIsMenuButtonAnimationRunning = false;
             }
-        }
-    }
+//        }
+//    }
 
     public void toggleMenu(boolean animate) {
         if (isMenuHidden()) {
@@ -1069,15 +1071,15 @@ public class FloatingActionMenu extends ViewGroup {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
                 close(animate);
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+//                mUiHandler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
                         hideMenuButtonWithImage(animate);
                     }
-                }, mAnimationDelayPerItem * mButtonsCount);
+//                }, mAnimationDelayPerItem * mButtonsCount);
             } else {
                 hideMenuButtonWithImage(animate);
-            }
+//            }
         }
     }
 

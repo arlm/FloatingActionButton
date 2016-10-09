@@ -57,15 +57,19 @@ public class HomeFragment extends Fragment {
         mFab.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFab.isOpened()) {
-                    mFab.close(false);
+                if (mFab.isExtended()) {
+                   // mFab.hideMenu(false);
+                    mFab.shrinkMenu();
+                    mFab.setVisibility(View.VISIBLE);
                 } else {
-                    mFab.open(false);
+                   // mFab.hideMenu(false);
+                    mFab.extendMenu();
+                    mFab.setVisibility(View.VISIBLE);
                 }
+               // mFab.setCorrectPivot();
             }
         });
-        mFab.setCorrectPivotForExtendedSize();
-        mFab.setCorrectPivotForNormalSize();
+
         mFab.setFloatingActionMenuTypeface(Typeface.BOLD);
 
     }
