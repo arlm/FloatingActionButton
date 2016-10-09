@@ -457,7 +457,7 @@ public class FloatingActionMenu extends ViewGroup {
             mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.calculateMeasuredWidth(),
                     menuButtonTop + mMenuButton.calculateMeasuredWidth());
         } else {
-            mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
+            mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.calculateMeasuredWidth(),
                     menuButtonTop + mMenuButton.getMeasuredHeight());
         }
         Log.d("Left-Top-TransL-Width-H", menuButtonLeft + " / " + menuButtonTop + " / " + leftTranslation + " / " + mMenuButton.getMeasuredWidth() + " / " + mMenuButton.getMeasuredHeight());
