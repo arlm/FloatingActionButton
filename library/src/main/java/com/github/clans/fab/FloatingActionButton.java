@@ -38,8 +38,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import static android.R.attr.width;
-
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -650,17 +648,17 @@ public class FloatingActionButton extends ImageButton {
             public void run() {
                 setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
 
-                 // It is not set visible here because it may cause problem during animation aplicated on this button.
-               // getActionMenu().setCorrectPivot();
+                // It is not set visible here because it may cause problem during animation aplicated on this button.
+                // getActionMenu().setCorrectPivot();
             }
         }, 100);
         uiHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-        //        updateBackground();
+                //        updateBackground();
             }
-        },200);
+        }, 200);
 
     }
 
@@ -733,21 +731,21 @@ public class FloatingActionButton extends ImageButton {
             if (label == null) return super.onTouchEvent(event);
 
             int action = event.getAction();
-//            switch (action) {
-//                case MotionEvent.ACTION_UP:
-//                    if (label != null) {
-//                        label.onActionUp();
-//                    }
-//                    onActionUp();
-//                    break;
-//
-//                case MotionEvent.ACTION_CANCEL:
-//                    if (label != null) {
-//                        label.onActionUp();
-//                    }
-//                    onActionUp();
-//                    break;
-//            }
+            switch (action) {
+                case MotionEvent.ACTION_UP:
+                    if (label != null) {
+                        label.onActionUp();
+                    }
+                    onActionUp();
+                    break;
+
+                case MotionEvent.ACTION_CANCEL:
+                    if (label != null) {
+                        label.onActionUp();
+                    }
+                    onActionUp();
+                    break;
+            }
             mGestureDetector.onTouchEvent(event);
         }
         return super.onTouchEvent(event);

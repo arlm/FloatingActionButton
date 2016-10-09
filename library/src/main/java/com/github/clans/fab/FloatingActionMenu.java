@@ -241,7 +241,7 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void onMenuSizeChange() {
-      open(false);
+        open(false);
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -414,7 +414,7 @@ public class FloatingActionMenu extends ViewGroup {
             if (label != null) {
                 int labelOffset = (mMaxButtonWidth - child.getMeasuredWidth()) / (mUsingMenuLabel ? 1 : 2);
                 int labelUsedWidth = child.getMeasuredWidth() + label.calculateShadowWidth() + mLabelsMargin + labelOffset;
-                if (Util.hasNougat()){
+                if (Util.hasNougat()) {
                     measureChildWithMargins(label, widthMeasureSpec, 0, heightMeasureSpec, 0); // I allow label to use just the space which is not already used by its FAB - we dont need it with extended FAB it would cause visibility problems
                 } else {
                     measureChildWithMargins(label, widthMeasureSpec, mIsExtended ? 0 : labelUsedWidth, heightMeasureSpec, 0); // I allow label to use just the space which is not already used by its FAB - we dont need it with extended FAB it would cause visibility problems
@@ -458,7 +458,7 @@ public class FloatingActionMenu extends ViewGroup {
                     menuButtonTop + mMenuButton.getMeasuredHeight());
         } else {
             if (mIsExtended) {
-                mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, Util.getScreenWidth(getContext()) - (getPaddingRight()),
+                mMenuButton.layout(menuButtonLeft , menuButtonTop, Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.calculateShadowWidth()),
                         menuButtonTop + mMenuButton.calculateMeasuredWidth());
             } else {
                 mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
@@ -473,11 +473,11 @@ public class FloatingActionMenu extends ViewGroup {
             alignMenuText();
             alignMenuIcon();
         } else {
-            if(!Util.hasNougat()) {
+            if (!Util.hasNougat()) {
                 mImageToggle.layout(imageLeft, imageTop, imageLeft + mImageToggle.getMeasuredWidth(),
                         imageTop + mImageToggle.getMeasuredHeight());
             } else {
-               int newImageLeft = newLeftSide + mMenuButton.getCircleSize() / 2 + mMenuButton.calculateShadowWidth() / 2 - mImageToggle.getWidth() / 2;
+                int newImageLeft = newLeftSide + mMenuButton.getCircleSize() / 2 + mMenuButton.calculateShadowWidth() / 2 - mImageToggle.getWidth() / 2;
                 mImageToggle.layout(newImageLeft, imageTop, newImageLeft + mImageToggle.getMeasuredWidth(),
                         imageTop + mImageToggle.getMeasuredHeight());
             }
@@ -499,10 +499,9 @@ public class FloatingActionMenu extends ViewGroup {
             int childX = 0;
             int childY = 0;
             if (!Util.hasNougat()) {
-                 childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
-                 childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
-            }
-            else if (mIsExtended) {
+                childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
+                childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
+            } else if (mIsExtended) {
                 childX = menuButtonLeft + leftTranslation;
                 childY = openUp ? nextY - fab.calculateMeasuredHeight() - mButtonSpacing : nextY;
             } else {
@@ -784,19 +783,18 @@ public class FloatingActionMenu extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        if (mIsSetClosedOnTouchOutside) {
-//            boolean handled = false;
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    handled = isOpened();
-//                    break;
-//                case MotionEvent.ACTION_UP:
-//                    close(mIsAnimated);
-//                    handled = true;
-//            }
-//            return handled;
-//        }
-
+        if (mIsSetClosedOnTouchOutside) {
+            boolean handled = false;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    handled = isOpened();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    close(mIsAnimated);
+                    handled = true;
+            }
+            return handled;
+        }
         return super.onTouchEvent(event);
     }
 

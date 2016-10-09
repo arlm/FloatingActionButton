@@ -140,7 +140,7 @@ public class Label extends TextView {
     }
 
     public void removeLabelBackground() {
-        setBackgroundCompat(new ColorDrawable(Color.argb(0,0,0,0)));
+        setBackgroundCompat(new ColorDrawable(Color.argb(0, 0, 0, 0)));
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -319,17 +319,17 @@ public class Label extends TextView {
         }
 
         int action = event.getAction();
-//        switch (action) {
-//            case MotionEvent.ACTION_UP:
-//                onActionUp();
-//                mFab.onActionUp();
-//                break;
-//
-//            case MotionEvent.ACTION_CANCEL:
-//                onActionUp();
-//                mFab.onActionUp();
-//                break;
-//        }
+        switch (action) {
+            case MotionEvent.ACTION_UP:
+                onActionUp();
+                mFab.onActionUp();
+                break;
+
+            case MotionEvent.ACTION_CANCEL:
+                onActionUp();
+                mFab.onActionUp();
+                break;
+        }
 
         mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
