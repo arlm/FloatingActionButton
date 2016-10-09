@@ -458,7 +458,7 @@ public class FloatingActionMenu extends ViewGroup {
                     menuButtonTop + mMenuButton.getMeasuredHeight());
         } else {
             if (mIsExtended) {
-                mMenuButton.layout(menuButtonLeft , menuButtonTop, Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.calculateShadowWidth()),
+                mMenuButton.layout(menuButtonLeft, menuButtonTop, Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.calculateShadowWidth()),
                         menuButtonTop + mMenuButton.calculateMeasuredWidth());
             } else {
                 mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
@@ -581,7 +581,7 @@ public class FloatingActionMenu extends ViewGroup {
                 } else if (mIsExtended) {
                     int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
                     int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
-                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                    label.layout(extendedLabelLeft - leftTranslation, labelTop, extendedLabelRight - leftTranslation, labelBottom);
                 } else {
                     label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // Here we set label position
                 }
