@@ -453,12 +453,17 @@ public class FloatingActionMenu extends ViewGroup {
         if (mIsExtended) {
             leftTranslation = Util.dpToPx(getContext(), 8);
         }
-        if (mIsExtended) {
-            mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.calculateMeasuredWidth(),
-                    menuButtonTop + mMenuButton.calculateMeasuredWidth());
-        } else {
-            mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.calculateMeasuredWidth(),
+        if (!Util.hasNougat()) {
+            mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.getMeasuredWidth(),
                     menuButtonTop + mMenuButton.getMeasuredHeight());
+        } else {
+            if (mIsExtended) {
+                mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, Util.getScreenWidth(getContext()) - (getPaddingRight()),
+                        menuButtonTop + mMenuButton.calculateMeasuredWidth());
+            } else {
+                mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
+                        menuButtonTop + mMenuButton.getMeasuredHeight());
+            }
         }
         Log.d("Left-Top-TransL-Width-H", menuButtonLeft + " / " + menuButtonTop + " / " + leftTranslation + " / " + mMenuButton.getMeasuredWidth() + " / " + mMenuButton.getMeasuredHeight());
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
@@ -504,7 +509,7 @@ public class FloatingActionMenu extends ViewGroup {
                 childX = newLeftSide;
                 childY = openUp ? nextY - fab.calculateMeasuredHeight() - mButtonSpacing : nextY;
             }
-            
+
 
             if (fab == mMenuButton) {
                 if (!getMenuButton().isExtended()) {
