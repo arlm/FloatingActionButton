@@ -499,7 +499,7 @@ public class FloatingActionButton extends ImageButton {
         drawable.addState(new int[]{android.R.attr.state_pressed}, createCircleDrawable(mColorPressed));
         drawable.addState(new int[]{}, createCircleDrawable(mColorNormal));
 
-        if (false) { //FIXME
+        if (Util.hasLollipop()) {
             RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
                     new int[]{mColorRipple}), drawable, null);
             if (mIsExtended) {
@@ -547,7 +547,7 @@ public class FloatingActionButton extends ImageButton {
     @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setBackgroundCompat(Drawable drawable) {
-        if (false) { //FIXME
+        if (Util.hasJellyBean()) {
             setBackground(drawable);
         } else {
             setBackgroundDrawable(drawable);
@@ -639,30 +639,18 @@ public class FloatingActionButton extends ImageButton {
     void changeMenuSize(final Boolean shouldBeExtended) {
 
         mIsExtended = shouldBeExtended;
-       // getActionMenu().setVisibility(View.INVISIBLE);
-
-
+        FloatingActionButton.super.onAnimationEnd();
+        getActionMenu().setVisibility(View.INVISIBLE);
         getActionMenu().onMenuSizeChange();
-//        measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-//        setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-//        measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-//        updateBackground(); // It is not set visible here bec
-        ViewGroup.LayoutParams params = getActionMenu().getLayoutParams();
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        getActionMenu().setLayoutParams(params);
         uiHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
                 measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-              //  updateBackground(); // It is not set visible here because it may cause problem during animation aplicated on this button.
-//                getActionMenu().setCorrectPivot();
-
+                updateBackground(); // It is not set visible here because it may cause problem during animation aplicated on this button.
+                getActionMenu().setCorrectPivot();
             }
         }, 10);
-
-
     }
 
     void playHideAnimation() {
@@ -1470,9 +1458,8 @@ public class FloatingActionButton extends ImageButton {
         public void draw(Canvas canvas) {
             if (mIsExtended) {
                 drawRoundRectangleCanvas(canvas, mPaint);
-               // drawRoundRectangleCanvas(canvas, mErase);
             } else {
-              drawCircleCanvas(canvas, mPaint);
+                drawCircleCanvas(canvas, mPaint);
                 drawCircleCanvas(canvas, mErase);
             }
         }
