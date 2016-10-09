@@ -319,17 +319,17 @@ public class Label extends TextView {
         }
 
         int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_UP:
-                onActionUp();
-                mFab.onActionUp();
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-                onActionUp();
-                mFab.onActionUp();
-                break;
-        }
+//        switch (action) {
+//            case MotionEvent.ACTION_UP:
+//                onActionUp();
+//                mFab.onActionUp();
+//                break;
+//
+//            case MotionEvent.ACTION_CANCEL:
+//                onActionUp();
+//                mFab.onActionUp();
+//                break;
+//        }
 
         mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);

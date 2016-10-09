@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
@@ -28,8 +29,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.pivotX;
-
 public class FloatingActionMenu extends ViewGroup {
 
     protected static final int EXTENDED_ACTION_MENU = -1;
@@ -43,7 +42,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     private static final int LABELS_POSITION_LEFT = 0;
     private static final int LABELS_POSITION_RIGHT = 1;
-
+    public boolean isClicking = true;
     private AnimatorSet mOpenAnimatorSet = new AnimatorSet();
     private AnimatorSet mCloseAnimatorSet = new AnimatorSet();
     private AnimatorSet mIconToggleSet;
@@ -242,7 +241,7 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void onMenuSizeChange() {
-        close(false);
+      open(false);
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -371,6 +370,14 @@ public class FloatingActionMenu extends ViewGroup {
         mCloseAnimatorSet.setDuration(ANIMATION_DURATION);
     }
 
+    public boolean isClicking() {
+        return isClicking;
+    }
+
+    public void setIsClicking(boolean clicking) {
+        isClicking = clicking;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = 0;
@@ -407,7 +414,11 @@ public class FloatingActionMenu extends ViewGroup {
             if (label != null) {
                 int labelOffset = (mMaxButtonWidth - child.getMeasuredWidth()) / (mUsingMenuLabel ? 1 : 2);
                 int labelUsedWidth = child.getMeasuredWidth() + label.calculateShadowWidth() + mLabelsMargin + labelOffset;
-                measureChildWithMargins(label, widthMeasureSpec, mIsExtended ? 0 : labelUsedWidth, heightMeasureSpec, 0); // I allow label to use just the space which is not already used by its FAB - we dont need it with extended FAB it would cause visibility problems
+                if (Util.hasNougat()){
+                    measureChildWithMargins(label, widthMeasureSpec, 0, heightMeasureSpec, 0); // I allow label to use just the space which is not already used by its FAB - we dont need it with extended FAB it would cause visibility problems
+                } else {
+                    measureChildWithMargins(label, widthMeasureSpec, mIsExtended ? 0 : labelUsedWidth, heightMeasureSpec, 0); // I allow label to use just the space which is not already used by its FAB - we dont need it with extended FAB it would cause visibility problems
+                }
                 usedWidth += label.getMeasuredWidth();
                 maxLabelWidth = Math.max(maxLabelWidth, usedWidth + labelOffset);
             }
@@ -433,27 +444,41 @@ public class FloatingActionMenu extends ViewGroup {
                 : mMaxButtonWidth / 2 + getPaddingLeft();
         boolean openUp = mOpenDirection == OPEN_UP;
 
+        int newLeftSide = Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.getCircleSize() + mMenuButton.calculateShadowWidth());
         int leftTranslation = 0;
         int menuButtonTop = openUp
-                ? b - t - mMenuButton.getMeasuredHeight() - getPaddingBottom()
+                ? b - t - mMenuButton.calculateMeasuredHeight() - getPaddingBottom()
                 : getPaddingTop();
-        int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
+        int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.calculateMeasuredWidth() / 2;
         if (mIsExtended) {
             leftTranslation = Util.dpToPx(getContext(), 8);
         }
-        mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.getMeasuredWidth(),
-                menuButtonTop + mMenuButton.getMeasuredHeight());
+        if (mIsExtended) {
+            mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.calculateMeasuredWidth(),
+                    menuButtonTop + mMenuButton.calculateMeasuredWidth());
+        } else {
+            mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
+                    menuButtonTop + mMenuButton.getMeasuredHeight());
+        }
+        Log.d("Left-Top-TransL-Width-H", menuButtonLeft + " / " + menuButtonTop + " / " + leftTranslation + " / " + mMenuButton.getMeasuredWidth() + " / " + mMenuButton.getMeasuredHeight());
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
+
         if (mIsExtended) { // Sets position for text ("add new expense") and icon - in this case icon must be more left
             alignMenuText();
             alignMenuIcon();
         } else {
-            mImageToggle.layout(imageLeft, imageTop, imageLeft + mImageToggle.getMeasuredWidth(),
-                    imageTop + mImageToggle.getMeasuredHeight());
+            if(!Util.hasNougat()) {
+                mImageToggle.layout(imageLeft, imageTop, imageLeft + mImageToggle.getMeasuredWidth(),
+                        imageTop + mImageToggle.getMeasuredHeight());
+            } else {
+               int newImageLeft = newLeftSide + mMenuButton.getCircleSize() / 2 + mMenuButton.calculateShadowWidth() / 2 - mImageToggle.getWidth() / 2;
+                mImageToggle.layout(newImageLeft, imageTop, newImageLeft + mImageToggle.getMeasuredWidth(),
+                        imageTop + mImageToggle.getMeasuredHeight());
+            }
         }
         int nextY = openUp
-                ? menuButtonTop + mMenuButton.getMeasuredHeight() + mButtonSpacing
+                ? menuButtonTop + mMenuButton.calculateMeasuredHeight() + mButtonSpacing
                 : menuButtonTop;
 
         for (int i = mButtonsCount - 1; i >= 0; i--) {
@@ -466,11 +491,23 @@ public class FloatingActionMenu extends ViewGroup {
             if (fab.getVisibility() == GONE) continue;
 
             int childExtendedExtraX = getResources().getDimensionPixelSize(R.dimen.extended_button_child_left_offset);
-            int childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
-            int childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
+            int childX = 0;
+            int childY = 0;
+            if (!Util.hasNougat()) {
+                 childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
+                 childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
+            }
+            else if (mIsExtended) {
+                childX = menuButtonLeft + leftTranslation;
+                childY = openUp ? nextY - fab.calculateMeasuredHeight() - mButtonSpacing : nextY;
+            } else {
+                childX = newLeftSide;
+                childY = openUp ? nextY - fab.calculateMeasuredHeight() - mButtonSpacing : nextY;
+            }
+            
 
             if (fab == mMenuButton) {
-                if (!mIsExtended) {
+                if (!getMenuButton().isExtended()) {
                     fab.getLabelView().setVisibility(View.VISIBLE);
                     fab.setNormalMenuLabelColors();
                 } else {
@@ -478,7 +515,7 @@ public class FloatingActionMenu extends ViewGroup {
                 }
             }
             if (fab != mMenuButton) {
-                if (mIsExtended) {
+                if (getMenuButton().isExtended()) {
                     fab.setExtended(true);
                     fab.setLabelTextColor(getMenuButtonColorNormal());
                     fab.measure(fab.calculateMeasuredWidth(), fab.calculateMeasuredHeight());
@@ -487,8 +524,8 @@ public class FloatingActionMenu extends ViewGroup {
                     fab.setLabelTextColor(mLabelsNormalTextColor);
                     fab.measure(fab.calculateMeasuredWidth(), fab.calculateMeasuredHeight());
                 }
-                fab.layout(childX, childY, childX + fab.getMeasuredWidth(),
-                        childY + fab.getMeasuredHeight());
+                fab.layout(childX, childY, childX + fab.calculateMeasuredWidth(),
+                        childY + fab.calculateMeasuredHeight());
 
                 if (!mIsMenuOpening) {
                     fab.hide(false);
@@ -520,8 +557,24 @@ public class FloatingActionMenu extends ViewGroup {
                 int labelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
                         + label.getMeasuredHeight()) / 2;
 
+                int newlabelTop = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
+                        - 120) / 2;
+
+                int newlabelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
+                        + 120) / 2;
+
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
-                if (mIsExtended) {
+//                if (Util.hasNougat() && mIsExtended) {
+//                    int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
+//                    int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
+//                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+//                }
+//                else
+                if (Util.hasNougat() && !mIsExtended) {
+                    int extendedLabelRight = newLeftSide - 20; //FIXME random 20
+                    int extendedLabelLeft = extendedLabelRight - label.getWidth();
+                    label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
+                } else if (mIsExtended) {
                     int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
                     int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
                     label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
@@ -566,14 +619,14 @@ public class FloatingActionMenu extends ViewGroup {
                     fab.setBackgroundColor(mExtendedButtonBackgroundColor);
                 }
                 addLabel(fab);
-                if (fab == mMenuButton) {
-                    mMenuButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            toggle(mIsAnimated);
-                        }
-                    });
-                }
+//                if (fab == mMenuButton) {
+//                    mMenuButton.setOnClickListener(new OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            toggle(mIsAnimated);
+//                        }
+//                    });
+//                }
             }
         }
     }
@@ -644,7 +697,7 @@ public class FloatingActionMenu extends ViewGroup {
         }
         label.setText(text);
         fab.updateBackground();
-        label.setOnClickListener(fab.getOnClickListener());
+        // label.setOnClickListener(fab.getOnClickListener());
         addView(label);
         fab.setTag(R.id.fab_label, label);
     }
@@ -726,18 +779,18 @@ public class FloatingActionMenu extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mIsSetClosedOnTouchOutside) {
-            boolean handled = false;
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    handled = isOpened();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    close(mIsAnimated);
-                    handled = true;
-            }
-            return handled;
-        }
+//        if (mIsSetClosedOnTouchOutside) {
+//            boolean handled = false;
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    handled = isOpened();
+//                    break;
+//                case MotionEvent.ACTION_UP:
+//                    close(mIsAnimated);
+//                    handled = true;
+//            }
+//            return handled;
+//        }
 
         return super.onTouchEvent(event);
     }

@@ -38,6 +38,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.R.attr.width;
+
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -248,6 +250,7 @@ public class FloatingActionButton extends ImageButton {
 
     protected int calculateMeasuredWidth() {
         int width;
+
         if (mIsExtended) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
@@ -441,6 +444,7 @@ public class FloatingActionButton extends ImageButton {
         if (getIconDrawable() != null) {
             iconSize = Math.max(getIconDrawable().getIntrinsicWidth(), getIconDrawable().getIntrinsicHeight());
         }
+
         if (!mIsExtended) {
             iconOffsetVertical = ((getCircleSize() - (iconSize > 0 ? iconSize : mIconSize)) / 2);
         } else {
@@ -639,18 +643,25 @@ public class FloatingActionButton extends ImageButton {
     void changeMenuSize(final Boolean shouldBeExtended) {
 
         mIsExtended = shouldBeExtended;
-        FloatingActionButton.super.onAnimationEnd();
         getActionMenu().setVisibility(View.INVISIBLE);
         getActionMenu().onMenuSizeChange();
         uiHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-                measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-                updateBackground(); // It is not set visible here because it may cause problem during animation aplicated on this button.
-                getActionMenu().setCorrectPivot();
+
+                 // It is not set visible here because it may cause problem during animation aplicated on this button.
+               // getActionMenu().setCorrectPivot();
             }
-        }, 10);
+        }, 100);
+        uiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                measure(calculateMeasuredWidth(), calculateMeasuredHeight());
+        //        updateBackground();
+            }
+        },200);
+
     }
 
     void playHideAnimation() {
@@ -722,21 +733,21 @@ public class FloatingActionButton extends ImageButton {
             if (label == null) return super.onTouchEvent(event);
 
             int action = event.getAction();
-            switch (action) {
-                case MotionEvent.ACTION_UP:
-                    if (label != null) {
-                        label.onActionUp();
-                    }
-                    onActionUp();
-                    break;
-
-                case MotionEvent.ACTION_CANCEL:
-                    if (label != null) {
-                        label.onActionUp();
-                    }
-                    onActionUp();
-                    break;
-            }
+//            switch (action) {
+//                case MotionEvent.ACTION_UP:
+//                    if (label != null) {
+//                        label.onActionUp();
+//                    }
+//                    onActionUp();
+//                    break;
+//
+//                case MotionEvent.ACTION_CANCEL:
+//                    if (label != null) {
+//                        label.onActionUp();
+//                    }
+//                    onActionUp();
+//                    break;
+//            }
             mGestureDetector.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
@@ -1237,7 +1248,7 @@ public class FloatingActionButton extends ImageButton {
 
             Label label = getLabelView();
             if (label != null) {
-                label.hide(!mIsExtended && animate);
+                label.hide(!getActionMenu().isExtended() && animate);
             }
 
             getHideAnimation().setAnimationListener(new Animation.AnimationListener() {
@@ -1265,7 +1276,7 @@ public class FloatingActionButton extends ImageButton {
         show(animate);
         Label label = getLabelView();
         if (label != null) {
-            label.show(!mIsExtended && animate);
+            label.show(!getActionMenu().isExtended() && animate);
         }
     }
 
@@ -1456,7 +1467,7 @@ public class FloatingActionButton extends ImageButton {
 
         @Override
         public void draw(Canvas canvas) {
-            if (mIsExtended) {
+            if (getActionMenu().isExtended()) {
                 drawRoundRectangleCanvas(canvas, mPaint);
             } else {
                 drawCircleCanvas(canvas, mPaint);

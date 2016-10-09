@@ -1,7 +1,7 @@
 package com.github.clans.fab.sample;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -49,24 +49,49 @@ public class HomeFragment extends Fragment {
         mListView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, locales));
         mFab = (FloatingActionMenu) getActivity().findViewById(R.id.fab);
-
+        delayClick();
         mFab.setIconAnimated(false);
         mFab.setClosedOnTouchOutside(true);
         mFab.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_up)));
         mFab.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_down)));
-        mFab.setOnMenuButtonClickListener(new View.OnClickListener() {
+        mFab.setOnMenuButtonClickListener(new FloatingActionMenu.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFab.isOpened()) {
+                mFab.setIsClicking(true);
+                if (mFab.isExtended()) {
                     mFab.close(false);
-                } else {
+                    mFab.shrinkMenu();
+                    mFab.showMenu(false);
                     mFab.open(false);
+//                    ViewGroup.LayoutParams params = mFab.getLayoutParams();
+//                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                 //   mFab.setLayoutParams(params);
+                    delayClick();
+                } else {
+                    //mFab.close(false);
+                    mFab.extendMenu();
+                    mFab.showMenu(false);
+                    mFab.open(true);
+//                    ViewGroup.LayoutParams params = mFab.getLayoutParams();
+//                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                   // mFab.setLayoutParams(params);
+                    delayClick();
                 }
             }
         });
-        mFab.setCorrectPivotForExtendedSize();
-        mFab.setCorrectPivotForNormalSize();
-        mFab.setFloatingActionMenuTypeface(Typeface.BOLD);
 
+
+    }
+
+    public void delayClick() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFab.setIsClicking(false);
+            }
+        }, 3000);
     }
 }
