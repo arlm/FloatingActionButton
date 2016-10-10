@@ -465,7 +465,6 @@ public class FloatingActionMenu extends ViewGroup {
                         menuButtonTop + mMenuButton.getMeasuredHeight());
             }
         }
-        Log.d("Left-Top-TransL-Width-H", menuButtonLeft + " / " + menuButtonTop + " / " + leftTranslation + " / " + mMenuButton.getMeasuredWidth() + " / " + mMenuButton.getMeasuredHeight());
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
 
@@ -577,17 +576,18 @@ public class FloatingActionMenu extends ViewGroup {
                 if (Util.hasNougat()) {
                     if (!mIsExtended) {
                         int extendedLabelRight = newLeftSide - 20; //FIXME random 20
-                        int extendedLabelLeft = extendedLabelRight - label.getWidth();
-                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                        int extendedLabelLeft = extendedLabelRight - label.getMeasuredWidth();
+                        label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
                     } else {
                         int extendedLabelRight = newLeftSide - 20; //FIXME random 20
-                        int extendedLabelLeft = extendedLabelRight - label.getWidth();
-                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                        int extendedLabelLeft = extendedLabelRight - label.getMeasuredWidth();
+                        label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
                     }
-                } else {
+                } else if (!Util.hasNougat()) {
                     if (mIsExtended) {
-                        int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
-                        int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
+                         float WHITE_SPACE_PERCENTAGE = 1.9f;
+                        int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE ) / 2;
+                        int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE ) / 2;
                         label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
                     } else {
                         label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // Here we set label position
@@ -645,7 +645,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     private void alignMenuText() {
         int textIconGap = Math.round(getResources().getDimension(R.dimen.extended_button_gap_between_icon_text));
-        int textLeft = (Math.round(mMenuButton.getX()) + mMenuButton.getMeasuredWidth() / 2 - mMenuText.getMeasuredWidth() / 2) + mImageToggle.getMeasuredWidth() / 2 + textIconGap / 2;
+        int textLeft = (Math.round((mMenuButton.getX()) + (mMenuButton.getWidth() - getPaddingRight() / 2) / 2) - mMenuText.getWidth() / 2) + mImageToggle.getMeasuredWidth() / 2 + textIconGap / 2;
         int textTop = Math.round(mMenuButton.getY()) + mMenuButton.getMeasuredHeight() / 2 - mMenuText.getMeasuredHeight() / 2;
         mMenuText.layout(textLeft, textTop, textLeft + mMenuText.getMeasuredWidth(),
                 textTop + mMenuText.getMeasuredHeight());
