@@ -457,7 +457,7 @@ public class FloatingActionMenu extends ViewGroup {
                     menuButtonTop + mMenuButton.getMeasuredHeight());
         } else {
             if (mIsExtended) {
-                int buttonRightEdge = Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.calculateShadowWidth());
+                int buttonRightEdge = Util.getScreenWidth(getContext()) - (getPaddingRight());
                 mMenuButton.layout(buttonRightEdge - mMenuButton.calculateMeasuredWidthAuto() , menuButtonTop, buttonRightEdge,
                         menuButtonTop + mMenuButton.calculateMeasuredWidth());
             } else {
@@ -502,7 +502,7 @@ public class FloatingActionMenu extends ViewGroup {
                 childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + (mIsExtended ? childExtendedExtraX : 0);
                 childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
             } else if (mIsExtended) {
-                childX = menuButtonLeft + leftTranslation;
+                childX = menuButtonLeft;
                 childY = openUp ? nextY - fab.calculateMeasuredHeight() - mButtonSpacing : nextY;
             } else {
                 childX = newLeftSide;
