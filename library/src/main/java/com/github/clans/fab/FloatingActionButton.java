@@ -38,6 +38,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.R.attr.width;
+
 public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
@@ -263,6 +265,22 @@ public class FloatingActionButton extends ImageButton {
             width += mProgressWidth * 2;
         }
         return width;
+    }
+
+    public int calculateMeasuredWidthPortrait() {
+        return Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
+    }
+
+    public int calculateMeasuredWidthLandscape() {
+        return getExtendedButtonLandscapeWidth() + calculateShadowWidth();
+    }
+
+    public int calculateMeasuredWidthAuto() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return  Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
+        } else {
+            return  getExtendedButtonLandscapeWidth() + calculateShadowWidth();
+        }
     }
 
     protected int calculateMeasuredHeight() {

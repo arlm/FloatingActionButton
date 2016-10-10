@@ -241,7 +241,6 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void onMenuSizeChange() {
-        open(false);
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -458,7 +457,8 @@ public class FloatingActionMenu extends ViewGroup {
                     menuButtonTop + mMenuButton.getMeasuredHeight());
         } else {
             if (mIsExtended) {
-                mMenuButton.layout(menuButtonLeft , menuButtonTop, Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.calculateShadowWidth()),
+                int buttonRightEdge = Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.calculateShadowWidth());
+                mMenuButton.layout(buttonRightEdge - mMenuButton.calculateMeasuredWidthAuto() , menuButtonTop, buttonRightEdge,
                         menuButtonTop + mMenuButton.calculateMeasuredWidth());
             } else {
                 mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
