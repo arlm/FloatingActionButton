@@ -458,7 +458,7 @@ public class FloatingActionMenu extends ViewGroup {
         } else {
             if (mIsExtended) {
                 int buttonRightEdge = Util.getScreenWidth(getContext()) - (getPaddingRight());
-                mMenuButton.layout(buttonRightEdge - mMenuButton.calculateMeasuredWidthAuto() , menuButtonTop, buttonRightEdge,
+                mMenuButton.layout(buttonRightEdge - mMenuButton.calculateMeasuredWidthAuto(), menuButtonTop, buttonRightEdge,
                         menuButtonTop + mMenuButton.calculateMeasuredWidth());
             } else {
                 mMenuButton.layout(newLeftSide, menuButtonTop, newLeftSide + mMenuButton.getMeasuredWidth(),
@@ -574,16 +574,24 @@ public class FloatingActionMenu extends ViewGroup {
 //                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
 //                }
 //                else
-                if (Util.hasNougat() && !mIsExtended) {
-                    int extendedLabelRight = newLeftSide - 20; //FIXME random 20
-                    int extendedLabelLeft = extendedLabelRight - label.getWidth();
-                    label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
-                } else if (mIsExtended) {
-                    int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
-                    int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
-                    label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                if (Util.hasNougat()) {
+                    if (!mIsExtended) {
+                        int extendedLabelRight = newLeftSide - 20; //FIXME random 20
+                        int extendedLabelLeft = extendedLabelRight - label.getWidth();
+                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                    } else {
+                        int extendedLabelRight = newLeftSide - 20; //FIXME random 20
+                        int extendedLabelLeft = extendedLabelRight - label.getWidth();
+                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                    }
                 } else {
-                    label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // Here we set label position
+                    if (mIsExtended) {
+                        int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
+                        int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + mImageToggle.getWidth() / 2;
+                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                    } else {
+                        label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight()); // Here we set label position
+                    }
                 }
                 if (!mIsMenuOpening) {
                     label.setVisibility(INVISIBLE);
