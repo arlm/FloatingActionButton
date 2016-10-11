@@ -20,7 +20,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
 import android.os.Handler;
@@ -37,8 +36,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import static android.R.attr.width;
 
 /**
  * WRITE DESCRIPTION PLS
@@ -133,7 +130,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
     private boolean mShouldSetProgress;
     private int mProgressMax = 100;
     private boolean mShowProgressBackground;
-    private boolean mIsExtended = true;
     private Context mContext;
     private Handler uiHandler = new Handler();
 
@@ -250,11 +246,11 @@ public class ExtendedFloatingActionButton extends ImageButton {
         int width;
 
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
-            } else {
-                width = getExtendedButtonLandscapeWidth() + calculateShadowWidth();
-            }
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            width = Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
+        } else {
+            width = getExtendedButtonLandscapeWidth() + calculateShadowWidth();
+        }
 
 
         if (mProgressBarEnabled) {
@@ -273,9 +269,9 @@ public class ExtendedFloatingActionButton extends ImageButton {
 
     public int calculateMeasuredWidthAuto() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return  Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
+            return Util.getScreenWidth(getContext()) - getExtendedButtonPadding() + calculateShadowWidth();
         } else {
-            return  getExtendedButtonLandscapeWidth() + calculateShadowWidth();
+            return getExtendedButtonLandscapeWidth() + calculateShadowWidth();
         }
     }
 
@@ -458,14 +454,14 @@ public class ExtendedFloatingActionButton extends ImageButton {
         }
 
 
-            int extraLeftOffset = 0;
+        int extraLeftOffset = 0;
 
-            if (getLabelView() != null) {
-                extraLeftOffset = Math.round(((getX() + calculateMeasuredWidth() / 2) - getLabelView().getX()) + getResources().getDimensionPixelSize(R.dimen.extended_button_gap_between_icon_text) / 2); // Align icon on the left side of label text
-            }
-            iconOffsetVertical = (calculateMeasuredHeight() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
-            iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;
-            iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset;
+        if (getLabelView() != null) {
+            extraLeftOffset = Math.round(((getX() + calculateMeasuredWidth() / 2) - getLabelView().getX()) + getResources().getDimensionPixelSize(R.dimen.extended_button_gap_between_icon_text) / 2); // Align icon on the left side of label text
+        }
+        iconOffsetVertical = (calculateMeasuredHeight() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
+        iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;
+        iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset;
 
 
         int circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
@@ -477,14 +473,14 @@ public class ExtendedFloatingActionButton extends ImageButton {
         }
 
 
-            layerDrawable.setLayerInset(
-                    hasShadow() ? 2 : 1,
-                    iconOffsetLeft,
-                    iconOffsetVertical + (circleInsetVertical / 4),
-                    iconOffsetRight,
-                    iconOffsetVertical +
-                            (circleInsetVertical / 4)
-            );
+        layerDrawable.setLayerInset(
+                hasShadow() ? 2 : 1,
+                iconOffsetLeft,
+                iconOffsetVertical + (circleInsetVertical / 4),
+                iconOffsetRight,
+                iconOffsetVertical +
+                        (circleInsetVertical / 4)
+        );
 
 
         setBackgroundCompat(layerDrawable);
@@ -508,28 +504,21 @@ public class ExtendedFloatingActionButton extends ImageButton {
         if (Util.hasLollipop()) {
             RippleDrawable ripple = new RippleDrawable(new ColorStateList(new int[][]{{}},
                     new int[]{mColorRipple}), drawable, null);
-            if (mIsExtended) {
-                setOutlineProvider(new ViewOutlineProvider() {
-                    int extraShadowSpace = 5;
 
-                    @Override
-                    public void getOutline(View view, Outline outline) {
-                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 70f), 25f);
+            setOutlineProvider(new ViewOutlineProvider() {
+                int extraShadowSpace = 5;
 
-                        } else {
-                            outline.setRoundRect(0, -8, getExtendedButtonLandscapeWidth() + Util.dpToPx(getContext(), extraShadowSpace), Util.dpToPx(getContext(), 70f), 25f);
-                        }
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        outline.setRoundRect(0, -8, Util.getScreenWidth(getContext()) - (getExtendedButtonPadding() - Util.dpToPx(getContext(), extraShadowSpace)), Util.dpToPx(getContext(), 70f), 25f);
+
+                    } else {
+                        outline.setRoundRect(0, -8, getExtendedButtonLandscapeWidth() + Util.dpToPx(getContext(), extraShadowSpace), Util.dpToPx(getContext(), 70f), 25f);
                     }
-                });
-            } else {
-                setOutlineProvider(new ViewOutlineProvider() {
-                    @Override
-                    public void getOutline(View view, Outline outline) {
-                        outline.setOval(0, 0, view.getWidth(), view.getHeight());
-                    }
-                });
-            }
+                }
+            });
+
             setClipToOutline(true);
             mBackgroundDrawable = ripple;
             return ripple;
@@ -540,12 +529,8 @@ public class ExtendedFloatingActionButton extends ImageButton {
     }
 
     private Drawable createCircleDrawable(int color) {
-       CircleDrawable shapeDrawable;
-        if (mIsExtended) {
-            shapeDrawable = new CircleDrawable(new ExtendedButtonShadowShape(getContext()));
-        } else {
-            shapeDrawable = new CircleDrawable(new OvalShape());
-        }
+        CircleDrawable shapeDrawable;
+        shapeDrawable = new CircleDrawable(new ExtendedButtonShadowShape(getContext()));
         shapeDrawable.getPaint().setColor(color);
         return shapeDrawable;
     }
@@ -641,7 +626,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
     ExtendedFloatingActionMenu getActionMenu() {
         return ((ExtendedFloatingActionMenu) getParent());
     }
-
 
 
     void playHideAnimation() {
@@ -760,7 +744,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
             return;
         }
 
-       ProgressSavedState ss = (ProgressSavedState) state;
+        ProgressSavedState ss = (ProgressSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
 
         this.mCurrentProgress = ss.mCurrentProgress;
@@ -1228,7 +1212,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
 
             ExtendedLabel label = getLabelView();
             if (label != null) {
-                label.hide(!getActionMenu().isExtended() && animate);
+                label.hide(false);
             }
 
             getHideAnimation().setAnimationListener(new Animation.AnimationListener() {
@@ -1256,7 +1240,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
         show(animate);
         ExtendedLabel label = getLabelView();
         if (label != null) {
-            label.show(!getActionMenu().isExtended() && animate);
+            label.show(false);
         }
     }
 
@@ -1285,23 +1269,18 @@ public class ExtendedFloatingActionButton extends ImageButton {
     }
 
     public void setExtended(Boolean isExtended) {
-        mIsExtended = isExtended;
         mColorNormal = mColorExtendedNormal;
         mColorPressed = mColorExtendedPressed;
         mColorRipple = mColorExtendedRipple;
         mColorDisabled = mColorExtendedDisabled;
         setColorRipple(mColorRipple);
         setIconColor(getActionMenu().getMenuButtonColorNormal());
-        if (isExtended) {
-            if (getLabelView() != null) {
-                getLabelView().removeLabelBackground();
-            }
 
-        } else {
-            if (getLabelView() != null) {
-                setLabelColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
-            }
+        if (getLabelView() != null) {
+            getLabelView().removeLabelBackground();
         }
+
+
     }
 
     public void setNormalMenuLabelColors() {
@@ -1314,10 +1293,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
     public void setIconColor(int color) {
         PorterDuff.Mode filterMode = PorterDuff.Mode.SRC_ATOP;
         mIcon.setColorFilter(color, filterMode);
-    }
-
-    public Boolean isExtended() {
-        return mIsExtended;
     }
 
     static class ProgressSavedState extends BaseSavedState {
@@ -1447,12 +1422,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
 
         @Override
         public void draw(Canvas canvas) {
-            if (getActionMenu().isExtended()) {
-                drawRoundRectangleCanvas(canvas, mPaint);
-            } else {
-                drawCircleCanvas(canvas, mPaint);
-                drawCircleCanvas(canvas, mErase);
-            }
+            drawRoundRectangleCanvas(canvas, mPaint);
         }
 
         private void drawRoundRectangleCanvas(Canvas canvas, Paint paint) {

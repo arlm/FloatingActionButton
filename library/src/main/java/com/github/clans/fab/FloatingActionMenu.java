@@ -567,10 +567,6 @@ public class FloatingActionMenu extends ViewGroup {
         bringChildToFront(mImageToggle);
         bringChildToFront(mMenuText);
         mButtonsCount = getChildCount();
-        if (mIsExtended) { // Sets position for text ("add new expense") and icon - in this case icon must be more left
-            alignMenuText();
-            alignMenuIcon();
-        }
         createLabels();
     }
 
