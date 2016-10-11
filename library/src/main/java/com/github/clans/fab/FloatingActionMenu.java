@@ -550,10 +550,10 @@ public class FloatingActionMenu extends ViewGroup {
                         + label.getMeasuredHeight()) / 2;
 
                 int newlabelTop = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
-                        - 130) / 2;
+                        - 100) / 2;
 
                 int newlabelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
-                        + 130) / 2;
+                        + 100) / 2;
 
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
                 float WHITE_SPACE_PERCENTAGE = 1.0f;
@@ -567,7 +567,7 @@ public class FloatingActionMenu extends ViewGroup {
                         int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
                         label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
                     }
-                } else if (!Util.hasNougat()) {
+                } else {
                     if (mIsExtended) {
                         int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
                         int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
