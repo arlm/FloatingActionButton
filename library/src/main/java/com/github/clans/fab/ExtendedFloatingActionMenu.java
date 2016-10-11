@@ -29,6 +29,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.height;
+import static android.R.attr.width;
+
 /**
  * WRITE DESCRIPTION PLS
  *
@@ -36,7 +39,7 @@ import java.util.List;
  */
 
 
-public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMenu {
+public class ExtendedFloatingActionMenu extends ViewGroup {
 
     protected static final int EXTENDED_ACTION_MENU = -1;
     private static final int ANIMATION_DURATION = 300;
@@ -380,9 +383,9 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
                 ? b - t - mMenuButton.calculateMeasuredHeight() - getPaddingBottom()
                 : getPaddingTop();
         int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.calculateMeasuredWidth() / 2;
-        leftTranslation = Util.dpToPx(getContext(), 8);
-        mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.getMeasuredWidth(),
-                menuButtonTop + mMenuButton.getMeasuredHeight());
+            leftTranslation = Util.dpToPx(getContext(), 8);
+            mMenuButton.layout(menuButtonLeft + leftTranslation, menuButtonTop, menuButtonLeft + leftTranslation + mMenuButton.getMeasuredWidth(),
+                    menuButtonTop + mMenuButton.getMeasuredHeight());
 
         int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
         int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
@@ -404,14 +407,14 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
             int childExtendedExtraX = getResources().getDimensionPixelSize(R.dimen.extended_button_child_left_offset);
             int childX = 0;
             int childY = 0;
-            childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + childExtendedExtraX;
-            childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
+                childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2 + childExtendedExtraX;
+                childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
 
             if (fab != mMenuButton) {
 
-                fab.setExtended(true);
-                fab.setLabelTextColor(getMenuButtonColorNormal());
-                fab.measure(fab.calculateMeasuredWidth(), fab.calculateMeasuredHeight());
+                    fab.setExtended(true);
+                    fab.setLabelTextColor(getMenuButtonColorNormal());
+                    fab.measure(fab.calculateMeasuredWidth(), fab.calculateMeasuredHeight());
 
                 fab.layout(childX, childY, childX + fab.calculateMeasuredWidth(),
                         childY + fab.calculateMeasuredHeight());
@@ -453,9 +456,9 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
 
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
                 float WHITE_SPACE_PERCENTAGE = 1.0f;
-                int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
-                int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
-                label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                        int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
+                        int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
+                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
 
                 if (!mIsMenuOpening) {
                     label.setVisibility(INVISIBLE);
@@ -468,8 +471,8 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
                     ? childY - buttonSpacing
                     : childY + child.getMeasuredHeight() + buttonSpacing;
         }
-        alignMenuText();
-        alignMenuIcon();
+            alignMenuText();
+            alignMenuIcon();
     }
 
     private int adjustForOvershoot(int dimension) {
@@ -491,8 +494,8 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
         bringChildToFront(mImageToggle);
         bringChildToFront(mMenuText);
         mButtonsCount = getChildCount();
-        alignMenuText();// FIXME: Do we really need this ?
-        alignMenuIcon();
+            alignMenuText();// FIXME: Do we really need this ?
+            alignMenuIcon();
         createLabels();
     }
 
@@ -706,7 +709,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
         }
     }
 
-    @Override
     public void open(final boolean animate) {
         if (!isOpened()) {
             if (isBackgroundEnabled()) {
@@ -765,7 +767,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
         }
     }
 
-    @Override
     public void close(final boolean animate) {
         if (isOpened()) {
             if (isBackgroundEnabled()) {
@@ -796,7 +797,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
                             if (fab != mMenuButton) {
                                 fab.hide(animate);
                             }
-                            ExtendedLabel label = (ExtendedLabel) fab.getTag(R.id.fab_label);
+                            ExtendedLabel  label = (ExtendedLabel) fab.getTag(R.id.fab_label);
                             if (label != null && label.isHandleVisibilityChanges()) {
                                 label.hide(false);
                             }
@@ -898,12 +899,10 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
         mMenuButton.setHideAnimation(hideAnimation);
     }
 
-    @Override
     public boolean isMenuHidden() {
         return getVisibility() == INVISIBLE;
     }
 
-    @Override
     public boolean isMenuButtonHidden() {
         return mMenuButton.isHidden();
     }
@@ -923,7 +922,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
      *
      * @param animate if true - plays "show animation"
      */
-    @Override
     public void showMenu(boolean animate) {
         setCorrectPivot();
         if (isMenuHidden()) {
@@ -939,7 +937,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
      *
      * @param animate if true - plays "hide animation"
      */
-    @Override
     public void hideMenu(final boolean animate) {
         setCorrectPivot();
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
@@ -980,7 +977,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
      *
      * @param animate if true - plays "show animation"
      */
-    @Override
     public void showMenuButton(boolean animate) {
         setCorrectPivot();
         if (isMenuButtonHidden()) {
@@ -994,7 +990,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMen
      *
      * @param animate if true - plays "hide animation"
      */
-    @Override
     public void hideMenuButton(final boolean animate) {
         setCorrectPivot();
         if (!isMenuButtonHidden() && !mIsMenuButtonAnimationRunning) {

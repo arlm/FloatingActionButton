@@ -28,7 +28,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FloatingActionMenu extends ViewGroup implements FloatingMenu{
+public class FloatingActionMenu extends ViewGroup {
 
     private static final int ANIMATION_DURATION = 300;
     private static final float CLOSED_PLUS_ROTATION = 0f;
@@ -621,7 +621,7 @@ public class FloatingActionMenu extends ViewGroup implements FloatingMenu{
             open(animate);
         }
     }
-    @Override
+
     public void open(final boolean animate) {
         if (!isOpened()) {
             if (isBackgroundEnabled()) {
@@ -677,7 +677,7 @@ public class FloatingActionMenu extends ViewGroup implements FloatingMenu{
             }, ++counter * mAnimationDelayPerItem);
         }
     }
-    @Override
+
     public void close(final boolean animate) {
         if (isOpened()) {
             if (isBackgroundEnabled()) {
@@ -808,11 +808,11 @@ public class FloatingActionMenu extends ViewGroup implements FloatingMenu{
         mMenuButtonHideAnimation = hideAnimation;
         mMenuButton.setHideAnimation(hideAnimation);
     }
-    @Override
+
     public boolean isMenuHidden() {
         return getVisibility() == INVISIBLE;
     }
-    @Override
+
     public boolean isMenuButtonHidden() {
         return mMenuButton.isHidden();
     }
@@ -822,7 +822,6 @@ public class FloatingActionMenu extends ViewGroup implements FloatingMenu{
      *
      * @param animate if true - plays "show animation"
      */
-    @Override
     public void showMenu(boolean animate) {
         if (isMenuHidden()) {
             if (animate) {
@@ -837,7 +836,6 @@ public class FloatingActionMenu extends ViewGroup implements FloatingMenu{
      *
      * @param animate if true - plays "hide animation"
      */
-    @Override
     public void hideMenu(final boolean animate) {
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
