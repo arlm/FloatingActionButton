@@ -550,10 +550,10 @@ public class FloatingActionMenu extends ViewGroup {
                         + label.getMeasuredHeight()) / 2;
 
                 int newlabelTop = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
-                        - 100) / 2;
+                        - label.getMeasuredHeight()) / 2;
 
                 int newlabelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
-                        + 100) / 2;
+                        + label.getMeasuredHeight()) / 2;
 
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
                 float WHITE_SPACE_PERCENTAGE = 1.0f;
