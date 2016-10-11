@@ -656,30 +656,6 @@ public class FloatingActionButton extends ImageButton {
         return ((FloatingActionMenu) getParent());
     }
 
-    void changeMenuSize(final Boolean shouldBeExtended) {
-
-        mIsExtended = shouldBeExtended;
-        getActionMenu().setVisibility(View.INVISIBLE);
-        getActionMenu().onMenuSizeChange();
-        uiHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
-
-                // It is not set visible here because it may cause problem during animation aplicated on this button.
-                // getActionMenu().setCorrectPivot();
-            }
-        }, 100);
-        uiHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                measure(calculateMeasuredWidth(), calculateMeasuredHeight());
-                //        updateBackground();
-            }
-        }, 200);
-
-    }
-
     void playHideAnimation() {
         mShowAnimation.cancel();
         startAnimation(mHideExtendedAnimation);

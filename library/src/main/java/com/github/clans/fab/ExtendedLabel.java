@@ -28,7 +28,7 @@ import android.view.ViewOutlineProvider;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-public class Label extends TextView {
+public class ExtendedLabel extends TextView {
 
     private static final Xfermode PORTER_DUFF_CLEAR = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
@@ -44,7 +44,7 @@ public class Label extends TextView {
     private int mColorPressed;
     private int mColorRipple;
     private int mCornerRadius;
-    private FloatingActionButton mFab;
+    private ExtendedFloatingActionButton mFab;
     private Animation mShowAnimation;
     private Animation mHideAnimation;
     private boolean mUsingStyle;
@@ -70,15 +70,15 @@ public class Label extends TextView {
     });
     private boolean mHandleVisibilityChanges = true;
 
-    public Label(Context context) {
+    public ExtendedLabel(Context context) {
         super(context);
     }
 
-    public Label(Context context, AttributeSet attrs) {
+    public ExtendedLabel(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public Label(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ExtendedLabel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -165,7 +165,7 @@ public class Label extends TextView {
         return shapeDrawable;
     }
 
-    private void setShadow(FloatingActionButton fab) {
+    private void setShadow(ExtendedFloatingActionButton fab) {
         mShadowColor = fab.getShadowColor();
         mShadowRadius = 0; // We dont use shadow in our app
         mShadowXOffset = fab.getShadowXOffset();
@@ -233,7 +233,7 @@ public class Label extends TextView {
 //        setPressed(false);
     }
 
-    void setFab(FloatingActionButton fab) {
+    void setFab(ExtendedFloatingActionButton fab) {
         mFab = fab;
         setShadow(fab);
     }
@@ -288,6 +288,10 @@ public class Label extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        if (mFab != null) {  // Ripple was not handled.
+            return false;
+        }
 
         if (mFab == null || mFab.getOnClickListener() == null || !mFab.isEnabled()) {
             return super.onTouchEvent(event);
