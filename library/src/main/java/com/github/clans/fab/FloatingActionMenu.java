@@ -440,8 +440,8 @@ public class FloatingActionMenu extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int buttonsHorizontalCenter = mLabelsPosition == LABELS_POSITION_LEFT
-                ? r - l - mMaxButtonWidth / 2 - getPaddingRight()
-                : mMaxButtonWidth / 2 + getPaddingLeft();
+                ? r - l - mMaxButtonWidth / 2 - getMenuPaddingRight()
+                : mMaxButtonWidth / 2 + getMenuPaddingRight();
         boolean openUp = mOpenDirection == OPEN_UP;
 
         int newLeftSide = Util.getScreenWidth(getContext()) - (getPaddingRight() + mMenuButton.getCircleSize() + mMenuButton.calculateShadowWidth());
@@ -458,7 +458,7 @@ public class FloatingActionMenu extends ViewGroup {
                     menuButtonTop + mMenuButton.getMeasuredHeight());
         } else {
             if (mIsExtended) {
-                int buttonRightEdge = Util.getScreenWidth(getContext()) - (getPaddingRight());
+                int buttonRightEdge = Util.getScreenWidth(getContext()) - (getMenuPaddingRight());
                 mMenuButton.layout(buttonRightEdge - mMenuButton.calculateMeasuredWidthAuto(), menuButtonTop, buttonRightEdge,
                         menuButtonTop + mMenuButton.calculateMeasuredWidth());
             } else {
@@ -604,6 +604,14 @@ public class FloatingActionMenu extends ViewGroup {
 
     private int adjustForOvershoot(int dimension) {
         return (int) (dimension * 0.03 + dimension);
+    }
+
+    public int getMenuPaddingRight() {
+        if (Util.hasNougat()) {
+            return Math.round(getPaddingRight() * 0.7f);
+        } else {
+            return getPaddingRight();
+        }
     }
 
     @Override
