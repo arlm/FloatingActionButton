@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.FloatingMenu;
 import com.github.fab.sample.R;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class MenusFragment extends Fragment {
     private FloatingActionMenu menuYellow;
     private FloatingActionMenu menuGreen;
     private FloatingActionMenu menuBlue;
-    private FloatingActionMenu menuDown;
-    private FloatingActionMenu menuLabelsRight;
+    private FloatingMenu menuDown;
+    private FloatingMenu menuLabelsRight;
 
     private FloatingActionButton fab1;
     private FloatingActionButton fab2;
@@ -39,7 +40,7 @@ public class MenusFragment extends Fragment {
 
     private FloatingActionButton fabEdit;
 
-    private List<FloatingActionMenu> menus = new ArrayList<>();
+    private List<FloatingMenu> menus = new ArrayList<>();
     private Handler mUiHandler = new Handler();
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -71,8 +72,8 @@ public class MenusFragment extends Fragment {
         menuYellow = (FloatingActionMenu) view.findViewById(R.id.menu_yellow);
         menuGreen = (FloatingActionMenu) view.findViewById(R.id.menu_green);
         menuBlue = (FloatingActionMenu) view.findViewById(R.id.menu_blue);
-        menuDown = (FloatingActionMenu) view.findViewById(R.id.menu_down);
-        menuLabelsRight = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right);
+        menuDown = (FloatingMenu) view.findViewById(R.id.menu_down);
+        menuLabelsRight = (FloatingMenu) view.findViewById(R.id.menu_labels_right);
 
         fab1 = (FloatingActionButton) view.findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
@@ -151,7 +152,7 @@ public class MenusFragment extends Fragment {
         fab3.setOnClickListener(clickListener);
 
         int delay = 400;
-        for (final FloatingActionMenu menu : menus) {
+        for (final FloatingMenu menu : menus) {
             mUiHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
