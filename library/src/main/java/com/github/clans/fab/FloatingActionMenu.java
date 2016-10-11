@@ -413,7 +413,7 @@ public class FloatingActionMenu extends ViewGroup {
             Label label = (Label) child.getTag(R.id.fab_label);
             if (label != null) {
                 int labelOffset = (mMaxButtonWidth - child.getMeasuredWidth()) / (mUsingMenuLabel ? 1 : 2);
-                int labelUsedWidth = child.getMeasuredWidth() + label.calculateShadowWidth() + mLabelsMargin + labelOffset;
+                int labelUsedWidth = child.getMeasuredWidth() + mLabelsMargin + labelOffset;
                 if (Util.hasNougat()) {
                     measureChildWithMargins(label, widthMeasureSpec, 0, heightMeasureSpec, 0); // I allow label to use just the space which is not already used by its FAB - we dont need it with extended FAB it would cause visibility problems
                 } else {
@@ -550,13 +550,13 @@ public class FloatingActionMenu extends ViewGroup {
                         + label.getMeasuredHeight()) / 2;
 
                 int newlabelTop = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
-                        - 120) / 2;
+                        - 130) / 2;
 
                 int newlabelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
                         + 130) / 2;
 
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
-                float WHITE_SPACE_PERCENTAGE = 1.9f;
+                float WHITE_SPACE_PERCENTAGE = 1.0f;
                 if (Util.hasNougat()) {
                     if (!mIsExtended) {
                         int extendedLabelRight = newLeftSide - 20; //FIXME random 20

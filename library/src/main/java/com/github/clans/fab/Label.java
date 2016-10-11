@@ -112,30 +112,9 @@ public class Label extends TextView {
 
     void updateBackground() {
         LayerDrawable layerDrawable;
-        if (mShowShadow) {
-            layerDrawable = new LayerDrawable(new Drawable[]{
-                    new Shadow(),
-                    createFillDrawable()
-            });
-
-            int leftInset = mShadowRadius + Math.abs(mShadowXOffset);
-            int topInset = mShadowRadius + Math.abs(mShadowYOffset);
-            int rightInset = (mShadowRadius + Math.abs(mShadowXOffset));
-            int bottomInset = (mShadowRadius + Math.abs(mShadowYOffset));
-
-            layerDrawable.setLayerInset(
-                    1,
-                    leftInset,
-                    topInset,
-                    rightInset,
-                    bottomInset
-            );
-        } else {
-            layerDrawable = new LayerDrawable(new Drawable[]{
-                    createFillDrawable()
-            });
-        }
-
+        layerDrawable = new LayerDrawable(new Drawable[]{
+                createFillDrawable()
+        });
         setBackgroundCompat(layerDrawable);
     }
 
@@ -188,7 +167,7 @@ public class Label extends TextView {
 
     private void setShadow(FloatingActionButton fab) {
         mShadowColor = fab.getShadowColor();
-        mShadowRadius = fab.getShadowRadius();
+        mShadowRadius = 0; // We dont use shadow in our app
         mShadowXOffset = fab.getShadowXOffset();
         mShadowYOffset = fab.getShadowYOffset();
         mShowShadow = fab.hasShadow();
