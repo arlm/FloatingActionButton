@@ -457,7 +457,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
         int extraLeftOffset = 0;
 
         if (getLabelView() != null) {
-            extraLeftOffset = Math.round(((getX() + calculateMeasuredWidth() / 2) - getLabelView().getX()) + getResources().getDimensionPixelSize(R.dimen.extended_button_gap_between_icon_text) / 2); // Align icon on the left side of label text
+            extraLeftOffset = Math.round(((getX() + calculateMeasuredWidth() / 2) - getLabelView().getX()) + getResources().getDimensionPixelSize(R.dimen.extended_button_gap_between_icon_text) / 3); // Align icon on the left side of label text
         }
         iconOffsetVertical = (calculateMeasuredHeight() - (iconSize > 0 ? iconSize : mIconSize)) / 2;
         iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;

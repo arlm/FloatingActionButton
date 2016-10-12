@@ -455,7 +455,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
                 int newlabelBottom = fabVerticalCenter +  Math.round(label.getMeasuredHeight() / 1.5f);
 
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
-                float WHITE_SPACE_PERCENTAGE = 1.2f;
+                float WHITE_SPACE_PERCENTAGE = 1.6f;
                         int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
                         int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
                         label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
