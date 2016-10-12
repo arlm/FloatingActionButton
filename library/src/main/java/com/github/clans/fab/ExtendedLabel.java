@@ -2,9 +2,6 @@ package com.github.clans.fab;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -12,28 +9,21 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.animation.Animation;
 import android.widget.TextView;
+
+
+/**
+ * TextView for extended version of FloatingActionMenu
+ *
+ * @author Josef Hruška (josef@stepuplabs.io)
+ */
 
 public class ExtendedLabel extends TextView {
 
-    private static final Xfermode PORTER_DUFF_CLEAR = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-
-    private int mShadowRadius;
-    private int mShadowXOffset;
-    private int mShadowYOffset;
-    private int mShadowColor;
     private Drawable mBackgroundDrawable;
-    private boolean mShowShadow = true;
     private int mRawWidth;
     private int mRawHeight;
-    private int mColorNormal;
-    private int mColorPressed;
-    private int mColorRipple;
-    private int mCornerRadius;
     private ExtendedFloatingActionButton mFab;
-    private Animation mShowAnimation;
-    private Animation mHideAnimation;
     private boolean mUsingStyle;
     GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
 
@@ -112,7 +102,6 @@ public class ExtendedLabel extends TextView {
             ripple.setHotspot(getMeasuredWidth() / 2, getMeasuredHeight() / 2);
             ripple.setVisible(true, true);
         }
-//        setPressed(true);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -130,7 +119,6 @@ public class ExtendedLabel extends TextView {
             ripple.setHotspot(getMeasuredWidth() / 2, getMeasuredHeight() / 2);
             ripple.setVisible(true, true);
         }
-//        setPressed(false);
     }
 
     void setFab(ExtendedFloatingActionButton fab) {
@@ -172,9 +160,7 @@ public class ExtendedLabel extends TextView {
                 mFab.onActionUp();
                 break;
         }
-
         mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
-
 }

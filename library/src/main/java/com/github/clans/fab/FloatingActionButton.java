@@ -160,8 +160,6 @@ public class FloatingActionButton extends ImageButton {
                 setProgress(mProgress, false);
             }
         }
-
-//        updateBackground();
         setClickable(true);
     }
 
@@ -222,7 +220,6 @@ public class FloatingActionButton extends ImageButton {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(calculateMeasuredWidth(), calculateMeasuredHeight());
     }
 
@@ -368,14 +365,6 @@ public class FloatingActionButton extends ImageButton {
             circleInsetHorizontal += mProgressWidth;
             circleInsetVertical += mProgressWidth;
         }
-
-        /*layerDrawable.setLayerInset(
-                mShowShadow ? 1 : 0,
-                circleInsetHorizontal,
-                circleInsetVertical,
-                circleInsetHorizontal,
-                circleInsetVertical
-        );*/
         layerDrawable.setLayerInset(
                 hasShadow() ? 2 : 1,
                 circleInsetHorizontal + iconOffset,
@@ -383,7 +372,6 @@ public class FloatingActionButton extends ImageButton {
                 circleInsetHorizontal + iconOffset,
                 circleInsetVertical + iconOffset
         );
-
         setBackgroundCompat(layerDrawable);
     }
 
@@ -415,7 +403,6 @@ public class FloatingActionButton extends ImageButton {
             mBackgroundDrawable = ripple;
             return ripple;
         }
-
         mBackgroundDrawable = drawable;
         return drawable;
     }

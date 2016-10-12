@@ -73,9 +73,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
     private Animation mReplaceExtendedAnimation;
     private Animation mHideExtendedAnimation;
     private String mLabelText;
-    private int mLabelColorNormal;
-    private int mLabelColorRipple;
-    private int mLabelColorPressed;
     private OnClickListener mClickListener;
     private Drawable mBackgroundDrawable;
     GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -130,7 +127,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
     private boolean mShouldSetProgress;
     private int mProgressMax = 100;
     private boolean mShowProgressBackground;
-    private Context mContext;
     private Handler uiHandler = new Handler();
 
     public ExtendedFloatingActionButton(Context context) {
@@ -143,7 +139,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
 
     public ExtendedFloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
+        Context mContext = context;
         init(context, attrs, defStyleAttr);
     }
 
@@ -171,9 +167,9 @@ public class ExtendedFloatingActionButton extends ImageButton {
         mShadowYOffset = attr.getDimensionPixelSize(R.styleable.FloatingActionButton_fab_shadowYOffset, mShadowYOffset);
         mFabSize = attr.getInt(R.styleable.FloatingActionButton_fab_size, SIZE_NORMAL);
         mLabelText = attr.getString(R.styleable.FloatingActionButton_fab_label);
-        mLabelColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorNormal, Color.BLACK);
-        mLabelColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorPressed, Color.BLACK);
-        mLabelColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorRipple, Color.BLACK);
+        int mLabelColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorNormal, Color.BLACK);
+        int mLabelColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorPressed, Color.BLACK);
+        int mLabelColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_labelColorRipple, Color.BLACK);
         mShouldProgressIndeterminate = attr.getBoolean(R.styleable.FloatingActionButton_fab_progress_indeterminate, false);
         mProgressColor = attr.getColor(R.styleable.FloatingActionButton_fab_progress_color, 0xFF009688);
         mProgressBackgroundColor = attr.getColor(R.styleable.FloatingActionButton_fab_progress_backgroundColor, 0x4D000000);
@@ -453,7 +449,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
             iconSize = Math.max(getIconDrawable().getIntrinsicWidth(), getIconDrawable().getIntrinsicHeight());
         }
 
-
         int extraLeftOffset = 0;
 
         if (getLabelView() != null) {
@@ -463,15 +458,11 @@ public class ExtendedFloatingActionButton extends ImageButton {
         iconOffsetLeft = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 - extraLeftOffset;
         iconOffsetRight = (calculateMeasuredWidth() - (iconSize > 0 ? iconSize : mIconSize)) / 2 + extraLeftOffset;
 
-
-        int circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
         int circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
 
         if (mProgressBarEnabled) {
-            circleInsetHorizontal += mProgressWidth;
             circleInsetVertical += mProgressWidth;
         }
-
 
         layerDrawable.setLayerInset(
                 hasShadow() ? 2 : 1,
@@ -481,7 +472,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
                 iconOffsetVertical +
                         (circleInsetVertical / 4)
         );
-
 
         setBackgroundCompat(layerDrawable);
     }
@@ -1423,10 +1413,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
             } else {
                 canvas.drawRoundRect(new RectF(0, Util.dpToPx(getContext(), 8), getExtendedButtonLandscapeWidth() - Util.dpToPx(getContext(), 2f), Util.dpToPx(getContext(), 63f)), 70f, 70f, paint);
             }
-        }
-
-        private void drawCircleCanvas(Canvas canvas, Paint paint) {
-            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, paint);
         }
 
         @Override
