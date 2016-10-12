@@ -823,6 +823,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "show animation"
      */
     public void showMenu(boolean animate) {
+        setCorrectPivot();
         if (isMenuHidden()) {
             if (animate) {
                 startAnimation(mMenuButtonShowAnimation);
@@ -837,6 +838,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "hide animation"
      */
     public void hideMenu(final boolean animate) {
+        setCorrectPivot();
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
@@ -876,6 +878,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "show animation"
      */
     public void showMenuButton(boolean animate) {
+        setCorrectPivot();
         if (isMenuButtonHidden()) {
             showMenuButtonWithImage(animate);
         }
@@ -888,6 +891,7 @@ public class FloatingActionMenu extends ViewGroup {
      * @param animate if true - plays "hide animation"
      */
     public void hideMenuButton(final boolean animate) {
+        setCorrectPivot();
         if (!isMenuButtonHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
@@ -981,6 +985,15 @@ public class FloatingActionMenu extends ViewGroup {
         addView(fab, index);
         mButtonsCount++;
         addLabel(fab);
+    }
+
+    public void setCorrectPivot() {
+            int pivotX = (Util.getScreenWidth(getContext()) - (getPaddingRight() + (mMenuButton.getCircleSize() / 2)));
+            float pivotY = (mImageToggle.getY() + mImageToggle.getHeight() / 2);
+            setPivotX(pivotX);
+            setPivotY(pivotY);
+            mMenuButton.setPivotX(pivotX);
+            mMenuButton.setPivotY(pivotY);
     }
 
     public void removeAllMenuButtons() {

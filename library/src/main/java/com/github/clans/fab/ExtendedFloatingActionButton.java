@@ -1212,7 +1212,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
 
             ExtendedLabel label = getLabelView();
             if (label != null) {
-                label.hide(false);
+                label.setVisibility(View.INVISIBLE);
             }
 
             getHideAnimation().setAnimationListener(new Animation.AnimationListener() {
@@ -1240,7 +1240,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
         show(animate);
         ExtendedLabel label = getLabelView();
         if (label != null) {
-            label.show(false);
+            label.show();
         }
     }
 
@@ -1255,8 +1255,7 @@ public class ExtendedFloatingActionButton extends ImageButton {
         int right = label.getPaddingRight();
         int bottom = label.getPaddingBottom();
 
-        label.setColors(colorNormal, colorPressed, colorRipple);
-        label.updateBackground();
+//        label.updateBackground();
         label.setPadding(left, top, right, bottom);
     }
 
@@ -1275,18 +1274,11 @@ public class ExtendedFloatingActionButton extends ImageButton {
         mColorDisabled = mColorExtendedDisabled;
         setColorRipple(mColorRipple);
         setIconColor(getActionMenu().getMenuButtonColorNormal());
-
-        if (getLabelView() != null) {
-            getLabelView().removeLabelBackground();
-        }
-
-
     }
 
     public void setNormalMenuLabelColors() {
         if (getLabelView() != null) {
-            getLabelView().setColors(mLabelColorNormal, mLabelColorPressed, mLabelColorRipple);
-            getLabelView().updateBackground();
+//            getLabelView().updateBackground();
         }
     }
 

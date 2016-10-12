@@ -449,16 +449,16 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
                 int labelBottom = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
                         + label.getMeasuredHeight()) / 2;
 
-                int fabVerticalCenter = Math.round(fab.getY() + fab.getMeasuredHeight() / 2);
-                int newlabelTop = fabVerticalCenter - 40;
+                int fabVerticalCenter = Math.round(fab.getY() + fab.getCircleSize() / 2);
+                int newlabelTop = fabVerticalCenter  - Math.round(label.getMeasuredHeight() / 2.5f);
 
-                int newlabelBottom = fabVerticalCenter + 40;
+                int newlabelBottom = fabVerticalCenter +  Math.round(label.getMeasuredHeight() / 1.5f);
 
                 int relatedButtonWidth = fab.calculateMeasuredWidth() / 2;
-                float WHITE_SPACE_PERCENTAGE = 1.0f;
+                float WHITE_SPACE_PERCENTAGE = 1.2f;
                         int extendedLabelLeft = (labelLeft + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
                         int extendedLabelRight = (labelRight + relatedButtonWidth + label.getMeasuredWidth() / 2) + Math.round(mImageToggle.getWidth() * WHITE_SPACE_PERCENTAGE) / 2;
-                        label.layout(extendedLabelLeft, labelTop, extendedLabelRight, labelBottom);
+                        label.layout(extendedLabelLeft, newlabelTop, extendedLabelRight, newlabelBottom);
 
                 if (!mIsMenuOpening) {
                     label.setVisibility(INVISIBLE);
@@ -556,21 +556,16 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         final ExtendedLabel label = new ExtendedLabel(mLabelsContext);
         label.setClickable(true);
         label.setFab(fab);
-        label.setShowAnimation(AnimationUtils.loadAnimation(getContext(), mLabelsShowAnimation));
-        label.setHideAnimation(AnimationUtils.loadAnimation(getContext(), mLabelsHideAnimation));
         if (mLabelsStyle > 0) {
             label.setTextAppearance(getContext(), mLabelsStyle);
-            label.setShowShadow(false);
             label.setUsingStyle(true);
         } else {
-            label.setShowShadow(mLabelsShowShadow);
-            label.setCornerRadius(mLabelsCornerRadius);
             if (mLabelsEllipsize > 0) {
                 setLabelEllipsize(label);
             }
             label.setMaxLines(mLabelsMaxLines);
             label.setTypeface(null, Typeface.BOLD);
-            label.updateBackground();
+            //label.updateBackground();
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
             label.setTextColor(mLabelsNormalTextColor);
 
@@ -745,7 +740,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
                             ExtendedLabel label = (ExtendedLabel) fab.getTag(R.id.fab_label);
                             if (label != null && label.isHandleVisibilityChanges()) {
                                 if (fab != mMenuButton) {
-                                    label.show(false);
+                                    label.show();
                                 }
                             }
                         }
@@ -799,7 +794,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
                             }
                             ExtendedLabel  label = (ExtendedLabel) fab.getTag(R.id.fab_label);
                             if (label != null && label.isHandleVisibilityChanges()) {
-                                label.hide(false);
+                                label.hide();
                             }
                         }
                     }, delay);

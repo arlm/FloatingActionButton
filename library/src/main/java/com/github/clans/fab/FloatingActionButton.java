@@ -175,7 +175,7 @@ public class FloatingActionButton extends ImageButton {
         mHideAnimation = AnimationUtils.loadAnimation(getContext(), resourceId);
     }
 
-    private int getCircleSize() {
+    protected int getCircleSize() {
         return getResources().getDimensionPixelSize(mFabSize == SIZE_NORMAL
                 ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
     }
