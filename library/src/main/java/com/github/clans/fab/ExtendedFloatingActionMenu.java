@@ -1102,5 +1102,3 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         void onMenuToggle(boolean opened);
     }
 }
-
-
