@@ -107,6 +107,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
     private Context mLabelsContext;
     private String mMenuLabelText;
     private boolean mUsingMenuLabel;
+    private boolean mIsInCurrentPlace = false;
 
     public ExtendedFloatingActionMenu(Context context) {
         this(context, null);
@@ -130,10 +131,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, mButtonSpacing);
         mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, mLabelsMargin);
         mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, LABELS_POSITION_LEFT);
-        int mLabelsShowAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_showAnimation,
-                mLabelsPosition == LABELS_POSITION_LEFT ? R.anim.fab_slide_in_from_right : R.anim.fab_slide_in_from_left);
-        int mLabelsHideAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_hideAnimation,
-                mLabelsPosition == LABELS_POSITION_LEFT ? R.anim.fab_slide_out_to_right : R.anim.fab_slide_out_to_left);
         mLabelsPaddingTop = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingTop, mLabelsPaddingTop);
         mLabelsPaddingRight = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingRight, mLabelsPaddingRight);
         mLabelsPaddingBottom = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingBottom, mLabelsPaddingBottom);
@@ -827,6 +824,14 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
 
     public void setOnMenuToggleListener(ExtendedFloatingActionMenu.OnMenuToggleListener listener) {
         mToggleListener = listener;
+    }
+
+    public boolean isInCurrentPlace() {
+        return mIsInCurrentPlace;
+    }
+
+    public void setIsInCurrentPlace(Boolean isThere) {
+        mIsInCurrentPlace = isThere;
     }
 
     public boolean isIconAnimated() {

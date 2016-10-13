@@ -105,6 +105,7 @@ public class FloatingActionMenu extends ViewGroup {
     private Context mLabelsContext;
     private String mMenuLabelText;
     private boolean mUsingMenuLabel;
+    private boolean mIsInCurrentPlace = false;
 
     public FloatingActionMenu(Context context) {
         this(context, null);
@@ -746,6 +747,14 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setIconAnimationCloseInterpolator(Interpolator closeInterpolator) {
         mCloseAnimatorSet.setInterpolator(closeInterpolator);
+    }
+
+    public boolean isInCurrentPlace() {
+        return mIsInCurrentPlace;
+    }
+
+    public void setIsInCurrentPlace(Boolean isThere) {
+        mIsInCurrentPlace = isThere;
     }
 
     public boolean isAnimated() {
