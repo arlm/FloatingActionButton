@@ -103,12 +103,12 @@ public class MenusFragment extends Fragment {
         menuRed.setClosedOnTouchOutside(true);
         menuBlue.setIconAnimated(false);
 
-        menuRed.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menuRed.setExtendedMenuSize();
-            }
-        });
+//        menuRed.setOnMenuButtonClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                menuRed.extendMenu();
+//            }
+//        });
 
         menuDown.hideMenuButton(false);
         menuRed.hideMenuButton(false);
