@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Menu Button class for extended version of FloatingActionMenu
+ * Menu class for extended version of FloatingActionMenu
  *
  * @author Josef Hruška (josef@stepuplabs.io)
  */
@@ -42,7 +42,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
     private static final float CLOSED_PLUS_ROTATION = 0f;
     private static final float OPENED_PLUS_ROTATION_LEFT = -90f - 45f;
     private static final float OPENED_PLUS_ROTATION_RIGHT = 90f + 45f;
-
     private static final int OPEN_UP = 0;
 
     private static final int LABELS_POSITION_LEFT = 0;

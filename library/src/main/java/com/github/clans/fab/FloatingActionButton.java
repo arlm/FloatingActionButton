@@ -22,8 +22,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -40,19 +38,16 @@ public class FloatingActionButton extends ImageButton {
 
     public static final int SIZE_NORMAL = 0;
     public static final int SIZE_MINI = 1;
-
+    private static final Xfermode PORTER_DUFF_CLEAR = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+    private static final long PAUSE_GROWING_TIME = 200;
+    private static final double BAR_SPIN_CYCLE_TIME = 500;
+    private static final int BAR_MAX_LENGTH = 270;
     int mFabSize;
     boolean mShowShadow;
     int mShadowColor;
     int mShadowRadius = Util.dpToPx(getContext(), 4f);
     int mShadowXOffset = Util.dpToPx(getContext(), 1f);
     int mShadowYOffset = Util.dpToPx(getContext(), 3f);
-
-    private static final Xfermode PORTER_DUFF_CLEAR = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-    private static final long PAUSE_GROWING_TIME = 200;
-    private static final double BAR_SPIN_CYCLE_TIME = 500;
-    private static final int BAR_MAX_LENGTH = 270;
-
     private int mColorNormal;
     private int mColorPressed;
     private int mColorDisabled;
@@ -64,9 +59,30 @@ public class FloatingActionButton extends ImageButton {
     private String mLabelText;
     private OnClickListener mClickListener;
     private Drawable mBackgroundDrawable;
+    GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Label label = (Label) getTag(R.id.fab_label);
+            if (label != null) {
+                label.onActionDown();
+            }
+            onActionDown();
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Label label = (Label) getTag(R.id.fab_label);
+            if (label != null) {
+                label.onActionUp();
+            }
+            onActionUp();
+            return super.onSingleTapUp(e);
+        }
+    });
     private boolean mUsingElevation;
     private boolean mUsingElevationCompat;
-
     // Progress
     private boolean mProgressBarEnabled;
     private int mProgressWidth = Util.dpToPx(getContext(), 6f);
@@ -476,8 +492,16 @@ public class FloatingActionButton extends ImageButton {
         return mShowAnimation;
     }
 
+    public void setShowAnimation(Animation showAnimation) {
+        mShowAnimation = showAnimation;
+    }
+
     Animation getHideAnimation() {
         return mHideAnimation;
+    }
+
+    public void setHideAnimation(Animation hideAnimation) {
+        mHideAnimation = hideAnimation;
     }
 
     void playShowAnimation() {
@@ -492,6 +516,23 @@ public class FloatingActionButton extends ImageButton {
 
     OnClickListener getOnClickListener() {
         return mClickListener;
+    }
+
+    @Override
+    public void setOnClickListener(final OnClickListener l) {
+        super.setOnClickListener(l);
+        mClickListener = l;
+        View label = (View) getTag(R.id.fab_label);
+        if (label != null) {
+            label.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mClickListener != null) {
+                        mClickListener.onClick(FloatingActionButton.this);
+                    }
+                }
+            });
+        }
     }
 
     Label getLabelView() {
@@ -530,6 +571,8 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
+    /* ===== API methods ===== */
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mClickListener != null && isEnabled()) {
@@ -557,224 +600,6 @@ public class FloatingActionButton extends ImageButton {
         return super.onTouchEvent(event);
     }
 
-    GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            Label label = (Label) getTag(R.id.fab_label);
-            if (label != null) {
-                label.onActionDown();
-            }
-            onActionDown();
-            return super.onDown(e);
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            Label label = (Label) getTag(R.id.fab_label);
-            if (label != null) {
-                label.onActionUp();
-            }
-            onActionUp();
-            return super.onSingleTapUp(e);
-        }
-    });
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-
-        ProgressSavedState ss = new ProgressSavedState(superState);
-
-        ss.mCurrentProgress = this.mCurrentProgress;
-        ss.mTargetProgress = this.mTargetProgress;
-        ss.mSpinSpeed = this.mSpinSpeed;
-        ss.mProgressWidth = this.mProgressWidth;
-        ss.mProgressColor = this.mProgressColor;
-        ss.mProgressBackgroundColor = this.mProgressBackgroundColor;
-        ss.mShouldProgressIndeterminate = this.mProgressIndeterminate;
-        ss.mShouldSetProgress = this.mProgressBarEnabled && mProgress > 0 && !this.mProgressIndeterminate;
-        ss.mProgress = this.mProgress;
-        ss.mAnimateProgress = this.mAnimateProgress;
-        ss.mShowProgressBackground = this.mShowProgressBackground;
-
-        return ss;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof ProgressSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        ProgressSavedState ss = (ProgressSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-
-        this.mCurrentProgress = ss.mCurrentProgress;
-        this.mTargetProgress = ss.mTargetProgress;
-        this.mSpinSpeed = ss.mSpinSpeed;
-        this.mProgressWidth = ss.mProgressWidth;
-        this.mProgressColor = ss.mProgressColor;
-        this.mProgressBackgroundColor = ss.mProgressBackgroundColor;
-        this.mShouldProgressIndeterminate = ss.mShouldProgressIndeterminate;
-        this.mShouldSetProgress = ss.mShouldSetProgress;
-        this.mProgress = ss.mProgress;
-        this.mAnimateProgress = ss.mAnimateProgress;
-        this.mShowProgressBackground = ss.mShowProgressBackground;
-
-        this.mLastTimeAnimated = SystemClock.uptimeMillis();
-    }
-
-    private class CircleDrawable extends ShapeDrawable {
-
-        private int circleInsetHorizontal;
-        private int circleInsetVertical;
-
-        private CircleDrawable() {
-        }
-
-        private CircleDrawable(Shape s) {
-            super(s);
-            circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
-            circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
-
-            if (mProgressBarEnabled) {
-                circleInsetHorizontal += mProgressWidth;
-                circleInsetVertical += mProgressWidth;
-            }
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-            setBounds(circleInsetHorizontal, circleInsetVertical, calculateMeasuredWidth()
-                    - circleInsetHorizontal, calculateMeasuredHeight() - circleInsetVertical);
-            super.draw(canvas);
-        }
-    }
-
-    private class Shadow extends Drawable {
-
-        private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private float mRadius;
-
-        private Shadow() {
-            this.init();
-        }
-
-        private void init() {
-            setLayerType(LAYER_TYPE_SOFTWARE, null);
-            mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(mColorNormal);
-
-            mErase.setXfermode(PORTER_DUFF_CLEAR);
-
-            if (!isInEditMode()) {
-                mPaint.setShadowLayer(mShadowRadius, mShadowXOffset, mShadowYOffset, mShadowColor);
-            }
-
-            mRadius = getCircleSize() / 2;
-
-            if (mProgressBarEnabled && mShowProgressBackground) {
-                mRadius += mProgressWidth;
-            }
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mPaint);
-            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mErase);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter cf) {
-
-        }
-
-        @Override
-        public int getOpacity() {
-            return 0;
-        }
-    }
-
-    static class ProgressSavedState extends BaseSavedState {
-
-        float mCurrentProgress;
-        float mTargetProgress;
-        float mSpinSpeed;
-        int mProgress;
-        int mProgressWidth;
-        int mProgressColor;
-        int mProgressBackgroundColor;
-        boolean mProgressBarEnabled;
-        boolean mProgressBarVisibilityChanged;
-        boolean mProgressIndeterminate;
-        boolean mShouldProgressIndeterminate;
-        boolean mShouldSetProgress;
-        boolean mAnimateProgress;
-        boolean mShowProgressBackground;
-
-        ProgressSavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private ProgressSavedState(Parcel in) {
-            super(in);
-            this.mCurrentProgress = in.readFloat();
-            this.mTargetProgress = in.readFloat();
-            this.mProgressBarEnabled = in.readInt() != 0;
-            this.mSpinSpeed = in.readFloat();
-            this.mProgress = in.readInt();
-            this.mProgressWidth = in.readInt();
-            this.mProgressColor = in.readInt();
-            this.mProgressBackgroundColor = in.readInt();
-            this.mProgressBarVisibilityChanged = in.readInt() != 0;
-            this.mProgressIndeterminate = in.readInt() != 0;
-            this.mShouldProgressIndeterminate = in.readInt() != 0;
-            this.mShouldSetProgress = in.readInt() != 0;
-            this.mAnimateProgress = in.readInt() != 0;
-            this.mShowProgressBackground = in.readInt() != 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeFloat(this.mCurrentProgress);
-            out.writeFloat(this.mTargetProgress);
-            out.writeInt((mProgressBarEnabled ? 1 : 0));
-            out.writeFloat(this.mSpinSpeed);
-            out.writeInt(this.mProgress);
-            out.writeInt(this.mProgressWidth);
-            out.writeInt(this.mProgressColor);
-            out.writeInt(this.mProgressBackgroundColor);
-            out.writeInt(this.mProgressBarVisibilityChanged ? 1 : 0);
-            out.writeInt(this.mProgressIndeterminate ? 1 : 0);
-            out.writeInt(this.mShouldProgressIndeterminate ? 1 : 0);
-            out.writeInt(this.mShouldSetProgress ? 1 : 0);
-            out.writeInt(this.mAnimateProgress ? 1 : 0);
-            out.writeInt(this.mShowProgressBackground ? 1 : 0);
-        }
-
-        public static final Parcelable.Creator<ProgressSavedState> CREATOR =
-                new Parcelable.Creator<ProgressSavedState>() {
-                    public ProgressSavedState createFromParcel(Parcel in) {
-                        return new ProgressSavedState(in);
-                    }
-
-                    public ProgressSavedState[] newArray(int size) {
-                        return new ProgressSavedState[size];
-                    }
-                };
-    }
-
-    /* ===== API methods ===== */
-
     @Override
     public void setImageDrawable(Drawable drawable) {
         if (mIcon != drawable) {
@@ -792,21 +617,8 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    @Override
-    public void setOnClickListener(final OnClickListener l) {
-        super.setOnClickListener(l);
-        mClickListener = l;
-        View label = (View) getTag(R.id.fab_label);
-        if (label != null) {
-            label.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mClickListener != null) {
-                        mClickListener.onClick(FloatingActionButton.this);
-                    }
-                }
-            });
-        }
+    public int getButtonSize() {
+        return mFabSize;
     }
 
     /**
@@ -825,17 +637,6 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    public int getButtonSize() {
-        return mFabSize;
-    }
-
-    public void setColorNormal(int color) {
-        if (mColorNormal != color) {
-            mColorNormal = color;
-            updateBackground();
-        }
-    }
-
     public void setColorNormalResId(int colorResId) {
         setColorNormal(getResources().getColor(colorResId));
     }
@@ -844,9 +645,9 @@ public class FloatingActionButton extends ImageButton {
         return mColorNormal;
     }
 
-    public void setColorPressed(int color) {
-        if (color != mColorPressed) {
-            mColorPressed = color;
+    public void setColorNormal(int color) {
+        if (mColorNormal != color) {
+            mColorNormal = color;
             updateBackground();
         }
     }
@@ -859,9 +660,9 @@ public class FloatingActionButton extends ImageButton {
         return mColorPressed;
     }
 
-    public void setColorRipple(int color) {
-        if (color != mColorRipple) {
-            mColorRipple = color;
+    public void setColorPressed(int color) {
+        if (color != mColorPressed) {
+            mColorPressed = color;
             updateBackground();
         }
     }
@@ -874,9 +675,9 @@ public class FloatingActionButton extends ImageButton {
         return mColorRipple;
     }
 
-    public void setColorDisabled(int color) {
-        if (color != mColorDisabled) {
-            mColorDisabled = color;
+    public void setColorRipple(int color) {
+        if (color != mColorRipple) {
+            mColorRipple = color;
             updateBackground();
         }
     }
@@ -887,6 +688,13 @@ public class FloatingActionButton extends ImageButton {
 
     public int getColorDisabled() {
         return mColorDisabled;
+    }
+
+    public void setColorDisabled(int color) {
+        if (color != mColorDisabled) {
+            mColorDisabled = color;
+            updateBackground();
+        }
     }
 
     public void setShowShadow(boolean show) {
@@ -914,6 +722,10 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
+    public int getShadowRadius() {
+        return mShadowRadius;
+    }
+
     /**
      * Sets the shadow radius of the <b>FloatingActionButton</b> and invalidates its layout.
      * <p>
@@ -926,10 +738,6 @@ public class FloatingActionButton extends ImageButton {
         mShadowRadius = Util.dpToPx(getContext(), shadowRadiusDp);
         requestLayout();
         updateBackground();
-    }
-
-    public int getShadowRadius() {
-        return mShadowRadius;
     }
 
     /**
@@ -946,6 +754,10 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
+    public int getShadowXOffset() {
+        return mShadowXOffset;
+    }
+
     /**
      * Sets the shadow x offset of the <b>FloatingActionButton</b> and invalidates its layout.
      * <p>
@@ -958,10 +770,6 @@ public class FloatingActionButton extends ImageButton {
         mShadowXOffset = Util.dpToPx(getContext(), shadowXOffsetDp);
         requestLayout();
         updateBackground();
-    }
-
-    public int getShadowXOffset() {
-        return mShadowXOffset;
     }
 
     /**
@@ -978,6 +786,10 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
+    public int getShadowYOffset() {
+        return mShadowYOffset;
+    }
+
     /**
      * Sets the shadow y offset of the <b>FloatingActionButton</b> and invalidates its layout.
      * <p>
@@ -992,10 +804,6 @@ public class FloatingActionButton extends ImageButton {
         updateBackground();
     }
 
-    public int getShadowYOffset() {
-        return mShadowYOffset;
-    }
-
     public void setShadowColorResource(int colorResId) {
         int shadowColor = getResources().getColor(colorResId);
         if (mShadowColor != shadowColor) {
@@ -1004,15 +812,15 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
+    public int getShadowColor() {
+        return mShadowColor;
+    }
+
     public void setShadowColor(int color) {
         if (mShadowColor != color) {
             mShadowColor = color;
             updateBackground();
         }
-    }
-
-    public int getShadowColor() {
-        return mShadowColor;
     }
 
     /**
@@ -1060,31 +868,15 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
+    public String getLabelText() {
+        return mLabelText;
+    }
+
     public void setLabelText(String text) {
         mLabelText = text;
         TextView labelView = getLabelView();
         if (labelView != null) {
             labelView.setText(text);
-        }
-    }
-
-    public String getLabelText() {
-        return mLabelText;
-    }
-
-    public void setShowAnimation(Animation showAnimation) {
-        mShowAnimation = showAnimation;
-    }
-
-    public void setHideAnimation(Animation hideAnimation) {
-        mHideAnimation = hideAnimation;
-    }
-
-    public void setLabelVisibility(int visibility) {
-        Label labelView = getLabelView();
-        if (labelView != null) {
-            labelView.setVisibility(visibility);
-            labelView.setHandleVisibilityChanges(visibility == VISIBLE);
         }
     }
 
@@ -1095,6 +887,14 @@ public class FloatingActionButton extends ImageButton {
         }
 
         return -1;
+    }
+
+    public void setLabelVisibility(int visibility) {
+        Label labelView = getLabelView();
+        if (labelView != null) {
+            labelView.setVisibility(visibility);
+            labelView.setHandleVisibilityChanges(visibility == VISIBLE);
+        }
     }
 
     @Override
@@ -1116,7 +916,7 @@ public class FloatingActionButton extends ImageButton {
 
     /**
      * Sets the shadow color and radius to mimic the native elevation.
-     *
+     * <p>
      * <p><b>API 21+</b>: Sets the native elevation of this view, in pixels. Updates margins to
      * make the view hold its position in layout across different platform versions.</p>
      */
@@ -1164,12 +964,12 @@ public class FloatingActionButton extends ImageButton {
         updateBackground();
     }
 
-    public synchronized void setMax(int max) {
-        mProgressMax = max;
-    }
-
     public synchronized int getMax() {
         return mProgressMax;
+    }
+
+    public synchronized void setMax(int max) {
+        mProgressMax = max;
     }
 
     public synchronized void setProgress(int progress, boolean animate) {
@@ -1308,5 +1108,82 @@ public class FloatingActionButton extends ImageButton {
 
     public void setLabelTextColor(ColorStateList colors) {
         getLabelView().setTextColor(colors);
+    }
+
+    private class CircleDrawable extends ShapeDrawable {
+
+        private int circleInsetHorizontal;
+        private int circleInsetVertical;
+
+        private CircleDrawable() {
+        }
+
+        private CircleDrawable(Shape s) {
+            super(s);
+            circleInsetHorizontal = hasShadow() ? mShadowRadius + Math.abs(mShadowXOffset) : 0;
+            circleInsetVertical = hasShadow() ? mShadowRadius + Math.abs(mShadowYOffset) : 0;
+
+            if (mProgressBarEnabled) {
+                circleInsetHorizontal += mProgressWidth;
+                circleInsetVertical += mProgressWidth;
+            }
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            setBounds(circleInsetHorizontal, circleInsetVertical, calculateMeasuredWidth()
+                    - circleInsetHorizontal, calculateMeasuredHeight() - circleInsetVertical);
+            super.draw(canvas);
+        }
+    }
+
+    private class Shadow extends Drawable {
+
+        private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private Paint mErase = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private float mRadius;
+
+        private Shadow() {
+            this.init();
+        }
+
+        private void init() {
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(mColorNormal);
+
+            mErase.setXfermode(PORTER_DUFF_CLEAR);
+
+            if (!isInEditMode()) {
+                mPaint.setShadowLayer(mShadowRadius, mShadowXOffset, mShadowYOffset, mShadowColor);
+            }
+
+            mRadius = getCircleSize() / 2;
+
+            if (mProgressBarEnabled && mShowProgressBackground) {
+                mRadius += mProgressWidth;
+            }
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mPaint);
+            canvas.drawCircle(calculateCenterX(), calculateCenterY(), mRadius, mErase);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter cf) {
+
+        }
+
+        @Override
+        public int getOpacity() {
+            return 0;
+        }
     }
 }

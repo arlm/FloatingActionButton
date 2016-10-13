@@ -140,7 +140,7 @@ public class Label extends TextView {
     }
 
     public void removeLabelBackground() {
-        setBackgroundCompat(new ColorDrawable(Color.argb(0,0,0,0)));
+        setBackgroundCompat(new ColorDrawable(Color.argb(0, 0, 0, 0)));
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

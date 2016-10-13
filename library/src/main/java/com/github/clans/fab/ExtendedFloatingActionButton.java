@@ -23,8 +23,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -38,11 +36,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
- * WRITE DESCRIPTION PLS
+ * Menu button class for extended version of FloatingActionMenu
  *
  * @author Josef Hruška (josef@stepuplabs.io)
  */
-
 
 public class ExtendedFloatingActionButton extends ImageButton {
 
@@ -707,51 +704,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
         return super.onTouchEvent(event);
     }
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-
-        ProgressSavedState ss = new ProgressSavedState(superState);
-        ss.mCurrentProgress = this.mCurrentProgress;
-        ss.mTargetProgress = this.mTargetProgress;
-        ss.mSpinSpeed = this.mSpinSpeed;
-        ss.mProgressWidth = this.mProgressWidth;
-        ss.mProgressColor = this.mProgressColor;
-        ss.mProgressBackgroundColor = this.mProgressBackgroundColor;
-        ss.mShouldProgressIndeterminate = this.mProgressIndeterminate;
-        ss.mShouldSetProgress = this.mProgressBarEnabled && mProgress > 0 && !this.mProgressIndeterminate;
-        ss.mProgress = this.mProgress;
-        ss.mAnimateProgress = this.mAnimateProgress;
-        ss.mShowProgressBackground = this.mShowProgressBackground;
-
-        return ss;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof ProgressSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        ProgressSavedState ss = (ProgressSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-
-        this.mCurrentProgress = ss.mCurrentProgress;
-        this.mTargetProgress = ss.mTargetProgress;
-        this.mSpinSpeed = ss.mSpinSpeed;
-        this.mProgressWidth = ss.mProgressWidth;
-        this.mProgressColor = ss.mProgressColor;
-        this.mProgressBackgroundColor = ss.mProgressBackgroundColor;
-        this.mShouldProgressIndeterminate = ss.mShouldProgressIndeterminate;
-        this.mShouldSetProgress = ss.mShouldSetProgress;
-        this.mProgress = ss.mProgress;
-        this.mAnimateProgress = ss.mAnimateProgress;
-        this.mShowProgressBackground = ss.mShowProgressBackground;
-
-        this.mLastTimeAnimated = SystemClock.uptimeMillis();
-    }
-
     /* ===== API methods ===== */
 
     @Override
@@ -1275,75 +1227,6 @@ public class ExtendedFloatingActionButton extends ImageButton {
     public void setIconColor(int color) {
         PorterDuff.Mode filterMode = PorterDuff.Mode.SRC_ATOP;
         mIcon.setColorFilter(color, filterMode);
-    }
-
-    static class ProgressSavedState extends BaseSavedState {
-
-        public static final Parcelable.Creator<ProgressSavedState> CREATOR =
-                new Parcelable.Creator<ProgressSavedState>() {
-                    public ProgressSavedState createFromParcel(Parcel in) {
-                        return new ProgressSavedState(in);
-                    }
-
-                    public ProgressSavedState[] newArray(int size) {
-                        return new ProgressSavedState[size];
-                    }
-                };
-        float mCurrentProgress;
-        float mTargetProgress;
-        float mSpinSpeed;
-        int mProgress;
-        int mProgressWidth;
-        int mProgressColor;
-        int mProgressBackgroundColor;
-        boolean mProgressBarEnabled;
-        boolean mProgressBarVisibilityChanged;
-        boolean mProgressIndeterminate;
-        boolean mShouldProgressIndeterminate;
-        boolean mShouldSetProgress;
-        boolean mAnimateProgress;
-        boolean mShowProgressBackground;
-
-        ProgressSavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private ProgressSavedState(Parcel in) {
-            super(in);
-            this.mCurrentProgress = in.readFloat();
-            this.mTargetProgress = in.readFloat();
-            this.mProgressBarEnabled = in.readInt() != 0;
-            this.mSpinSpeed = in.readFloat();
-            this.mProgress = in.readInt();
-            this.mProgressWidth = in.readInt();
-            this.mProgressColor = in.readInt();
-            this.mProgressBackgroundColor = in.readInt();
-            this.mProgressBarVisibilityChanged = in.readInt() != 0;
-            this.mProgressIndeterminate = in.readInt() != 0;
-            this.mShouldProgressIndeterminate = in.readInt() != 0;
-            this.mShouldSetProgress = in.readInt() != 0;
-            this.mAnimateProgress = in.readInt() != 0;
-            this.mShowProgressBackground = in.readInt() != 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeFloat(this.mCurrentProgress);
-            out.writeFloat(this.mTargetProgress);
-            out.writeInt((mProgressBarEnabled ? 1 : 0));
-            out.writeFloat(this.mSpinSpeed);
-            out.writeInt(this.mProgress);
-            out.writeInt(this.mProgressWidth);
-            out.writeInt(this.mProgressColor);
-            out.writeInt(this.mProgressBackgroundColor);
-            out.writeInt(this.mProgressBarVisibilityChanged ? 1 : 0);
-            out.writeInt(this.mProgressIndeterminate ? 1 : 0);
-            out.writeInt(this.mShouldProgressIndeterminate ? 1 : 0);
-            out.writeInt(this.mShouldSetProgress ? 1 : 0);
-            out.writeInt(this.mAnimateProgress ? 1 : 0);
-            out.writeInt(this.mShowProgressBackground ? 1 : 0);
-        }
     }
 
     private class CircleDrawable extends ShapeDrawable {

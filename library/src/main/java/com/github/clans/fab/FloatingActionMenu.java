@@ -33,17 +33,14 @@ public class FloatingActionMenu extends ViewGroup {
     private static final float CLOSED_PLUS_ROTATION = 0f;
     private static final float OPENED_PLUS_ROTATION_LEFT = -90f - 45f;
     private static final float OPENED_PLUS_ROTATION_RIGHT = 90f + 45f;
-
     private static final int OPEN_UP = 0;
     private static final int OPEN_DOWN = 1;
-
     private static final int LABELS_POSITION_LEFT = 0;
     private static final int LABELS_POSITION_RIGHT = 1;
 
     private AnimatorSet mOpenAnimatorSet = new AnimatorSet();
     private AnimatorSet mCloseAnimatorSet = new AnimatorSet();
     private AnimatorSet mIconToggleSet;
-
     private int mButtonSpacing = Util.dpToPx(getContext(), 0f);
     private FloatingActionButton mMenuButton;
     private int mMaxButtonWidth;
@@ -96,11 +93,9 @@ public class FloatingActionMenu extends ViewGroup {
     private boolean animationInProgress = false;
     private int mOpenDirection;
     private OnMenuToggleListener mToggleListener;
-
     private ValueAnimator mShowBackgroundAnimator;
     private ValueAnimator mHideBackgroundAnimator;
     private int mBackgroundColor;
-
     private int mLabelsPosition;
     private Context mLabelsContext;
     private String mMenuLabelText;
@@ -190,7 +185,6 @@ public class FloatingActionMenu extends ViewGroup {
         initBackgroundDimAnimation();
         createMenuButton();
         initMenuButtonAnimations(attr);
-
         attr.recycle();
     }
 
@@ -198,7 +192,6 @@ public class FloatingActionMenu extends ViewGroup {
         int showResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_show_animation, R.anim.fab_scale_up);
         setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), showResId));
         mImageToggleShowAnimation = AnimationUtils.loadAnimation(getContext(), showResId);
-
         int hideResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_hide_animation, R.anim.fab_scale_down);
         setMenuButtonHideAnimation(AnimationUtils.loadAnimation(getContext(), hideResId));
         mImageToggleHideAnimation = AnimationUtils.loadAnimation(getContext(), hideResId);
@@ -341,7 +334,6 @@ public class FloatingActionMenu extends ViewGroup {
         width = Math.max(mMaxButtonWidth, maxLabelWidth + mLabelsMargin) + getPaddingLeft() + getPaddingRight();
         height += mButtonSpacing * (mButtonsCount - 1) + getPaddingTop() + getPaddingBottom();
         height = adjustForOvershoot(height);
-
         if (getLayoutParams().width == LayoutParams.MATCH_PARENT) {
             width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         }
@@ -349,7 +341,6 @@ public class FloatingActionMenu extends ViewGroup {
         if (getLayoutParams().height == LayoutParams.MATCH_PARENT) {
             height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         }
-
         setMeasuredDimension(width, height);
     }
 
@@ -450,7 +441,6 @@ public class FloatingActionMenu extends ViewGroup {
 
     private void createLabels() {
         for (int i = 0; i < mButtonsCount; i++) {
-
             if (getChildAt(i) == mImageToggle) continue;
 
             final FloatingActionButton fab = (FloatingActionButton) getChildAt(i);
@@ -494,17 +484,14 @@ public class FloatingActionMenu extends ViewGroup {
             }
             label.setMaxLines(mLabelsMaxLines);
             label.updateBackground();
-
             label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
             label.setTextColor(mLabelsTextColor);
-
             int left = mLabelsPaddingLeft;
             int top = mLabelsPaddingTop;
             if (mLabelsShowShadow) {
                 left += fab.getShadowRadius() + Math.abs(fab.getShadowXOffset());
                 top += fab.getShadowRadius() + Math.abs(fab.getShadowYOffset());
             }
-
             label.setPadding(
                     left,
                     top,
@@ -522,7 +509,6 @@ public class FloatingActionMenu extends ViewGroup {
         }
         label.setText(text);
         label.setOnClickListener(fab.getOnClickListener());
-
         addView(label);
         fab.setTag(R.id.fab_label, label);
     }
@@ -722,7 +708,6 @@ public class FloatingActionMenu extends ViewGroup {
                 @Override
                 public void run() {
                     mMenuOpened = false;
-
                     if (mToggleListener != null) {
                         mToggleListener.onMenuToggle(false);
                     }

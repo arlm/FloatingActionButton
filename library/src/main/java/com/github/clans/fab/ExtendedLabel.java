@@ -11,7 +11,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-
 /**
  * TextView for extended version of FloatingActionMenu
  *
@@ -140,7 +139,7 @@ public class ExtendedLabel extends TextView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (mFab != null) {  // Ripple was not handled.
+        if (mFab != null) {  // Ripple is not handled.
             return false;
         }
 
