@@ -93,6 +93,7 @@ public class FloatingActionMenu extends ViewGroup {
     private Animation mImageToggleHideAnimation;
     private boolean mIsMenuButtonAnimationRunning;
     private boolean mIsSetClosedOnTouchOutside;
+    private boolean animationInProgress = false;
     private int mOpenDirection;
     private OnMenuToggleListener mToggleListener;
 
@@ -442,6 +443,7 @@ public class FloatingActionMenu extends ViewGroup {
         bringChildToFront(mMenuButton);
         bringChildToFront(mImageToggle);
         mButtonsCount = getChildCount();
+        setAnimationInProgressListener();
         createLabels();
     }
 
@@ -761,7 +763,7 @@ public class FloatingActionMenu extends ViewGroup {
         mCloseAnimatorSet.setDuration(animated ? ANIMATION_DURATION : 0);
     }
 
-    public FloatingActionButton getmMenuButton() {
+    public FloatingActionButton getMenuButton() {
         return mMenuButton;
     }
 
@@ -805,6 +807,32 @@ public class FloatingActionMenu extends ViewGroup {
     public void setMenuButtonHideAnimation(Animation hideAnimation) {
         mMenuButtonHideAnimation = hideAnimation;
         mMenuButton.setHideAnimation(hideAnimation);
+    }
+
+    public void setAnimationInProgressListener() {
+        setLayoutAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                animationInProgress = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                animationInProgress = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    /**
+     * Returns true if an animation on this layout has not ended yet.
+     */
+    public boolean isAnimating() {
+        return animationInProgress;
     }
 
     public boolean isMenuHidden() {

@@ -82,6 +82,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
     private Interpolator mOpenInterpolator;
     private Interpolator mCloseInterpolator;
     private boolean mIsAnimated = true;
+    private boolean animationInProgress = false;
     private boolean mLabelsSingleLine;
     private int mLabelsEllipsize;
     private int mLabelsMaxLines;
@@ -468,6 +469,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         mButtonsCount = getChildCount();
         alignMenuText();// FIXME: Do we really need this ?
         alignMenuIcon();
+        setAnimationInProgressListener();
         createLabels();
     }
 
@@ -774,6 +776,32 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         }
     }
 
+    public void setAnimationInProgressListener() {
+        setLayoutAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                animationInProgress = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                animationInProgress = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    /**
+     * Returns true if an animation on this layout has not ended yet.
+     */
+    public boolean isAnimating() {
+        return animationInProgress;
+    }
+
     public boolean isAnimated() {
         return mIsAnimated;
     }
@@ -787,10 +815,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         mIsAnimated = animated;
         mOpenAnimatorSet.setDuration(animated ? ANIMATION_DURATION : 0);
         mCloseAnimatorSet.setDuration(animated ? ANIMATION_DURATION : 0);
-    }
-
-    public ExtendedFloatingActionButton getmMenuButton() {
-        return mMenuButton;
     }
 
     public int getAnimationDelayPerItem() {
