@@ -106,7 +106,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
     private Context mLabelsContext;
     private String mMenuLabelText;
     private boolean mUsingMenuLabel;
-    private boolean mIsInCurrentPlace = false;
 
     public ExtendedFloatingActionMenu(Context context) {
         this(context, null);
@@ -823,14 +822,6 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
 
     public void setOnMenuToggleListener(ExtendedFloatingActionMenu.OnMenuToggleListener listener) {
         mToggleListener = listener;
-    }
-
-    public boolean isInCurrentPlace() {
-        return mIsInCurrentPlace;
-    }
-
-    public void setIsInCurrentPlace(Boolean isThere) {
-        mIsInCurrentPlace = isThere;
     }
 
     public boolean isIconAnimated() {
