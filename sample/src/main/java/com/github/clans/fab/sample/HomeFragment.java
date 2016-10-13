@@ -70,10 +70,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-//        mFab.shrinkMenu(R.layout.menu_extended);
-//        mFab.shrinkMenu(R.layout.menu_normal);
-//        mFab.invalidate();
-
 
         mFabExtended.setOnMenuButtonClickListener(new FloatingActionMenu.OnClickListener() {
             @Override

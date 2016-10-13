@@ -26,10 +26,6 @@ final class Util {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
-    static boolean hasNougat() {
-        return Build.VERSION.SDK_INT >= 24;
-    }
-
     static boolean hasLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
