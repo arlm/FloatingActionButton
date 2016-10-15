@@ -35,7 +35,7 @@ import java.util.List;
  * @author Josef Hruška (josef@stepuplabs.io)
  */
 
-public class ExtendedFloatingActionMenu extends ViewGroup {
+public class ExtendedFloatingActionMenu extends ViewGroup implements FloatingMenu {
 
     protected static final int EXTENDED_ACTION_MENU = -1;
     private static final int ANIMATION_DURATION = 300;
@@ -97,7 +97,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
     private boolean mIsMenuButtonAnimationRunning;
     private boolean mIsSetClosedOnTouchOutside;
     private int mOpenDirection;
-    private ExtendedFloatingActionMenu.OnMenuToggleListener mToggleListener;
+    private FloatingMenuToggleListener mToggleListener;
     private ExtendedFloatingActionButton mMenuButton;
     private ValueAnimator mShowBackgroundAnimator;
     private ValueAnimator mHideBackgroundAnimator;
@@ -820,7 +820,7 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         mAnimationDelayPerItem = animationDelayPerItem;
     }
 
-    public void setOnMenuToggleListener(ExtendedFloatingActionMenu.OnMenuToggleListener listener) {
+    public void setOnMenuToggleListener(FloatingMenuToggleListener listener) {
         mToggleListener = listener;
     }
 
@@ -998,6 +998,16 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
         mMenuButton.setColorPressedResId(colorResId);
     }
 
+    @Override
+    public float getMenuX() {
+        return getPivotX();
+    }
+
+    @Override
+    public float getMenuY() {
+        return getPivotY();
+    }
+
     public int getMenuButtonColorPressed() {
         return mMenuColorPressed;
     }
@@ -1087,9 +1097,5 @@ public class ExtendedFloatingActionMenu extends ViewGroup {
 
     public void setOnMenuButtonLongClickListener(OnLongClickListener longClickListener) {
         mMenuButton.setOnLongClickListener(longClickListener);
-    }
-
-    public interface OnMenuToggleListener {
-        void onMenuToggle(boolean opened);
     }
 }
