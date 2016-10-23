@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
