@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Outline;
 import android.graphics.Paint;
@@ -11,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Xfermode;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -46,6 +48,26 @@ public class Label extends TextView {
     private Animation mShowAnimation;
     private Animation mHideAnimation;
     private boolean mUsingStyle;
+    GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            onActionDown();
+            if (mFab != null) {
+                mFab.onActionDown();
+            }
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            onActionUp();
+            if (mFab != null) {
+                mFab.onActionUp();
+            }
+            return super.onSingleTapUp(e);
+        }
+    });
     private boolean mHandleVisibilityChanges = true;
 
     public Label(Context context) {
@@ -80,11 +102,11 @@ public class Label extends TextView {
         return getMeasuredHeight() + calculateShadowHeight();
     }
 
-    int calculateShadowWidth() {
+    protected int calculateShadowWidth() {
         return mShowShadow ? (mShadowRadius + Math.abs(mShadowXOffset)) : 0;
     }
 
-    int calculateShadowHeight() {
+    protected int calculateShadowHeight() {
         return mShowShadow ? (mShadowRadius + Math.abs(mShadowYOffset)) : 0;
     }
 
@@ -115,6 +137,10 @@ public class Label extends TextView {
         }
 
         setBackgroundCompat(layerDrawable);
+    }
+
+    public void removeLabelBackground() {
+        setBackgroundCompat(new ColorDrawable(Color.argb(0, 0, 0, 0)));
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -273,16 +299,17 @@ public class Label extends TextView {
         mUsingStyle = usingStyle;
     }
 
-    void setHandleVisibilityChanges(boolean handle) {
-        mHandleVisibilityChanges = handle;
-    }
-
     boolean isHandleVisibilityChanges() {
         return mHandleVisibilityChanges;
     }
 
+    void setHandleVisibilityChanges(boolean handle) {
+        mHandleVisibilityChanges = handle;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         if (mFab == null || mFab.getOnClickListener() == null || !mFab.isEnabled()) {
             return super.onTouchEvent(event);
         }
@@ -303,27 +330,6 @@ public class Label extends TextView {
         mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
-
-    GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            onActionDown();
-            if (mFab != null) {
-                mFab.onActionDown();
-            }
-            return super.onDown(e);
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            onActionUp();
-            if (mFab != null) {
-                mFab.onActionUp();
-            }
-            return super.onSingleTapUp(e);
-        }
-    });
 
     private class Shadow extends Drawable {
 

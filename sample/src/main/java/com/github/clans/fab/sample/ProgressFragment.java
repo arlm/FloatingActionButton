@@ -118,6 +118,20 @@ public class ProgressFragment extends Fragment {
         }
     }
 
+    private enum ProgressType {
+        INDETERMINATE, PROGRESS_POSITIVE, PROGRESS_NEGATIVE, HIDDEN, PROGRESS_NO_ANIMATION, PROGRESS_NO_BACKGROUND
+    }
+
+    private static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView mTextView;
+
+        public ViewHolder(TextView v) {
+            super(v);
+            mTextView = v;
+        }
+    }
+
     private class LanguageAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         private Locale[] mLocales;
@@ -143,19 +157,5 @@ public class ProgressFragment extends Fragment {
         public int getItemCount() {
             return mLocales.length;
         }
-    }
-
-    private static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView mTextView;
-
-        public ViewHolder(TextView v) {
-            super(v);
-            mTextView = v;
-        }
-    }
-
-    private enum ProgressType {
-        INDETERMINATE, PROGRESS_POSITIVE, PROGRESS_NEGATIVE, HIDDEN, PROGRESS_NO_ANIMATION, PROGRESS_NO_BACKGROUND
     }
 }

@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.FloatingMenu;
+import com.github.clans.fab.FloatingMenuToggleListener;
 import com.github.fab.sample.R;
 
 import java.util.ArrayList;
@@ -39,8 +41,23 @@ public class MenusFragment extends Fragment {
 
     private FloatingActionButton fabEdit;
 
-    private List<FloatingActionMenu> menus = new ArrayList<>();
+    private List<FloatingMenu> menus = new ArrayList<>();
     private Handler mUiHandler = new Handler();
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    break;
+                case R.id.fab2:
+                    fab2.setVisibility(View.GONE);
+                    break;
+                case R.id.fab3:
+                    fab2.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -88,6 +105,13 @@ public class MenusFragment extends Fragment {
         menuRed.setClosedOnTouchOutside(true);
         menuBlue.setIconAnimated(false);
 
+//        menuRed.setOnMenuButtonClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                menuRed.extendMenu();
+//            }
+//        });
+
         menuDown.hideMenuButton(false);
         menuRed.hideMenuButton(false);
         menuYellow.hideMenuButton(false);
@@ -111,7 +135,7 @@ public class MenusFragment extends Fragment {
         menus.add(menuBlue);
         menus.add(menuLabelsRight);
 
-        menuYellow.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
+        menuYellow.setOnMenuToggleListener(new FloatingMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
                 String text;
@@ -129,15 +153,15 @@ public class MenusFragment extends Fragment {
         fab3.setOnClickListener(clickListener);
 
         int delay = 400;
-        for (final FloatingActionMenu menu : menus) {
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    menu.showMenuButton(true);
-                }
-            }, delay);
-            delay += 150;
-        }
+//        for ( FloatingActionMenu menu : menus) {
+//            mUiHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    menu.showMenuButton(true);
+//                }
+//            }, delay);
+//            delay += 150;
+//        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -189,20 +213,4 @@ public class MenusFragment extends Fragment {
 
         menuGreen.setIconToggleAnimatorSet(set);
     }
-
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.fab1:
-                    break;
-                case R.id.fab2:
-                    fab2.setVisibility(View.GONE);
-                    break;
-                case R.id.fab3:
-                    fab2.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
-    };
 }

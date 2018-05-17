@@ -2,10 +2,15 @@
 <resources>
 
     <declare-styleable name="FloatingActionButton">
+        <attr name="fab_isExtended" format="boolean" />
         <attr name="fab_colorNormal" format="color" />
         <attr name="fab_colorPressed" format="color" />
         <attr name="fab_colorDisabled" format="color" />
         <attr name="fab_colorRipple" format="color" />
+        <attr name="fab_colorExtendedNormal" format="color" />
+        <attr name="fab_colorExtendedPressed" format="color" />
+        <attr name="fab_colorExtendedDisabled" format="color" />
+        <attr name="fab_colorExtendedRipple" format="color" />
         <attr name="fab_showShadow" format="boolean" />
         <attr name="fab_shadowColor" format="color" />
         <attr name="fab_shadowRadius" format="dimension" />
@@ -18,6 +23,9 @@
         <attr name="fab_showAnimation" format="reference" />
         <attr name="fab_hideAnimation" format="reference" />
         <attr name="fab_label" format="string" />
+        <attr name="fab_labelColorNormal" format="color" />
+        <attr name="fab_labelColorRipple" format="color" />
+        <attr name="fab_labelColorPressed" format="color" />
         <attr name="fab_elevationCompat" format="dimension" />
         <attr name="fab_progress_color" format="color" />
         <attr name="fab_progress_backgroundColor" format="color" />
@@ -28,6 +36,12 @@
     </declare-styleable>
 
     <declare-styleable name="FloatingActionMenu">
+        <attr name="menu_isExtended" format="boolean" />
+        <attr name="menu_extendedButtonTextCollapsed" format="string" />
+        <attr name="menu_extendedButtonTextExpanded" format="string" />
+        <attr name="menu_extendedButtonTextColor" format="integer" />
+        <attr name="menu_extendedButtonBackgroundColor" format="integer" />
+        <attr name="menu_extendedButtonTextSize" format="integer" />
         <attr name="menu_showShadow" format="boolean" />
         <attr name="menu_buttonSpacing" format="dimension" />
         <attr name="menu_labels_margin" format="dimension" />
@@ -42,6 +56,8 @@
         <attr name="menu_labels_textSize" format="dimension" />
         <attr name="menu_labels_cornerRadius" format="dimension" />
         <attr name="menu_labels_showShadow" format="boolean" />
+        <attr name="menu_labels_textNormalColorList" format="color" />
+        <attr name="menu_labels_textExtendedColorList" format="color" />
         <attr name="menu_labels_colorNormal" format="color" />
         <attr name="menu_labels_colorPressed" format="color" />
         <attr name="menu_labels_colorRipple" format="color" />

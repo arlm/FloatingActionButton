@@ -1,19 +1,17 @@
 package com.github.clans.fab.sample;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.ExtendedFloatingActionMenu;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.fab.sample.R;
 
 import java.util.ArrayList;
@@ -23,8 +21,8 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private ListView mListView;
-    private FloatingActionButton mFab;
-    private int mPreviousVisibleItem;
+    private FloatingActionMenu mFab;
+    private ExtendedFloatingActionMenu mFabExtended;
 
     @Nullable
     @Override
@@ -36,7 +34,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(R.id.list);
-        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
     }
 
     @Override
@@ -51,30 +48,41 @@ public class HomeFragment extends Fragment {
 
         mListView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, locales));
-
-        mFab.hide(false);
-        new Handler().postDelayed(new Runnable() {
+        mFab = (FloatingActionMenu) getActivity().findViewById(R.id.fab);
+        mFabExtended = (ExtendedFloatingActionMenu) getActivity().findViewById(R.id.fabExtended);
+        mFab.setIconAnimated(false);
+        mFab.setClosedOnTouchOutside(true);
+        mFab.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_up)));
+        mFab.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(getContext(), (R.anim.fab_scale_down)));
+        mFab.setOnMenuButtonClickListener(new FloatingActionMenu.OnClickListener() {
             @Override
-            public void run() {
-                mFab.show(true);
-                mFab.setShowAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.show_from_bottom));
-                mFab.setHideAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.hide_to_bottom));
-            }
-        }, 300);
+            public void onClick(View v) {
 
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
+                if (mFab.isShown()) {
+                    mFab.hideMenu(false);
+                    mFabExtended.showMenu(false);
+                    mFabExtended.open(false);
+                } else {
+                    mFabExtended.hideMenu(false);
+                    mFab.showMenu(false);
+                    mFab.open(false);
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem > mPreviousVisibleItem) {
-                    mFab.hide(true);
-                } else if (firstVisibleItem < mPreviousVisibleItem) {
-                    mFab.show(true);
                 }
-                mPreviousVisibleItem = firstVisibleItem;
+            }
+        });
+
+        mFabExtended.setOnMenuButtonClickListener(new FloatingActionMenu.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFabExtended.isShown()) {
+                    mFabExtended.hideMenu(false);
+                    mFab.showMenu(false);
+                    mFab.open(false);
+                } else {
+                    mFab.hideMenu(false);
+                    mFabExtended.showMenu(false);
+                    mFabExtended.open(false);
+                }
             }
         });
     }
